@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace news_server.Infrastructure
+namespace news_server.Infrastructure.Extensions
 {
     public static class IConfigurationExtension
     {
