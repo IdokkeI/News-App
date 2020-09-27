@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
 namespace news_server.Data.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200927174658_ffff")]
+    partial class ffff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -551,7 +553,7 @@ namespace news_server.Data.Migrations
                     b.HasOne("news_server.Data.dbModels.News", "News")
                         .WithMany("Comments")
                         .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("news_server.Data.dbModels.User", "UserOwner")
@@ -564,7 +566,7 @@ namespace news_server.Data.Migrations
                     b.HasOne("news_server.Data.dbModels.SectionsName", "SectionsName")
                         .WithMany("HashTags")
                         .HasForeignKey("sectionsNameId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -595,7 +597,7 @@ namespace news_server.Data.Migrations
                     b.HasOne("news_server.Data.dbModels.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -613,7 +615,7 @@ namespace news_server.Data.Migrations
                     b.HasOne("news_server.Data.dbModels.Comment", "Comment")
                         .WithMany()
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -622,7 +624,7 @@ namespace news_server.Data.Migrations
                     b.HasOne("news_server.Data.dbModels.News", "News")
                         .WithMany()
                         .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

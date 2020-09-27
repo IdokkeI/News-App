@@ -21,7 +21,7 @@ namespace news_server.Features.Identity
         [HttpPost(nameof(Login))]
         public async Task<ActionResult> Login(LoginModel model)
         {
-            var user = await userManager.FindByNameAsync(model.UserName);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 var role = await userManager.GetRolesAsync(user);
