@@ -11,7 +11,7 @@ namespace news_server.Features.Identity.Models
 
 
         [Required(ErrorMessage = "Пароль не может быть пустым")] 
-        [RegularExpression("(?=.*[0-9])(?=.*[a-z])[0-9a-z]{6,}", ErrorMessage = "Пароль должен состоять из цифр и букв латинского алфавита и иметь хотя бы 1 букву и цифру")]
+        [RegularExpression("(?=.*[0-9])(?=.*[a-zA-z])[0-9a-zA-Z]{6,}", ErrorMessage = "Пароль должен состоять из цифр и букв латинского алфавита и иметь хотя бы 1 букву и цифру")]
         [MinLength(6, ErrorMessage = "Минимальная длина пароля 6 символов")]
         public string Password { get; set; }
 

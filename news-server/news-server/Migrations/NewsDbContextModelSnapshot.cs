@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
-namespace news_server.Data.Migrations
+namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    partial class NewsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -297,10 +297,20 @@ namespace news_server.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("StatisticCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatisticNewsId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isBanned")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StatisticCommentId");
+
+                    b.HasIndex("StatisticNewsId");
 
                     b.ToTable("Profiles");
                 });
@@ -376,6 +386,12 @@ namespace news_server.Data.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Dislike")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
@@ -389,6 +405,12 @@ namespace news_server.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Dislike")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
 
                     b.Property<int>("NewsId")
                         .HasColumnType("int");
@@ -445,23 +467,8 @@ namespace news_server.Data.Migrations
                     b.Property<int?>("ProfileId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProfileId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StatisticCommentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StatisticCommentId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StatisticNewsId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StatisticNewsId1")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -481,16 +488,6 @@ namespace news_server.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("ProfileId");
-
-                    b.HasIndex("ProfileId1");
-
-                    b.HasIndex("StatisticCommentId");
-
-                    b.HasIndex("StatisticCommentId1");
-
-                    b.HasIndex("StatisticNewsId");
-
-                    b.HasIndex("StatisticNewsId1");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -590,6 +587,21 @@ namespace news_server.Data.Migrations
                         .HasForeignKey("UserOwnerId1");
                 });
 
+            modelBuilder.Entity("news_server.Data.dbModels.Profile", b =>
+                {
+                    b.HasOne("news_server.Data.dbModels.StatisticComment", "StatisticComment")
+                        .WithMany()
+                        .HasForeignKey("StatisticCommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("news_server.Data.dbModels.StatisticNews", "StatisticNews")
+                        .WithMany()
+                        .HasForeignKey("StatisticNewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("news_server.Data.dbModels.ProfileStatistic", b =>
                 {
                     b.HasOne("news_server.Data.dbModels.Profile", "Profile")
@@ -628,29 +640,9 @@ namespace news_server.Data.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.User", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.Profile", null)
-                        .WithMany("Folowers")
-                        .HasForeignKey("ProfileId");
-
-                    b.HasOne("news_server.Data.dbModels.Profile", null)
+                    b.HasOne("news_server.Data.dbModels.Profile", "Profile")
                         .WithMany("ListSubscribers")
-                        .HasForeignKey("ProfileId1");
-
-                    b.HasOne("news_server.Data.dbModels.StatisticComment", null)
-                        .WithMany("Dislike")
-                        .HasForeignKey("StatisticCommentId");
-
-                    b.HasOne("news_server.Data.dbModels.StatisticComment", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("StatisticCommentId1");
-
-                    b.HasOne("news_server.Data.dbModels.StatisticNews", null)
-                        .WithMany("Dislike")
-                        .HasForeignKey("StatisticNewsId");
-
-                    b.HasOne("news_server.Data.dbModels.StatisticNews", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("StatisticNewsId1");
+                        .HasForeignKey("ProfileId");
                 });
 #pragma warning restore 612, 618
         }

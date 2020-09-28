@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Identity.Models;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace news_server.Features.Identity
         }
 
         [HttpPost(nameof(Login))]
+        [Produces("application/json")]
         public async Task<ActionResult> Login(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
@@ -27,7 +29,27 @@ namespace news_server.Features.Identity
                 var role = await userManager.GetRolesAsync(user);
                 var roleName = role.FirstOrDefault();
                 var token = identityService.Authenticate(user, roleName);
-                return Ok(token);
+                int access = 0;
+                if (roleName == "admin")
+                {
+                    access = (int)RoleEnum.admin;
+                }
+                else if (roleName == "moderator")
+                {
+                    access = (int)RoleEnum.moderator;
+                }
+                else if (roleName == "user")
+                {
+                    access = (int)RoleEnum.user;
+                }
+
+                var result = new
+                {
+                    token,
+                    access
+                };
+
+                return Ok(result);
             }
 
             return Unauthorized();
