@@ -46,8 +46,7 @@ namespace news_server
                 .UseEndpoints(endpoints =>
                 {
                     endpoints.MapControllers();
-                })
-                .Migrate();
+                });
         }
     }
 }

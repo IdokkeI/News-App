@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Data.Seeder;
 using System.Threading.Tasks;
@@ -16,6 +18,9 @@ namespace news_server
 
             using (var scoped = host.Services.CreateScope())
             {
+                var db = scoped.ServiceProvider.GetRequiredService<NewsDbContext>();                
+                db.Database.Migrate();
+
                 var userManager = scoped.ServiceProvider.GetRequiredService<UserManager<User>>();
                 var roleManager = scoped.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 await Seeder.Seed(userManager, roleManager);

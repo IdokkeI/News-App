@@ -29,12 +29,6 @@ namespace news_server.Infrastructure.Extensions
                 .AllowAnyHeader());
             return app;
         }
-
-        public static void Migrate(this IApplicationBuilder app)
-        {
-            var services = app.ApplicationServices.CreateScope(); 
-            var db = services.ServiceProvider.GetService<NewsDbContext>(); 
-            db.Database.Migrate();
-        }
+       
     }
 }
