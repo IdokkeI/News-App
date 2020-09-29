@@ -6,7 +6,9 @@ namespace news_server.Features.SectionNames.Models
     {
 
         [Required(ErrorMessage = "Введите имя секции")]
-        [RegularExpression("^(?=.*[A-Za-zа-яА-Я])[A-Za-zа-яА-Я -]*$")]
+        [RegularExpression("^(?=.*[A-Za-zа-яА-Я])[A-Za-zа-яА-Я -]*$", ErrorMessage = "Имя может содержать буквы пробелы и знак '-'")]
         public string SectionName { get; set; }
+
     }
 }
+

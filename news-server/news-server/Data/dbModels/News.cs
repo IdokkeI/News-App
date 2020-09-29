@@ -7,9 +7,11 @@ namespace news_server.Data.dbModels
     {
         public int Id { get; set; }
 
-        public SectionsName SectionsName { get; set; }
+        public string SectionName { get; set; }
 
-        public int SectionNameId { get; set; }
+        public int SectionsNameId { get; set; }
+
+        public SectionsName SectionsName { get; set; }
 
         public string Title { get; set; }
 
@@ -25,7 +27,7 @@ namespace news_server.Data.dbModels
 
         public User UserOwner { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public bool isModifyed { get; set; }
 

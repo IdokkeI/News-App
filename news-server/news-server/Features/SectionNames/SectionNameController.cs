@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using news_server.Data;
 using news_server.Data.dbModels;
@@ -17,11 +16,9 @@ namespace news_server.Features.SectionNames
             this.context = context;
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
-            Roles = "admin, moderator")]
+        [Authorize(Roles = "admin, moderator")]
         [HttpPost]
-        [Consumes("application/json")]
-        public async Task<ActionResult> AddSection([FromBody] AddSectionNameModel model)
+        public async Task<ActionResult> AddSection(AddSectionNameModel model)
         {
             if (ModelState.IsValid)
             {
@@ -35,8 +32,9 @@ namespace news_server.Features.SectionNames
                     return Ok();
                 }
                 else
-                    ModelState.AddModelError("duplicate", "Секция с таким именем уже существует");
+                    ModelState.AddModelError("error", "Секция с таким именем уже существует");
             }
+           
             return BadRequest(ModelState);
         }
     }

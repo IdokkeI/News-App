@@ -10,7 +10,7 @@ namespace news_server.Data.dbModels
 
         public int ProfileId { get; set; }
 
-        public double RatingDiscuss { get; set; }
+        public double RatingComments { get; set; }
 
         public double RatingNews { get; set; }
 

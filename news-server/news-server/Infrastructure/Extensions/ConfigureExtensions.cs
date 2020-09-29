@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using news_server.Data;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -25,6 +28,13 @@ namespace news_server.Infrastructure.Extensions
                 .AllowAnyMethod()
                 .AllowAnyHeader());
             return app;
+        }
+
+        public static void Migrate(this IApplicationBuilder app)
+        {
+            var services = app.ApplicationServices.CreateScope(); 
+            var db = services.ServiceProvider.GetService<NewsDbContext>(); 
+            db.Database.Migrate();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace news_server.Features.Identity
     
     public class IdentityController: ApiController
     {
-        UserManager<User> userManager;
+        private readonly UserManager<User> userManager;
         IIdentityService identityService;
         
         public IdentityController(UserManager<User> userManager, IIdentityService identityService)

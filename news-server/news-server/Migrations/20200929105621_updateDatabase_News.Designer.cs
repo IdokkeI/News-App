@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
 namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class NewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200929105621_updateDatabase_News")]
+    partial class updateDatabase_News
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,6 +225,9 @@ namespace news_server.Migrations
                     b.Property<DateTime>("PublishOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("SectionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SectionName")
                         .HasColumnType("nvarchar(max)");
 
@@ -245,6 +250,8 @@ namespace news_server.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SectionId");
 
                     b.HasIndex("SectionsNameId");
 
@@ -334,6 +341,23 @@ namespace news_server.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("profileStatistics");
+                });
+
+            modelBuilder.Entity("news_server.Data.dbModels.Section", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("SectionNameId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SectionNameId");
+
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.SectionsName", b =>
@@ -542,6 +566,10 @@ namespace news_server.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.News", b =>
                 {
+                    b.HasOne("news_server.Data.dbModels.Section", null)
+                        .WithMany("News")
+                        .HasForeignKey("SectionId");
+
                     b.HasOne("news_server.Data.dbModels.SectionsName", "SectionsName")
                         .WithMany("News")
                         .HasForeignKey("SectionsNameId")
@@ -580,6 +608,15 @@ namespace news_server.Migrations
                     b.HasOne("news_server.Data.dbModels.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("news_server.Data.dbModels.Section", b =>
+                {
+                    b.HasOne("news_server.Data.dbModels.SectionsName", "SectionName")
+                        .WithMany()
+                        .HasForeignKey("SectionNameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

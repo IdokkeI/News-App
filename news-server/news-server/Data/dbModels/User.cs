@@ -6,7 +6,6 @@ namespace news_server.Data.dbModels
     {
         public Profile Profile { get; set; }
         public int? ProfileId { get; set; }
-
       
     }
 }
