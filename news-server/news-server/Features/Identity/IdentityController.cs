@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace news_server.Features.Identity
 {
+    
     public class IdentityController: ApiController
     {
         UserManager<User> userManager;
@@ -18,7 +19,8 @@ namespace news_server.Features.Identity
             this.userManager = userManager;
             this.identityService = identityService;
         }
-
+        
+        
         [HttpPost(nameof(Login))]
         [Produces("application/json")]
         public async Task<ActionResult> Login(LoginModel model)
@@ -54,6 +56,7 @@ namespace news_server.Features.Identity
 
             return Unauthorized();
         }
+        
         
         [HttpPost(nameof(Register))]
         public async Task<ActionResult> Register(RegisterModel model)

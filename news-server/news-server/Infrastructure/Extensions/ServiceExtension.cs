@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -18,13 +19,14 @@ namespace news_server.Infrastructure.Extensions
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = true;
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidIssuer = Configuration.GetIssuer(),
                         ValidateAudience = true,
                         ValidAudience = Configuration.GetAudience(),
                         ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
                         IssuerSigningKey = AuthConfiguration.GetSecurityKey(Configuration.GetSecurityKey())
                     };
                 });
@@ -44,9 +46,8 @@ namespace news_server.Infrastructure.Extensions
             services
                 .AddIdentity<User, IdentityRole>(options =>
                 {
-                    options.Password.RequireDigit = true;
+                    options.Password.RequireDigit = false;
                     options.Password.RequiredLength = 6;
-                    options.Password.RequiredUniqueChars = 6;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;

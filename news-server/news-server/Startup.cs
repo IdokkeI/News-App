@@ -38,10 +38,9 @@ namespace news_server
                 app.UseHsts();
             }
             app
-                .UseSwaggerMW()
-                .UseHttpsRedirection()
-                .UseCorsMW()
+                .UseSwaggerMW()               
                 .UseRouting()
+                .UseCorsMW()
                 .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints =>
