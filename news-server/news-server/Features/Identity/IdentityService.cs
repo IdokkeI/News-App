@@ -11,8 +11,8 @@ using System.Security.Claims;
 namespace news_server.Features.Identity
 {
     public class IdentityService: IIdentityService
-    {        
-        IConfiguration configuration;
+    {
+        private readonly IConfiguration configuration;
 
         public IdentityService(IConfiguration configuration)
         {

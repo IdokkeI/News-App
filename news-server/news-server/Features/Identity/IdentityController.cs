@@ -12,7 +12,7 @@ namespace news_server.Features.Identity
     public class IdentityController: ApiController
     {
         private readonly UserManager<User> userManager;
-        IIdentityService identityService;
+        private readonly IIdentityService identityService;
         
         public IdentityController(UserManager<User> userManager, IIdentityService identityService)
         {

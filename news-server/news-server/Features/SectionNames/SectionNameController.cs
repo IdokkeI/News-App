@@ -10,7 +10,7 @@ namespace news_server.Features.SectionNames
 {
     public class SectionNameController: ApiController
     {
-        NewsDbContext context;
+        private readonly NewsDbContext context;
         public SectionNameController(NewsDbContext context)
         {
             this.context = context;

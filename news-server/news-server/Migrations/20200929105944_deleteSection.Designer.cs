@@ -217,7 +217,9 @@ namespace news_server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime?>("ModifyedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .IsRequired(false)
+                        .HasDefaultValue();
 
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
@@ -241,10 +243,12 @@ namespace news_server.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("isAproove")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("isModifyed")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
