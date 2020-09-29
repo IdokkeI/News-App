@@ -7,6 +7,9 @@ using Microsoft.OpenApi.Models;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
+using news_server.Features.SectionNames.Models;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -14,20 +17,24 @@ namespace news_server.Infrastructure.Extensions
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration Configuration)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+            {
+                opt.RequireHttpsMetadata = true;
+                opt.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.RequireHttpsMetadata = true;
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = Configuration.GetIssuer(),
-                        ValidateAudience = true,
-                        ValidAudience = Configuration.GetAudience(),
-                        ValidateLifetime = true,
-                        IssuerSigningKey = AuthConfiguration.GetSecurityKey(Configuration.GetSecurityKey())
-                    };
-                });
+                    ValidateIssuer = true,
+                    ValidIssuer = Configuration.GetIssuer(),
+                    ValidateAudience = true,
+                    ValidAudience = Configuration.GetAudience(),
+                    IssuerSigningKey = AuthConfiguration.GetSecurityKey(Configuration.GetSecurityKey()),
+                    ValidateIssuerSigningKey = true
+                };
+            });
             return services;
         }
 
@@ -44,9 +51,8 @@ namespace news_server.Infrastructure.Extensions
             services
                 .AddIdentity<User, IdentityRole>(options =>
                 {
-                    options.Password.RequireDigit = true;
                     options.Password.RequiredLength = 6;
-                    options.Password.RequiredUniqueChars = 6;
+                    options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;

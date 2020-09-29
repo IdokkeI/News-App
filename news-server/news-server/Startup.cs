@@ -18,11 +18,11 @@ namespace news_server
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddJwtAuthentication(Configuration)
                 .AddDataBaseContext(Configuration)
                 .AddIdentityService()
-                .AddSwaggerService()
+                .AddJwtAuthentication(Configuration)
                 .AddAppServices()
+                .AddSwaggerService()                
                 .AddControllers();
         }
 
@@ -39,7 +39,6 @@ namespace news_server
             }
             app
                 .UseSwaggerMW()
-                .UseHttpsRedirection()
                 .UseCorsMW()
                 .UseRouting()
                 .UseAuthentication()

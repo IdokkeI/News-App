@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using news_server.Data;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -26,5 +29,6 @@ namespace news_server.Infrastructure.Extensions
                 .AllowAnyHeader());
             return app;
         }
+       
     }
 }
