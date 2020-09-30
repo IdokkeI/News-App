@@ -7,11 +7,11 @@ namespace news_server.Data.dbModels
     {
         public int Id { get; set; }
 
+        public SectionsName sectionsName { get; set; }
+
+        public int SectionNameId { get; set; }
+
         public string SectionName { get; set; }
-
-        public int SectionsNameId { get; set; }
-
-        public SectionsName SectionsName { get; set; }
 
         public string Title { get; set; }
 
