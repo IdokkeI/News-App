@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
 namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class NewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200930074325_newsDelSecName")]
+    partial class newsDelSecName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,7 +228,7 @@ namespace news_server.Migrations
                     b.Property<string>("SectionName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SectionNameId")
+                    b.Property<int?>("SectionsNameId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -244,14 +246,11 @@ namespace news_server.Migrations
                     b.Property<bool>("isModifyed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("sectionsNameId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SectionsNameId");
 
-                    b.HasIndex("sectionsNameId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("News");
                 });
@@ -545,13 +544,13 @@ namespace news_server.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.News", b =>
                 {
+                    b.HasOne("news_server.Data.dbModels.SectionsName", null)
+                        .WithMany("News")
+                        .HasForeignKey("SectionsNameId");
+
                     b.HasOne("news_server.Data.dbModels.User", "UserOwner")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.HasOne("news_server.Data.dbModels.SectionsName", "sectionsName")
-                        .WithMany("News")
-                        .HasForeignKey("sectionsNameId");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.Notification", b =>

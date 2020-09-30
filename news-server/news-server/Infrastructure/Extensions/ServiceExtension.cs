@@ -8,8 +8,8 @@ using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.DataAnnotations;
-using news_server.Features.SectionNames.Models;
+using news_server.Features.News;
+using news_server.Features.Comment;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -73,12 +73,15 @@ namespace news_server.Infrastructure.Extensions
                             Version = "v1"
                         }
                     ));
+
             return services;
         }
 
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<INewsService, NewsService>();
+            services.AddTransient<ICommentService, CommentService>();
             return services;
         }
     }

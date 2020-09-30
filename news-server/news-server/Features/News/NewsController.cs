@@ -14,11 +14,16 @@ namespace news_server.Features.News
             this.newsService = newsService;
         }
 
+        [HttpPost]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
         {
             var userName = User.GetUserName();
-            await newsService.CreateNews(model, userName);
-            return null;
+            var result = await newsService.CreateNews(model, userName);
+            if (result)
+            {
+                return Ok();
+            }
+            return BadRequest(ModelState);
         }
     }
 }

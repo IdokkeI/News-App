@@ -7,8 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Identity
-{
-    
+{    
     public class IdentityController: ApiController
     {
         private readonly UserManager<User> userManager;
