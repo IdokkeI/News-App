@@ -10,6 +10,8 @@ using news_server.Features.Identity;
 using Microsoft.IdentityModel.Tokens;
 using news_server.Features.News;
 using news_server.Features.Comment;
+using news_server.Features.StatisticNews;
+using news_server.Features.StatisticComment;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -82,6 +84,8 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<INewsService, NewsService>();
             services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<StatisticNewsService>();
+            services.AddTransient<StatisticCommentService>();
             return services;
         }
     }

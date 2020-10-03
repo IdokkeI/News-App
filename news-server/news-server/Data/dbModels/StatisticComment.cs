@@ -8,7 +8,5 @@ namespace news_server.Data.dbModels
 
         public Comment Comment { get; set; }
 
-        public int CommentId { get; set; }
-
     }
 }

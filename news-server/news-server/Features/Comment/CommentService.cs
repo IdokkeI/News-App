@@ -3,7 +3,6 @@ using news_server.Data;
 using news_server.Features.Comment.Models;
 using System;
 using System.Threading.Tasks;
-using CComment = news_server.Data.dbModels.Comment;
 
 namespace news_server.Features.Comment
 {
@@ -18,18 +17,18 @@ namespace news_server.Features.Comment
 
         public async Task<bool> CreateComment(CommentCreateModel model, string userName)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            var userProfile = await context.Profiles.FirstOrDefaultAsync(p => p.User.UserName == userName);
             var news = await context.News.FirstOrDefaultAsync(nameof => nameof.Id == model.NewsId);
 
             if (news != null)
             {
                 var now = DateTime.Now;
-                await context.Comments.AddAsync(new CComment
+                await context.Comments.AddAsync(new Data.dbModels.Comment
                 {
                     News = news,
                     DateComment = now,
                     Text = model.TextComment,
-                    UserOwner = user,
+                    Owner = userProfile,
                     UserNameTo = model.UsernameAddresTo                    
                 });
                 await context.SaveChangesAsync();

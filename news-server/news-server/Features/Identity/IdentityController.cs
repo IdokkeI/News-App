@@ -12,11 +12,13 @@ namespace news_server.Features.Identity
     {
         private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
-        
-        public IdentityController(UserManager<User> userManager, IIdentityService identityService)
+        private readonly NewsDbContext context;
+
+        public IdentityController(UserManager<User> userManager, IIdentityService identityService, NewsDbContext context)
         {
             this.userManager = userManager;
             this.identityService = identityService;
+            this.context = context;
         }
         
         
@@ -53,7 +55,7 @@ namespace news_server.Features.Identity
                 return Ok(result);
             }
 
-            return Unauthorized();
+            return BadRequest();
         }
         
         
@@ -67,13 +69,18 @@ namespace news_server.Features.Identity
                 if (mail == null)
                 {
                     var createUser = new User
-                        {
-                            UserName = model.UserName,
-                            Email = model.Email
-                        };
+                    {
+                        UserName = model.UserName,
+                        Email = model.Email
+                    };
 
                     await userManager.CreateAsync(createUser, model.Password);
                     await userManager.AddToRoleAsync(createUser, "user");
+                    await context.Profiles.AddAsync(new Profile
+                    {
+                        User = createUser
+                    });
+                    await context.SaveChangesAsync();
                     return Ok();
                 }
                 else

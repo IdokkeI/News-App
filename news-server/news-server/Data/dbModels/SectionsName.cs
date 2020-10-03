@@ -10,7 +10,5 @@ namespace news_server.Data.dbModels
 
         public List<News> News { get; set; } = new List<News>();
 
-        public List<HashTag> HashTags { get; set; } = new List<HashTag>();
-
     }
 }

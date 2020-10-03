@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using news_server.Features.News.Models;
 using news_server.Infrastructure.Extensions;
 using System.Threading.Tasks;
 
 namespace news_server.Features.News
 {
+    
     public class NewsController: ApiController
     {
         private readonly INewsService newsService;
@@ -14,6 +16,7 @@ namespace news_server.Features.News
             this.newsService = newsService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
         {

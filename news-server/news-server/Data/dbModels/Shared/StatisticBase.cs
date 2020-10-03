@@ -1,8 +1,10 @@
-﻿namespace news_server.Data.dbModels.Shared
+﻿using System.Collections.Generic;
+
+namespace news_server.Data.dbModels.Shared
 {
     public class StatisticBase
     {
-        public int Likes { get; set; }
-        public int Dislike { get; set; }
+        public Profile Likes { get; set; }
+        public Profile Dislike { get; set; }
     }
 }
