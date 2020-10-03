@@ -10,9 +10,7 @@ namespace news_server.Data.dbModels
 
         public string NotificationText { get; set; }
 
-        public User UserOwner { get; set; }
-
-        public int UserOwnerId { get; set; }
+        public Profile Owner { get; set; }
 
         public DateTime NotificationDate { get; set; }
     }

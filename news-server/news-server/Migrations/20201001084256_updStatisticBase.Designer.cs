@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
 namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class NewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201001084256_updStatisticBase")]
+    partial class updStatisticBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,17 +162,20 @@ namespace news_server.Migrations
                     b.Property<DateTime>("DateComment")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("NewsId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OwnerId")
+                    b.Property<int>("NewsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserNameTo")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserOwnerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("isEdit")
                         .HasColumnType("bit");
@@ -179,9 +184,29 @@ namespace news_server.Migrations
 
                     b.HasIndex("NewsId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("UserOwnerId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("news_server.Data.dbModels.HashTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("TagName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("sectionsNameId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("sectionsNameId");
+
+                    b.ToTable("HashTags");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.News", b =>
@@ -194,16 +219,16 @@ namespace news_server.Migrations
                     b.Property<DateTime?>("ModifyedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PublishOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SectionsNameId")
+                    b.Property<string>("SectionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SectionNameId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -212,17 +237,23 @@ namespace news_server.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("isAproove")
                         .HasColumnType("bit");
 
                     b.Property<bool>("isModifyed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("sectionsNameId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("SectionsNameId");
+                    b.HasIndex("sectionsNameId");
 
                     b.ToTable("News");
                 });
@@ -240,15 +271,18 @@ namespace news_server.Migrations
                     b.Property<string>("NotificationText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserNameTo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserOwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserOwnerId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("UserOwnerId1");
 
                     b.ToTable("Notifications");
                 });
@@ -260,23 +294,51 @@ namespace news_server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("LastActiveOn")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("StatisticCommentId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("RegisterOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("StatisticNewsId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("isBanned")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("StatisticCommentId");
+
+                    b.HasIndex("StatisticNewsId");
 
                     b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("news_server.Data.dbModels.ProfileStatistic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("LastActiveOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("RatingComments")
+                        .HasColumnType("float");
+
+                    b.Property<double>("RatingNews")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("RegisterOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("profileStatistics");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.SectionsName", b =>
@@ -301,22 +363,12 @@ namespace news_server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CommentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DislikeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LikesId")
+                    b.Property<int>("CommentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
-
-                    b.HasIndex("DislikeId");
-
-                    b.HasIndex("LikesId");
 
                     b.ToTable("StatisticComments");
                 });
@@ -328,27 +380,12 @@ namespace news_server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DislikeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LikesId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NewsId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ViewsId")
+                    b.Property<int>("NewsId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DislikeId");
-
-                    b.HasIndex("LikesId");
-
                     b.HasIndex("NewsId");
-
-                    b.HasIndex("ViewsId");
 
                     b.ToTable("StatisticNews");
                 });
@@ -395,8 +432,23 @@ namespace news_server.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StatisticCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StatisticCommentId1")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StatisticNewsId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StatisticNewsId1")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -414,6 +466,16 @@ namespace news_server.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("ProfileId");
+
+                    b.HasIndex("StatisticCommentId");
+
+                    b.HasIndex("StatisticCommentId1");
+
+                    b.HasIndex("StatisticNewsId");
+
+                    b.HasIndex("StatisticNewsId1");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -473,70 +535,105 @@ namespace news_server.Migrations
                 {
                     b.HasOne("news_server.Data.dbModels.News", "News")
                         .WithMany("Comments")
-                        .HasForeignKey("NewsId");
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "Owner")
+                    b.HasOne("news_server.Data.dbModels.User", "UserOwner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("UserOwnerId");
+                });
+
+            modelBuilder.Entity("news_server.Data.dbModels.HashTag", b =>
+                {
+                    b.HasOne("news_server.Data.dbModels.SectionsName", "SectionsName")
+                        .WithMany("HashTags")
+                        .HasForeignKey("sectionsNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.News", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.Profile", "Owner")
+                    b.HasOne("news_server.Data.dbModels.User", "UserOwner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("UserId");
 
-                    b.HasOne("news_server.Data.dbModels.SectionsName", "SectionsName")
+                    b.HasOne("news_server.Data.dbModels.SectionsName", "sectionsName")
                         .WithMany("News")
-                        .HasForeignKey("SectionsNameId");
+                        .HasForeignKey("sectionsNameId");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.Notification", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.Profile", "Owner")
+                    b.HasOne("news_server.Data.dbModels.User", "UserOwner")
                         .WithMany()
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("UserOwnerId1");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.Profile", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.User", "User")
+                    b.HasOne("news_server.Data.dbModels.StatisticComment", "StatisticComment")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("StatisticCommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("news_server.Data.dbModels.StatisticNews", "StatisticNews")
+                        .WithMany()
+                        .HasForeignKey("StatisticNewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("news_server.Data.dbModels.ProfileStatistic", b =>
+                {
+                    b.HasOne("news_server.Data.dbModels.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.StatisticComment", b =>
                 {
                     b.HasOne("news_server.Data.dbModels.Comment", "Comment")
                         .WithMany()
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("news_server.Data.dbModels.Profile", "Dislike")
-                        .WithMany()
-                        .HasForeignKey("DislikeId");
-
-                    b.HasOne("news_server.Data.dbModels.Profile", "Likes")
-                        .WithMany()
-                        .HasForeignKey("LikesId");
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.StatisticNews", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.Profile", "Dislike")
-                        .WithMany()
-                        .HasForeignKey("DislikeId");
-
-                    b.HasOne("news_server.Data.dbModels.Profile", "Likes")
-                        .WithMany()
-                        .HasForeignKey("LikesId");
-
                     b.HasOne("news_server.Data.dbModels.News", "News")
                         .WithMany()
-                        .HasForeignKey("NewsId");
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "Views")
-                        .WithMany()
-                        .HasForeignKey("ViewsId");
+            modelBuilder.Entity("news_server.Data.dbModels.User", b =>
+                {
+                    b.HasOne("news_server.Data.dbModels.Profile", "Profile")
+                        .WithMany("ListSubscribers")
+                        .HasForeignKey("ProfileId");
+
+                    b.HasOne("news_server.Data.dbModels.StatisticComment", null)
+                        .WithMany("Dislike")
+                        .HasForeignKey("StatisticCommentId");
+
+                    b.HasOne("news_server.Data.dbModels.StatisticComment", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("StatisticCommentId1");
+
+                    b.HasOne("news_server.Data.dbModels.StatisticNews", null)
+                        .WithMany("Dislike")
+                        .HasForeignKey("StatisticNewsId");
+
+                    b.HasOne("news_server.Data.dbModels.StatisticNews", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("StatisticNewsId1");
                 });
 #pragma warning restore 612, 618
         }

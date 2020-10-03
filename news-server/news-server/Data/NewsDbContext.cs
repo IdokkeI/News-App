@@ -6,6 +6,7 @@ namespace news_server.Data
 {
     public class NewsDbContext : IdentityDbContext<User>
     {
+        
         public NewsDbContext(DbContextOptions<NewsDbContext> options)
             : base(options)
         {
@@ -16,12 +17,8 @@ namespace news_server.Data
         public DbSet<StatisticNews> StatisticNews { get; set; }
         public DbSet<StatisticComment> StatisticComments { get; set; }
         public DbSet<SectionsName> SectionsNames { get; set; }
-        public DbSet<ProfileStatistic> profileStatistics { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<HashTag> HashTags { get; set; }
         public DbSet<Comment> Comments { get; set; }
-
-       
-
+        
     }
 }

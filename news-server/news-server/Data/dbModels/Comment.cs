@@ -6,9 +6,7 @@ namespace news_server.Data.dbModels
     {
         public int Id { get; set; }
 
-        public User UserOwner { get; set; }
-
-        public int UserId { get; set; }
+        public Profile Owner { get; set; }
 
         public string Text { get; set; }   
 
@@ -19,7 +17,5 @@ namespace news_server.Data.dbModels
         public bool isEdit { get; set; }
 
         public News News { get; set; }
-
-        public int NewsId { get; set; }
     }
 }

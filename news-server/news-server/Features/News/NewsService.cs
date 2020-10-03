@@ -21,7 +21,7 @@ namespace news_server.Features.News
             
             if (titleExist == null)
             {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+                var profile = await context.Profiles.FirstOrDefaultAsync(p => p.User.UserName == userName);
                 var section = await context.SectionsNames.FirstOrDefaultAsync(s => s.SectionName == model.SectionName);
                 var now = DateTime.Now;
                 if (section != null)
@@ -29,12 +29,11 @@ namespace news_server.Features.News
                     await context.News.AddAsync(
                     new CNews
                     {
-                        SectionName = model.SectionName,
+                        SectionsName = section,
                         Title = model.Title,
                         Photo = model.Photo,
                         Text = model.Text,
-                        UserOwner = user,
-                        sectionsName = section,
+                        Owner = profile,                       
                         PublishOn = now
                     });
                     await context.SaveChangesAsync();
