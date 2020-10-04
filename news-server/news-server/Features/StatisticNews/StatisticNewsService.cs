@@ -5,6 +5,8 @@ using CStatisticNews = news_server.Data.dbModels.StatisticNews;
 using CProfile = news_server.Data.dbModels.Profile;
 using CNews = news_server.Data.dbModels.News;
 using news_server.Features.SharedStatistic.Models;
+using System.Linq;
+using news_server.Features.News.SharedStatistic.Models;
 
 namespace news_server.Features.StatisticNews
 {
@@ -32,11 +34,25 @@ namespace news_server.Features.StatisticNews
             return false;
         }
 
+        public Params GetStatisticById(int newsId)
+        {
+            var countViews = context.StatisticNews.Where(sn => sn.NewsId == newsId).ToList().Count;
+            var listviews = context.StatisticNews.Where(sn => sn.NewsId == newsId).ToList();
+            var countLike = listviews.Where(sn => sn.LikeId != null).ToList().Count;
+            var countDislike = listviews.Where(sn => sn.DislikeId != null).ToList().Count;
+            return new Params 
+                { 
+                    Dislikes = countDislike, 
+                    Likes = countLike, 
+                    Views = countViews 
+                };
+        }
+
         private async Task SetState(CProfile user, CNews news, string state)
         {
-            var isLike = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.Likes == user && sn.News == news);
+            var isLike = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.Like == user && sn.News == news);
             var isDislike = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.Dislike == user && sn.News == news);
-            var isViews = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.Views == user && sn.News == news);
+            var isViews = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.ViewBy == user && sn.News == news);
 
             if (state == "like")
             {                
@@ -49,13 +65,13 @@ namespace news_server.Features.StatisticNews
                             await context.StatisticNews.AddAsync(new CStatisticNews
                             {
                                 News = news,
-                                Likes = user,
-                                Views = user
+                                Like = user,
+                                ViewBy = user
                             });
                         }
                         else
                         {                            
-                            isViews.Likes = user;
+                            isViews.Like = user;
                             context.StatisticNews.Update(isViews);
                         }
                         
@@ -63,14 +79,14 @@ namespace news_server.Features.StatisticNews
                     else
                     {
                         isDislike.Dislike = null;
-                        isDislike.Likes = user;
+                        isDislike.Like = user;
                         context.StatisticNews.Update(isDislike);
                         
                     }                    
                 }
                 else
                 {
-                    isLike.Likes = null;
+                    isLike.Like = null;
                     context.StatisticNews.Update(isLike);
                 }
             }
@@ -86,7 +102,7 @@ namespace news_server.Features.StatisticNews
                             {
                                 News = news,
                                 Dislike = user,
-                                Views = user
+                                ViewBy = user
                             });
                         }
                         else
@@ -98,7 +114,7 @@ namespace news_server.Features.StatisticNews
                     }
                     else
                     {
-                        isLike.Likes = null;
+                        isLike.Like = null;
                         isLike.Dislike = user;
                         context.StatisticNews.Update(isLike);                        
                     }

@@ -10,23 +10,30 @@ namespace news_server.Features.StatisticNews
     [Authorize]
     public class StatisticNewsController: ApiController
     {
-        private readonly IStatisticService newsService;
+        private readonly IStatisticService StatisticNewsService;
 
-        public StatisticNewsController(StatisticNewsService newsService)
+        public StatisticNewsController(StatisticNewsService StatisticNewsService)
         {
-            this.newsService = newsService;
+            this.StatisticNewsService = StatisticNewsService;
         }
 
         [HttpPost(nameof(SetLike))]
         public async Task<ActionResult> SetLike(StatisticModel model)
         {
             var username = User.GetUserName();
-            var result = await newsService.SetState(model.ObjectId, username, model.State);
+            var result = await StatisticNewsService.SetState(model.ObjectId, username, model.State);
             if (result)
             {
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public void getst()
+        {
+            StatisticNewsService.GetStatisticById(1);
         }
     }
 }

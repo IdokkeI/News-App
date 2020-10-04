@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Features.News.Models;
+using news_server.Features.StatisticNews;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CNews = news_server.Data.dbModels.News;
 
@@ -10,10 +13,12 @@ namespace news_server.Features.News
     public class NewsService : INewsService
     {
         private readonly NewsDbContext context;
+        private readonly StatisticNewsService statisticNewsService;
 
-        public NewsService(NewsDbContext context)
+        public NewsService(NewsDbContext context, StatisticNewsService statisticNewsService)
         {
             this.context = context;
+            this.statisticNewsService = statisticNewsService;
         }
         public async Task<bool> CreateNews(CreateNewsModel model, string userName)
         {
@@ -41,6 +46,26 @@ namespace news_server.Features.News
                 }                
             }
             return false;
+        }
+
+        public async Task<IEnumerable<GetNewsModel>> GetNews()
+        {
+            var news = await Task.Run(() =>
+            {
+                var count = context.StatisticNews.Where(sn => sn.News.Id == sn.News.Id).Count();
+
+                var news = context.News.Select(n => new GetNewsModel
+                {
+                    NewsId = n.Id,
+                    Photo = n.Photo,
+                    Title = n.Title,
+                    PublishDate = n.PublishOn,
+                    Params = statisticNewsService.GetStatisticById(n.Id) 
+                });
+                return news;
+            });
+
+            return news.ToList();
         }
     }
 }

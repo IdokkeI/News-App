@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Identity.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,7 +79,8 @@ namespace news_server.Features.Identity
                     await userManager.AddToRoleAsync(createUser, "user");
                     await context.Profiles.AddAsync(new Profile
                     {
-                        User = createUser
+                        User = createUser,
+                        RegisterOn = DateTime.Now
                     });
                     await context.SaveChangesAsync();
                     return Ok();

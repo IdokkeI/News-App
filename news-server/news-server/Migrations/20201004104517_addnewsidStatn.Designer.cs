@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
 namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class NewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201004104517_addnewsidStatn")]
+    partial class addnewsidStatn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,7 +309,7 @@ namespace news_server.Migrations
                     b.Property<int?>("DislikeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LikeId")
+                    b.Property<int?>("LikesId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -316,7 +318,7 @@ namespace news_server.Migrations
 
                     b.HasIndex("DislikeId");
 
-                    b.HasIndex("LikeId");
+                    b.HasIndex("LikesId");
 
                     b.ToTable("StatisticComments");
                 });
@@ -331,24 +333,24 @@ namespace news_server.Migrations
                     b.Property<int?>("DislikeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LikeId")
+                    b.Property<int?>("LikesId")
                         .HasColumnType("int");
 
                     b.Property<int>("NewsId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ViewById")
+                    b.Property<int?>("ViewsId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DislikeId");
 
-                    b.HasIndex("LikeId");
+                    b.HasIndex("LikesId");
 
                     b.HasIndex("NewsId");
 
-                    b.HasIndex("ViewById");
+                    b.HasIndex("ViewsId");
 
                     b.ToTable("StatisticNews");
                 });
@@ -515,9 +517,9 @@ namespace news_server.Migrations
                         .WithMany()
                         .HasForeignKey("DislikeId");
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "Like")
+                    b.HasOne("news_server.Data.dbModels.Profile", "Likes")
                         .WithMany()
-                        .HasForeignKey("LikeId");
+                        .HasForeignKey("LikesId");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.StatisticNews", b =>
@@ -526,9 +528,9 @@ namespace news_server.Migrations
                         .WithMany()
                         .HasForeignKey("DislikeId");
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "Like")
+                    b.HasOne("news_server.Data.dbModels.Profile", "Likes")
                         .WithMany()
-                        .HasForeignKey("LikeId");
+                        .HasForeignKey("LikesId");
 
                     b.HasOne("news_server.Data.dbModels.News", "News")
                         .WithMany()
@@ -536,9 +538,9 @@ namespace news_server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "ViewBy")
+                    b.HasOne("news_server.Data.dbModels.Profile", "Views")
                         .WithMany()
-                        .HasForeignKey("ViewById");
+                        .HasForeignKey("ViewsId");
                 });
 #pragma warning restore 612, 618
         }

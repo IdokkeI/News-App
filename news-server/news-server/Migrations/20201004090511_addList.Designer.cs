@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using news_server.Data;
 
 namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    partial class NewsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201004090511_addList")]
+    partial class addList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,6 +268,9 @@ namespace news_server.Migrations
                     b.Property<DateTime>("RegisterOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("StatisticNewsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -273,6 +278,8 @@ namespace news_server.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StatisticNewsId");
 
                     b.HasIndex("UserId");
 
@@ -307,7 +314,7 @@ namespace news_server.Migrations
                     b.Property<int?>("DislikeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LikeId")
+                    b.Property<int?>("LikesId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -316,7 +323,7 @@ namespace news_server.Migrations
 
                     b.HasIndex("DislikeId");
 
-                    b.HasIndex("LikeId");
+                    b.HasIndex("LikesId");
 
                     b.ToTable("StatisticComments");
                 });
@@ -331,24 +338,19 @@ namespace news_server.Migrations
                     b.Property<int?>("DislikeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LikeId")
+                    b.Property<int?>("LikesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("NewsId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ViewById")
+                    b.Property<int?>("NewsId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DislikeId");
 
-                    b.HasIndex("LikeId");
+                    b.HasIndex("LikesId");
 
                     b.HasIndex("NewsId");
-
-                    b.HasIndex("ViewById");
 
                     b.ToTable("StatisticNews");
                 });
@@ -500,6 +502,10 @@ namespace news_server.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.Profile", b =>
                 {
+                    b.HasOne("news_server.Data.dbModels.StatisticNews", null)
+                        .WithMany("Views")
+                        .HasForeignKey("StatisticNewsId");
+
                     b.HasOne("news_server.Data.dbModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -515,9 +521,9 @@ namespace news_server.Migrations
                         .WithMany()
                         .HasForeignKey("DislikeId");
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "Like")
+                    b.HasOne("news_server.Data.dbModels.Profile", "Likes")
                         .WithMany()
-                        .HasForeignKey("LikeId");
+                        .HasForeignKey("LikesId");
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.StatisticNews", b =>
@@ -526,19 +532,13 @@ namespace news_server.Migrations
                         .WithMany()
                         .HasForeignKey("DislikeId");
 
-                    b.HasOne("news_server.Data.dbModels.Profile", "Like")
+                    b.HasOne("news_server.Data.dbModels.Profile", "Likes")
                         .WithMany()
-                        .HasForeignKey("LikeId");
+                        .HasForeignKey("LikesId");
 
                     b.HasOne("news_server.Data.dbModels.News", "News")
                         .WithMany()
-                        .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("news_server.Data.dbModels.Profile", "ViewBy")
-                        .WithMany()
-                        .HasForeignKey("ViewById");
+                        .HasForeignKey("NewsId");
                 });
 #pragma warning restore 612, 618
         }
