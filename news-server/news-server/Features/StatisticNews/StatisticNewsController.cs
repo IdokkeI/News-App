@@ -29,11 +29,6 @@ namespace news_server.Features.StatisticNews
             return BadRequest();
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public void getst()
-        {
-            StatisticNewsService.GetStatisticById(1);
-        }
+        
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using news_server.Data;
+using news_server.Features.Comment;
 using news_server.Features.News.Models;
+using news_server.Features.StatisticComment;
 using news_server.Features.StatisticNews;
 using System;
 using System.Collections.Generic;
@@ -14,11 +16,16 @@ namespace news_server.Features.News
     {
         private readonly NewsDbContext context;
         private readonly StatisticNewsService statisticNewsService;
+        private readonly ICommentService commentService;
 
-        public NewsService(NewsDbContext context, StatisticNewsService statisticNewsService)
+        public NewsService(
+            NewsDbContext context, 
+            StatisticNewsService statisticNewsService, 
+            ICommentService commentService)
         {
             this.context = context;
             this.statisticNewsService = statisticNewsService;
+            this.commentService = commentService;
         }
         public async Task<bool> CreateNews(CreateNewsModel model, string userName)
         {
@@ -66,6 +73,22 @@ namespace news_server.Features.News
             });
 
             return news.ToList();
+        }
+
+        public async Task<GetNewsByIdModel> GetNewsById(int newsId)
+        {
+            var comments = await commentService.GetCommentsByNewsId(newsId);
+            var news = await context.News.Where(n => n.Id == newsId).Select(n =>  new GetNewsByIdModel
+            { 
+                NewsId = n.Id,
+                Params = statisticNewsService.GetStatisticById(n.Id),
+                PublishDate = n.PublishOn,
+                Photo = n.Photo,
+                Title = n.Title,
+                Text = n.Text,
+                Comments = comments            
+            }).FirstOrDefaultAsync();
+            return news;
         }
     }
 }

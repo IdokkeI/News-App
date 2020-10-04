@@ -9,7 +9,9 @@ namespace news_server.Data.dbModels
 
         public User User { get; set; }
 
-       public DateTime RegisterOn { get; set; }
+        public string UserId { get; set; }
+
+        public DateTime RegisterOn { get; set; }
 
         public DateTime? LastActiveOn { get; set; }
 

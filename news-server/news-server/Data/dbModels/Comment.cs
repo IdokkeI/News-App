@@ -8,6 +8,8 @@ namespace news_server.Data.dbModels
 
         public Profile Owner { get; set; }
 
+        public int OwnerId { get; set; }
+
         public string Text { get; set; }   
 
         public DateTime DateComment { get; set; }
@@ -17,5 +19,7 @@ namespace news_server.Data.dbModels
         public bool isEdit { get; set; }
 
         public News News { get; set; }
+
+        public int NewsId { get; set; }
     }
 }

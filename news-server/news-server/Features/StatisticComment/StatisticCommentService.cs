@@ -5,8 +5,8 @@ using CProfile = news_server.Data.dbModels.Profile;
 using CComment = news_server.Data.dbModels.Comment;
 using CStatisticComment = news_server.Data.dbModels.StatisticComment;
 using System.Threading.Tasks;
-using news_server.Features.News.Models;
 using news_server.Features.News.SharedStatistic.Models;
+using System.Linq;
 
 namespace news_server.Features.StatisticComment
 {
@@ -21,7 +21,16 @@ namespace news_server.Features.StatisticComment
 
         public Params GetStatisticById(int commentId)
         {
-            throw new System.NotImplementedException();
+            
+            var listComments = context.StatisticComments.Where(sc => sc.Id == commentId).ToList();
+            var countLike = listComments.Where(sc => sc.LikeId != null).ToList().Count;
+            var countDislike = listComments.Where(sc => sc.DislikeId != null).ToList().Count;
+            return new Params
+            {
+                Dislikes = countDislike,
+                Likes = countLike
+                
+            };
         }
 
         public async Task<bool> SetState(int commentId, string username, string state)
