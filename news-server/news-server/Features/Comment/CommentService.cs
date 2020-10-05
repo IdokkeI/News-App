@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using news_server.Data;
+using news_server.Data.dbModels;
 using news_server.Features.Comment.Models;
+using news_server.Features.StatisticComment;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Comment
@@ -9,10 +14,12 @@ namespace news_server.Features.Comment
     public class CommentService: ICommentService
     {
         private readonly NewsDbContext context;
+        private readonly StatisticCommentService statisticCommentService;
 
-        public CommentService(NewsDbContext context)
+        public CommentService(NewsDbContext context, StatisticCommentService statisticCommentService)
         {
             this.context = context;
+            this.statisticCommentService = statisticCommentService;
         }
 
         public async Task<bool> CreateComment(CommentCreateModel model, string userName)
@@ -35,6 +42,24 @@ namespace news_server.Features.Comment
                 return true;
             }
             return false;
+        }        
+
+        public async Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id)
+        {
+            var comments = await context.Comments.Where(c => c.NewsId == Id).Select(c =>
+            
+                new GetCommentsModel
+                {
+                    CommentId = c.Id,
+                    UserName = c.Owner.User.UserName,
+                    Text = c.Text,
+                    DateComment = c.DateComment,
+                    isEdit = c.isEdit,
+                    UserNameTo = c.UserNameTo,
+                    Params = statisticCommentService.GetStatisticById(c.Id)
+                }).ToListAsync();
+            
+            return comments;
         }
     }
 }

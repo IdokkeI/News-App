@@ -4,7 +4,9 @@ namespace news_server.Data.dbModels.Shared
 {
     public class StatisticBase
     {
-        public Profile Likes { get; set; }
+        public int? LikeId { get; set; }
+        public int? DislikeId { get; set; }
+        public Profile Like { get; set; }
         public Profile Dislike { get; set; }
     }
 }

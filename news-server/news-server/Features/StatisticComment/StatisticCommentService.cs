@@ -5,6 +5,8 @@ using CProfile = news_server.Data.dbModels.Profile;
 using CComment = news_server.Data.dbModels.Comment;
 using CStatisticComment = news_server.Data.dbModels.StatisticComment;
 using System.Threading.Tasks;
+using news_server.Features.News.SharedStatistic.Models;
+using System.Linq;
 
 namespace news_server.Features.StatisticComment
 {
@@ -15,6 +17,19 @@ namespace news_server.Features.StatisticComment
         public StatisticCommentService(NewsDbContext context)
         {
             this.context = context;
+        }
+
+        public Params GetStatisticById(int commentId)
+        {            
+            var listComments = context.StatisticComments.Where(sc => sc.Id == commentId).ToList();
+            var countLike = listComments.Where(sc => sc.LikeId != null).ToList().Count;
+            var countDislike = listComments.Where(sc => sc.DislikeId != null).ToList().Count;
+            return new Params
+            {
+                Dislikes = countDislike,
+                Likes = countLike
+                
+            };
         }
 
         public async Task<bool> SetState(int commentId, string username, string state)
@@ -35,7 +50,7 @@ namespace news_server.Features.StatisticComment
         private async Task SetState(CProfile user, CComment comment, string state)
         {
 
-            var isLike = await context.StatisticComments.FirstOrDefaultAsync(sc => sc.Likes == user && sc.Comment == comment);
+            var isLike = await context.StatisticComments.FirstOrDefaultAsync(sc => sc.Like == user && sc.Comment == comment);
             var isDislike = await context.StatisticComments.FirstOrDefaultAsync(sc => sc.Dislike == user && sc.Comment == comment);
 
             if (state == "like")
@@ -47,13 +62,13 @@ namespace news_server.Features.StatisticComment
                         await context.StatisticComments.AddAsync(new CStatisticComment
                         {
                             Comment = comment,
-                            Likes = user
+                            Like = user
                         });
                     }
                     else
                     {
                         isDislike.Dislike = null;
-                        isDislike.Likes = user;
+                        isDislike.Like = user;
                         context.StatisticComments.Update(isDislike);                        
                     }
                 }
@@ -76,7 +91,7 @@ namespace news_server.Features.StatisticComment
                     }
                     else
                     {
-                        isLike.Likes = null;
+                        isLike.Like = null;
                         isLike.Dislike = user;
                         context.StatisticComments.Update(isLike);                        
                     }

@@ -18,6 +18,14 @@
     <Compile Remove="Migrations\20201002162523_updProfile.Designer.cs" />
     <Compile Remove="Migrations\20201002163951_upd commen.cs" />
     <Compile Remove="Migrations\20201002163951_upd commen.Designer.cs" />
+    <Compile Remove="Migrations\20201004105903_AddIdStatBase.cs" />
+    <Compile Remove="Migrations\20201004105903_AddIdStatBase.Designer.cs" />
+    <Compile Remove="Migrations\20201004110426_addViewById.cs" />
+    <Compile Remove="Migrations\20201004110426_addViewById.Designer.cs" />
+    <Compile Remove="Migrations\20201004162632_updateDbId.cs" />
+    <Compile Remove="Migrations\20201004162632_updateDbId.Designer.cs" />
+    <Compile Remove="Migrations\20201004162950_updDbId.cs" />
+    <Compile Remove="Migrations\20201004162950_updDbId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
