@@ -20,8 +20,7 @@ namespace news_server.Features.StatisticComment
         }
 
         public Params GetStatisticById(int commentId)
-        {
-            
+        {            
             var listComments = context.StatisticComments.Where(sc => sc.Id == commentId).ToList();
             var countLike = listComments.Where(sc => sc.LikeId != null).ToList().Count;
             var countDislike = listComments.Where(sc => sc.DislikeId != null).ToList().Count;

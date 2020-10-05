@@ -27,6 +27,7 @@ namespace news_server.Features.News
             this.statisticNewsService = statisticNewsService;
             this.commentService = commentService;
         }
+
         public async Task<bool> CreateNews(CreateNewsModel model, string userName)
         {
             var titleExist = await context.News.FirstOrDefaultAsync(n => n.Title == model.Title);
@@ -56,23 +57,17 @@ namespace news_server.Features.News
         }
 
         public async Task<IEnumerable<GetNewsModel>> GetNews()
-        {
-            var news = await Task.Run(() =>
+        {           
+            var count = context.StatisticNews.Where(sn => sn.News.Id == sn.News.Id).Count();
+            var news = await context.News.Select(n => new GetNewsModel
             {
-                var count = context.StatisticNews.Where(sn => sn.News.Id == sn.News.Id).Count();
-
-                var news = context.News.Select(n => new GetNewsModel
-                {
-                    NewsId = n.Id,
-                    Photo = n.Photo,
-                    Title = n.Title,
-                    PublishDate = n.PublishOn,
-                    Params = statisticNewsService.GetStatisticById(n.Id) 
-                });
-                return news;
-            });
-
-            return news.ToList();
+                NewsId = n.Id,
+                Photo = n.Photo,
+                Title = n.Title,
+                PublishDate = n.PublishOn,
+                Params = statisticNewsService.GetStatisticById(n.Id) 
+            }).ToListAsync();
+            return news;            
         }
 
         public async Task<GetNewsByIdModel> GetNewsById(int newsId)

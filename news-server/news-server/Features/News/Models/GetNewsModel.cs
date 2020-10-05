@@ -1,4 +1,4 @@
-﻿using news_server.Features.News.SharedStatistic.Models;
+﻿using news_server.Features.SharedStatistic.Models;
 using System;
 
 namespace news_server.Features.News.Models

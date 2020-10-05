@@ -1,11 +1,8 @@
-﻿namespace news_server.Features.News.SharedStatistic.Models
+﻿using news_server.Features.News.SharedStatistic.Models;
+
+namespace news_server.Features.SharedStatistic.Models
 {
-    public class Params
+    public class Params: ParamsNews
     {
-        public int Likes { get; set; }
-
-        public int Dislikes { get; set; }
-
-        public int Views { get; set; }
     }
 }

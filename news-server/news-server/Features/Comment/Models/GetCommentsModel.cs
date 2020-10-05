@@ -1,4 +1,4 @@
-﻿using news_server.Features.News.SharedStatistic.Models;
+﻿using news_server.Features.SharedStatistic.Models;
 using System;
 
 namespace news_server.Features.Comment.Models
@@ -11,6 +11,6 @@ namespace news_server.Features.Comment.Models
         public DateTime DateComment { get; set; }
         public string UserNameTo { get; set; }
         public bool isEdit { get; set; }
-        public Params Params { get; set; }
+        public ParamsComment Params { get; set; }
     }
 }

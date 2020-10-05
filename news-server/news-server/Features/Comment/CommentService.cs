@@ -42,14 +42,7 @@ namespace news_server.Features.Comment
                 return true;
             }
             return false;
-        }
-
-        //public string GetUserName(int ownerId)
-        //{
-        //    var profile = context.Profiles.FirstOrDefault(p => p.Id == ownerId);
-        //    var username = context.Users.FirstOrDefault(u => u.Id == profile.UserId).UserName;
-        //    return username;
-        //}
+        }        
 
         public async Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id)
         {
@@ -59,7 +52,6 @@ namespace news_server.Features.Comment
                 {
                     CommentId = c.Id,
                     UserName = c.Owner.User.UserName,
-                    //UserName = GetUserName(c.OwnerId),
                     Text = c.Text,
                     DateComment = c.DateComment,
                     isEdit = c.isEdit,
