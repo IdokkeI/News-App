@@ -12,6 +12,7 @@ using news_server.Features.News;
 using news_server.Features.Comment;
 using news_server.Features.StatisticNews;
 using news_server.Features.StatisticComment;
+using news_server.Features.Admin;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -86,6 +87,7 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<StatisticNewsService>();
             services.AddTransient<StatisticCommentService>();
+            services.AddTransient<IAdminService, AdminService>();
             return services;
         }
     }
