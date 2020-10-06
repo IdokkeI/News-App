@@ -2,7 +2,6 @@
 using news_server.Data;
 using news_server.Features.Comment;
 using news_server.Features.News.Models;
-using news_server.Features.StatisticComment;
 using news_server.Features.StatisticNews;
 using System;
 using System.Collections.Generic;
@@ -58,7 +57,6 @@ namespace news_server.Features.News
 
         public async Task<IEnumerable<GetNewsModel>> GetNews()
         {           
-            var count = context.StatisticNews.Where(sn => sn.News.Id == sn.News.Id).Count();
             var news = await context.News.Select(n => new GetNewsModel
             {
                 NewsId = n.Id,
