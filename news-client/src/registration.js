@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import './Style/Enter.css'
+import './Style/Enter.scss'
 
 
 class Registration extends Component {
@@ -84,12 +84,7 @@ class Registration extends Component {
                   value={this.state.password}
                   onChange={this.handleUserInput} />
               </div>
-              <div className="form_field">
-                <label htmlFor="password_field" className="form_field_lable"> Пароль еще раз</label>
-                <input type="password" className="form_field_input" name="password" placeholder="Password"
-                  value={this.state.password}
-                  onChange={this.handleUserInput} />
-              </div>
+              
               <div className="form_buttom">
                 <button type="submit" className="button button-primary" onClick={this.handleClick}>Регистрация</button>
                 <div className="form_buttom_back">
