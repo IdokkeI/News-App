@@ -13,6 +13,7 @@ using news_server.Features.Comment;
 using news_server.Features.StatisticNews;
 using news_server.Features.StatisticComment;
 using news_server.Features.Admin;
+using news_server.Features.Moderator;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -88,6 +89,7 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticNewsService>();
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
+            services.AddScoped<IModeratorService, ModeratorService>();
             return services;
         }
     }
