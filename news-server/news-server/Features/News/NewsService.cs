@@ -27,6 +27,7 @@ namespace news_server.Features.News
             this.commentService = commentService;
         }
 
+
         public async Task<bool> CreateNews(CreateNewsModel model, string userName)
         {
             var titleExist = await context.News.FirstOrDefaultAsync(n => n.Title == model.Title);
@@ -57,7 +58,7 @@ namespace news_server.Features.News
 
         public async Task<IEnumerable<GetNewsModel>> GetNews()
         {           
-            var news = await context.News.Select(n => new GetNewsModel
+            var news = await context.News.Where(n => n.isAproove).Select(n => new GetNewsModel
             {
                 NewsId = n.Id,
                 Photo = n.Photo,
@@ -71,7 +72,7 @@ namespace news_server.Features.News
         public async Task<GetNewsByIdModel> GetNewsById(int newsId)
         {
             var comments = await commentService.GetCommentsByNewsId(newsId);
-            var news = await context.News.Where(n => n.Id == newsId).Select(n =>  new GetNewsByIdModel
+            var news = await context.News.Where(n => n.Id == newsId && n.isAproove).Select(n =>  new GetNewsByIdModel
             { 
                 NewsId = n.Id,
                 Params = statisticNewsService.GetStatisticById(n.Id),
