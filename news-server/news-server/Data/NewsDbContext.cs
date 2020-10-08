@@ -20,13 +20,6 @@ namespace news_server.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder
-                .Entity<News>()
-                .HasQueryFilter(n => n.isAproove);
-
-            base.OnModelCreating(builder);
-        }
+       
     }
 }
