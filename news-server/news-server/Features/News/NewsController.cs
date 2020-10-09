@@ -46,10 +46,14 @@ namespace news_server.Features.News
 
         [Produces("application/json")]
         [HttpGet(nameof(GetNewsById))]
-        public async Task<GetNewsByIdModel> GetNewsById(int newsId)
+        public async Task<ActionResult> GetNewsById(int newsId)
         {
             var news = await newsService.GetNewsById(newsId);
-            return news;
+            if (news != null)
+            {
+                return Ok(news);
+            }
+            return NotFound();
         }
     }
 }
