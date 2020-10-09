@@ -18,7 +18,7 @@ namespace news_server.Features.Comment
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(Banfilter))]
+        [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateComment(CommentCreateModel model)
         {
             var username = User.GetUserName();
