@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿using Microsoft.AspNetCore.Builder;
+=======
+using Microsoft.AspNetCore.Builder;
+>>>>>>> 457d37408b55aba5ecc45fc68bf7b9c934e7310e
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using news_server.Data;

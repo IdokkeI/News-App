@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
-import './Style/Enter.scss'
+import '../Style/Login.scss'
 
 
 class Enter extends Component {
