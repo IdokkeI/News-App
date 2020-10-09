@@ -88,6 +88,11 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticNewsService>();
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
+<<<<<<< Updated upstream
+=======
+            services.AddScoped<IModeratorService, ModeratorService>();
+            services.AddScoped<BanFilter>();
+>>>>>>> Stashed changes
             return services;
         }
     }

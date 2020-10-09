@@ -19,6 +19,7 @@ namespace news_server.Features.News
 
         [Authorize]
         [HttpPost(nameof(CreateNews))]
+        [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
         {
             var userName = User.GetUserName();
