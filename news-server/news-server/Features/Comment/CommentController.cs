@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using news_server.Features.Comment.Models;
 using news_server.Infrastructure.Extensions;
+using news_server.Infrastructure.Filter;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Comment
@@ -17,6 +18,7 @@ namespace news_server.Features.Comment
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateComment(CommentCreateModel model)
         {
             var username = User.GetUserName();

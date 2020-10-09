@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using news_server.Features.News.Models;
 using news_server.Infrastructure.Extensions;
+using news_server.Infrastructure.Filter;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace news_server.Features.News
 
         [Authorize]
         [HttpPost(nameof(CreateNews))]
+        [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
         {
             var userName = User.GetUserName();

@@ -14,6 +14,7 @@ using news_server.Features.StatisticNews;
 using news_server.Features.StatisticComment;
 using news_server.Features.Admin;
 using news_server.Features.Moderator;
+using news_server.Infrastructure.Filter;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -90,6 +91,7 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddScoped<IModeratorService, ModeratorService>();
+            services.AddScoped<BanFilter>();
             return services;
         }
     }

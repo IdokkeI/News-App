@@ -1,8 +1,5 @@
-<<<<<<< HEAD
+
 ﻿using Microsoft.AspNetCore.Builder;
-=======
-using Microsoft.AspNetCore.Builder;
->>>>>>> 457d37408b55aba5ecc45fc68bf7b9c934e7310e
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using news_server.Data;
@@ -29,10 +26,13 @@ namespace news_server.Infrastructure.MiddleWare
                 var username = httpcontext.User.GetUserName();
                 var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == username);
                 var profile = await context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id && !p.isBaned);
-
-                profile.LastActiveOn = DateTime.Now;
-                context.Profiles.Update(profile);
-                await context.SaveChangesAsync();
+                if (profile != null)
+                {
+                    profile.LastActiveOn = DateTime.Now;
+                    context.Profiles.Update(profile);
+                    await context.SaveChangesAsync();
+                }
+              
             }
 
             await next.Invoke(httpcontext);
