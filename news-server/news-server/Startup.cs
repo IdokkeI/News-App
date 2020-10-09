@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using news_server.Infrastructure.Extensions;
-using news_server.Infrastructure.Filter;
 using news_server.Infrastructure.MiddleWare;
 
 namespace news_server
