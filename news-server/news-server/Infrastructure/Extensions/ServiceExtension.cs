@@ -92,6 +92,7 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<IAdminService, AdminService>();
             services.AddScoped<IModeratorService, ModeratorService>();
             services.AddScoped<BanFilter>();
+            
             return services;
         }
     }
