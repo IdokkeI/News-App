@@ -266,9 +266,6 @@ namespace news_server.Migrations
                     b.Property<DateTime>("RegisterOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SubscriptionsProfileId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -276,8 +273,6 @@ namespace news_server.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SubscriptionsProfileId");
 
                     b.HasIndex("UserId");
 
@@ -360,17 +355,20 @@ namespace news_server.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.Subscriptions", b =>
                 {
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ProfileId1")
+                    b.Property<int>("ProfileId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProfileId");
+                    b.Property<int>("ProfileIdSub")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ProfileId1");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -526,10 +524,6 @@ namespace news_server.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.Profile", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.Subscriptions", null)
-                        .WithMany("Subs")
-                        .HasForeignKey("SubscriptionsProfileId");
-
                     b.HasOne("news_server.Data.dbModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -575,7 +569,7 @@ namespace news_server.Migrations
                 {
                     b.HasOne("news_server.Data.dbModels.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("ProfileId1")
+                        .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

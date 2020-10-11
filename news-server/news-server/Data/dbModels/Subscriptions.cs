@@ -5,9 +5,11 @@ namespace news_server.Data.dbModels
 {
     public class Subscriptions
     {
-        [Key]
+        public int Id { get; set; }
+
         public int ProfileId { get; set; }
         public Profile Profile { get; set; }
-        public List<Profile> Subs { get; set; }
+
+        public int ProfileIdSub{ get; set; }
     }
 }
