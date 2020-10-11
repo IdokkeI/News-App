@@ -21,6 +21,6 @@ namespace news_server.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Subscriptions> Subscriptions { get; set; }
 
-
+       
     }
 }

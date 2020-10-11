@@ -15,6 +15,7 @@ using news_server.Features.StatisticComment;
 using news_server.Features.Admin;
 using news_server.Features.Moderator;
 using news_server.Infrastructure.Filter;
+using news_server.Features.Subscriber;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -92,6 +93,7 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<IAdminService, AdminService>();
             services.AddScoped<IModeratorService, ModeratorService>();
             services.AddScoped<BanFilter>();
+            services.AddTransient<ISubService, SubService>();
             
             return services;
         }
