@@ -1,5 +1,4 @@
 ﻿using news_server.Data.dbModels.Shared;
-using System.Collections.Generic;
 
 namespace news_server.Data.dbModels
 {
@@ -14,5 +13,7 @@ namespace news_server.Data.dbModels
         public Profile ViewBy { get; set; }
 
         public int? ViewById { get; set; }
+
+        public bool IsNotifyed { get; set; }
     }
 }

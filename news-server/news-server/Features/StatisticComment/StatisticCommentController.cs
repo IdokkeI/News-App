@@ -23,7 +23,9 @@ namespace news_server.Features.StatisticComment
         public async Task<ActionResult> SetState(StatisticModel model)
         {
             var username = User.GetUserName();
-            var result = await commentService.SetState(model.ObjectId, username, model.State);
+
+            var result = await commentService.SetState(model.ObjectId, username, model.State, string.Empty);
+
             if (result)
             {
                 return Ok();

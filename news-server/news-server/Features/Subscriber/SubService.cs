@@ -18,11 +18,22 @@ namespace news_server.Features.Subscriber
         {
             if (!string.IsNullOrEmpty(state) && state == "sub")
             {
-                var user = await context.Users.FirstOrDefaultAsync(user => user.UserName == username);
-                var ownerProfile = await context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
-                var subProfile = await context.Profiles.FirstOrDefaultAsync(p => p.Id == SubTo);
+                var user = await context
+                    .Users
+                    .FirstOrDefaultAsync(user => user.UserName == username);
 
-                var isExist = await context.Subscriptions.FirstOrDefaultAsync(s => s.ProfileIdSub == SubTo);
+                var ownerProfile = await context
+                    .Profiles
+                    .FirstOrDefaultAsync(p => p.UserId == user.Id);
+
+                var subProfile = await context
+                    .Profiles
+                    .FirstOrDefaultAsync(p => p.Id == SubTo);
+
+
+                var isExist = await context
+                    .Subscriptions
+                    .FirstOrDefaultAsync(s => s.ProfileIdSub == SubTo);
 
                 if (ownerProfile == subProfile)
                 {
@@ -31,11 +42,13 @@ namespace news_server.Features.Subscriber
 
                 if (subProfile != null && isExist == null)
                 {
-                    await context.Subscriptions.AddAsync(new Subscriptions
-                    {
-                        Profile = ownerProfile,
-                        ProfileIdSub = subProfile.Id
-                    });
+                    await context
+                        .Subscriptions
+                        .AddAsync(new Subscriptions
+                        {
+                            Profile = ownerProfile,
+                            ProfileIdSub = subProfile.Id
+                        });
 
                     await context.SaveChangesAsync();
 
@@ -44,11 +57,21 @@ namespace news_server.Features.Subscriber
             }
             else if (!string.IsNullOrEmpty(state) && state == "unsub")
             {
-                var user = await context.Users.FirstOrDefaultAsync(user => user.UserName == username);
-                var ownerProfile = await context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
-                var subProfile = await context.Profiles.FirstOrDefaultAsync(p => p.Id == SubTo);
+                var user = await context
+                    .Users
+                    .FirstOrDefaultAsync(user => user.UserName == username);
 
-                var sub = await context.Subscriptions.FirstOrDefaultAsync(s => s.Profile == ownerProfile && s.ProfileIdSub == subProfile.Id);
+                var ownerProfile = await context
+                    .Profiles
+                    .FirstOrDefaultAsync(p => p.UserId == user.Id);
+
+                var subProfile = await context
+                    .Profiles
+                    .FirstOrDefaultAsync(p => p.Id == SubTo);
+
+                var sub = await context
+                    .Subscriptions
+                    .FirstOrDefaultAsync(s => s.Profile == ownerProfile && s.ProfileIdSub == subProfile.Id);
 
                 if (ownerProfile == subProfile)
                 {
@@ -59,6 +82,7 @@ namespace news_server.Features.Subscriber
                 {
                     return false;
                 }
+
                 context.Subscriptions.Remove(sub);
 
                 await context.SaveChangesAsync();

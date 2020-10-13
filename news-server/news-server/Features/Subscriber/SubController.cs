@@ -23,7 +23,9 @@ namespace news_server.Features.Subscriber
         public async Task<ActionResult> SubscribeState(SubModel model)
         {
             var username = User.GetUserName();
+
             var result = await subService.SubState(model.SubTo, username, model.State);
+
             if (result)
             {
                 return Ok();

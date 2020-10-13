@@ -6,53 +6,95 @@ using CProfile = news_server.Data.dbModels.Profile;
 using CNews = news_server.Data.dbModels.News;
 using news_server.Features.SharedStatistic.Models;
 using System.Linq;
-using news_server.Features.News.SharedStatistic.Models;
+using news_server.Features.Notify;
 
 namespace news_server.Features.StatisticNews
 {
     public class StatisticNewsService : IStatisticService
     {
         private readonly NewsDbContext context;
+        private readonly INotificationService notificationService;
 
-        public StatisticNewsService(NewsDbContext context)
+        public StatisticNewsService(NewsDbContext context, INotificationService notificationService)
         {
             this.context = context;
+            this.notificationService = notificationService;
         }
 
-        public async Task<bool> SetState(int newsId, string username, string state)
+        public async Task<bool> SetState(
+            int newsId, 
+            string username, 
+            string state,  
+            string link)
         {
-            var news = await context.News.FirstOrDefaultAsync(n => n.Id == newsId);
+            var news = await context
+                .News
+                .Include(n => n.Owner)
+                .FirstOrDefaultAsync(n => n.Id == newsId);
+
             if (news != null )
             {
-                var user = await context.Profiles.FirstOrDefaultAsync(p => p.User.UserName == username);
+                var user = await context
+                    .Profiles
+                    .FirstOrDefaultAsync(p => p.User.UserName == username);
                                
-                await SetState(user, news, state);
+                await SetState(user, news, state, link);
                
                 return true;
             }
-
             return false;
         }
 
-        public Params GetStatisticById(int newsId)
+        public async Task<Params> GetStatisticById(int newsId)
         {
-            var countViews = context.StatisticNews.Where(sn => sn.NewsId == newsId).ToList().Count;
-            var listviews = context.StatisticNews.Where(sn => sn.NewsId == newsId).ToList();
-            var countLike = listviews.Where(sn => sn.LikeId != null).ToList().Count;
-            var countDislike = listviews.Where(sn => sn.DislikeId != null).ToList().Count;
+            var countViews = (await context
+                .StatisticNews
+                .Where(sn => sn.NewsId == newsId)
+                .ToListAsync())
+                .Count;
+
+            var listviews = await context
+                .StatisticNews
+                .Where(sn => sn.NewsId == newsId)
+                .ToListAsync();
+
+            var countLike = await Task.Run( () => 
+                listviews
+                    .Where(sn => sn.LikeId != null)
+                    .ToList()
+                    .Count);
+
+            var countDislike = await Task.Run ( () => 
+                listviews
+                    .Where(sn => sn.DislikeId != null)
+                    .ToList()
+                    .Count);
+
             return new Params 
-                { 
-                    Dislikes = countDislike, 
-                    Likes = countLike, 
-                    Views = countViews 
-                };
+            { 
+                Dislikes = countDislike, 
+                Likes = countLike, 
+                Views = countViews 
+            };
         }
 
-        private async Task SetState(CProfile user, CNews news, string state)
+        private async Task SetState(
+            CProfile user, 
+            CNews news, 
+            string state,
+            string link)
         {
-            var isLike = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.Like == user && sn.News == news);
-            var isDislike = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.Dislike == user && sn.News == news);
-            var isViews = await context.StatisticNews.FirstOrDefaultAsync(sn => sn.ViewBy == user && sn.News == news);
+            var isLike = await context
+                .StatisticNews
+                .FirstOrDefaultAsync(sn => sn.Like == user && sn.News == news);
+
+            var isDislike = await context
+                .StatisticNews
+                .FirstOrDefaultAsync(sn => sn.Dislike == user && sn.News == news);
+
+            var isViews = await context
+                .StatisticNews
+                .FirstOrDefaultAsync(sn => sn.ViewBy == user && sn.News == news);
 
             if (state == "like")
             {                
@@ -62,15 +104,31 @@ namespace news_server.Features.StatisticNews
                     {
                         if (isViews == null)
                         {
-                            await context.StatisticNews.AddAsync(new CStatisticNews
+                            await context
+                                .StatisticNews
+                                .AddAsync(new CStatisticNews
+                                {
+                                    News = news,
+                                    Like = user,
+                                    ViewBy = user,
+                                    IsNotifyed = true
+                                });
+
+                            if (user.Id != news.Owner.Id)
                             {
-                                News = news,
-                                Like = user,
-                                ViewBy = user
-                            });
+                                await SetNotificationAsync(user, news, link);
+                            }
+                                
+                                                                                  
                         }
                         else
-                        {                            
+                        {
+                            if (!isViews.IsNotifyed && user.Id != news.Owner.Id)
+                            {
+                                await SetNotificationAsync(user, news, link);
+                                isViews.IsNotifyed = true;
+                            }
+                            
                             isViews.Like = user;
                             context.StatisticNews.Update(isViews);
                         }
@@ -78,6 +136,12 @@ namespace news_server.Features.StatisticNews
                     }
                     else
                     {
+                        if (!isDislike.IsNotifyed && user.Id != news.Owner.Id)
+                        {
+                            await SetNotificationAsync(user, news, link);
+                            isDislike.IsNotifyed = true;
+                        }
+                        
                         isDislike.Dislike = null;
                         isDislike.Like = user;
                         context.StatisticNews.Update(isDislike);
@@ -98,12 +162,14 @@ namespace news_server.Features.StatisticNews
                     {
                         if (isViews == null)
                         {
-                            await context.StatisticNews.AddAsync(new CStatisticNews
-                            {
-                                News = news,
-                                Dislike = user,
-                                ViewBy = user
-                            });
+                            await context
+                                .StatisticNews
+                                .AddAsync(new CStatisticNews
+                                {
+                                    News = news,
+                                    Dislike = user,
+                                    ViewBy = user
+                                });
                         }
                         else
                         {
@@ -124,9 +190,33 @@ namespace news_server.Features.StatisticNews
                     isDislike.Dislike = null;
                     context.StatisticNews.Update(isDislike);
                 }
-            }          
-
+            }
+            else if (state == "view")
+            {
+                if (isViews == null)
+                {
+                    await context
+                        .StatisticNews
+                        .AddAsync(new CStatisticNews
+                        {
+                            News = news,
+                            Like = null,
+                            ViewBy = user
+                        });
+                }
+            }
             await context.SaveChangesAsync();
+        }
+
+        private async Task SetNotificationAsync(CProfile user, CNews news, string link)
+        {
+            var profileFromName = user.User.UserName;
+            var profilFrom = user.Id;
+            var profileTo = news.Owner;
+            var text = $"Пользователь {profileFromName} оценил вашу <alt>";
+            var alt = "статью";
+
+            await notificationService.AddNotification(profileTo, profilFrom, text, link, alt);
         }
     }
 }
