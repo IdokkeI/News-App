@@ -16,13 +16,22 @@ namespace news_server
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var scoped = host.Services.CreateScope())
+            using ( var scoped = host.Services.CreateScope() )
             {
-                var db = scoped.ServiceProvider.GetRequiredService<NewsDbContext>();                
+                var db = scoped
+                    .ServiceProvider
+                    .GetRequiredService<NewsDbContext>();   
+                
                 db.Database.Migrate();
 
-                var userManager = scoped.ServiceProvider.GetRequiredService<UserManager<User>>();
-                var roleManager = scoped.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scoped
+                    .ServiceProvider
+                    .GetRequiredService<UserManager<User>>();
+
+                var roleManager = scoped
+                    .ServiceProvider
+                    .GetRequiredService<RoleManager<IdentityRole>>();
+
                 await Seeder.Seed(userManager, roleManager);
             }
             host.Run();

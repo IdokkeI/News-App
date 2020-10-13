@@ -20,12 +20,25 @@ namespace news_server.Infrastructure.MiddleWare
 
         public async Task InvokeAsync(HttpContext httpcontext, NewsDbContext context)
         {
-            var authHeader = httpcontext.Request.Headers.ContainsKey("Authorization");
+            var authHeader = httpcontext
+                .Request
+                .Headers
+                .ContainsKey("Authorization");
+
             if (authHeader)
             {
-                var username = httpcontext.User.GetUserName();
-                var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == username);
-                var profile = await context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id && !p.isBaned);
+                var username = httpcontext
+                    .User
+                    .GetUserName();
+
+                var user = await context
+                    .Users
+                    .FirstOrDefaultAsync(u => u.UserName == username);
+
+                var profile = await context
+                    .Profiles
+                    .FirstOrDefaultAsync(p => p.UserId == user.Id && !p.isBaned);
+
                 if (profile != null)
                 {
                     profile.LastActiveOn = DateTime.Now;
@@ -34,7 +47,6 @@ namespace news_server.Infrastructure.MiddleWare
                 }
               
             }
-
             await next.Invoke(httpcontext);
         }
     }

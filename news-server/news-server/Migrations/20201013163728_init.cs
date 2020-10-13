@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace news_server.Migrations
 {
-    public partial class update : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -174,8 +174,7 @@ namespace news_server.Migrations
                     UserId = table.Column<string>(nullable: true),
                     RegisterOn = table.Column<DateTime>(nullable: false),
                     LastActiveOn = table.Column<DateTime>(nullable: true),
-                    isBaned = table.Column<bool>(nullable: false),
-                    SubscriptionsId = table.Column<int>(nullable: true)
+                    isBaned = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -227,20 +226,23 @@ namespace news_server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserNameTo = table.Column<string>(nullable: true),
+                    ProfileIdFrom = table.Column<int>(nullable: false),
                     NotificationText = table.Column<string>(nullable: true),
-                    OwnerId = table.Column<int>(nullable: true),
+                    Url = table.Column<string>(nullable: true),
+                    Alt = table.Column<string>(nullable: true),
+                    ProfileId = table.Column<int>(nullable: false),
+                    CommentId = table.Column<int>(nullable: true),
                     NotificationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notifications_Profiles_OwnerId",
-                        column: x => x.OwnerId,
+                        name: "FK_Notifications_Profiles_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "Profiles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -249,7 +251,8 @@ namespace news_server.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProfileId = table.Column<int>(nullable: false)
+                    ProfileId = table.Column<int>(nullable: false),
+                    ProfileIdSub = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -301,7 +304,8 @@ namespace news_server.Migrations
                     LikeId = table.Column<int>(nullable: true),
                     DislikeId = table.Column<int>(nullable: true),
                     NewsId = table.Column<int>(nullable: false),
-                    ViewById = table.Column<int>(nullable: true)
+                    ViewById = table.Column<int>(nullable: true),
+                    IsNotifyed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -425,14 +429,9 @@ namespace news_server.Migrations
                 column: "SectionsNameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_OwnerId",
+                name: "IX_Notifications_ProfileId",
                 table: "Notifications",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profiles_SubscriptionsId",
-                table: "Profiles",
-                column: "SubscriptionsId");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
@@ -478,26 +477,10 @@ namespace news_server.Migrations
                 name: "IX_Subscriptions_ProfileId",
                 table: "Subscriptions",
                 column: "ProfileId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Profiles_Subscriptions_SubscriptionsId",
-                table: "Profiles",
-                column: "SubscriptionsId",
-                principalTable: "Subscriptions",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Profiles_AspNetUsers_UserId",
-                table: "Profiles");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Subscriptions_Profiles_ProfileId",
-                table: "Subscriptions");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -523,6 +506,9 @@ namespace news_server.Migrations
                 name: "StatisticNews");
 
             migrationBuilder.DropTable(
+                name: "Subscriptions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -532,16 +518,13 @@ namespace news_server.Migrations
                 name: "News");
 
             migrationBuilder.DropTable(
+                name: "Profiles");
+
+            migrationBuilder.DropTable(
                 name: "SectionsNames");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Profiles");
-
-            migrationBuilder.DropTable(
-                name: "Subscriptions");
         }
     }
 }

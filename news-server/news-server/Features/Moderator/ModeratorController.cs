@@ -24,7 +24,14 @@ namespace news_server.Features.Moderator
         [HttpPost(nameof(ApproveNews))]
         public async Task<ActionResult> ApproveNews(int newsId)
         {
-            var result = await moderatorService.ApprooveNews(newsId);
+            string link = Url
+                   .Action(
+                       "GetNewsById",
+                       "News",
+                       new { newsId = newsId },
+                    protocol: HttpContext.Request.Scheme);
+
+            var result = await moderatorService.ApprooveNews(newsId, link);
             if (result)
             {
                 return Ok();

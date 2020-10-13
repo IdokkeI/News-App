@@ -37,14 +37,22 @@ namespace news_server.Features.Admin
         public async Task<List<GetUser>> GetModerators()
         {
             var moderators = await userManager.GetUsersInRoleAsync("moderator");
-            var result = moderators.Select(m => new GetUser { UserName = m.UserName }).ToList();
+
+            var result = moderators
+                .Select(m => new GetUser { UserName = m.UserName })
+                .ToList();
+
             return result;
         }
 
         public async Task<List<GetUser>> GetUsers()
         {
             var users = await userManager.GetUsersInRoleAsync("user");
-            var result = await Task.Run( () => users.Select(u => new GetUser { UserName = u.UserName }).ToList() );
+
+            var result = await Task.Run( () => 
+                users
+                .Select(u => new GetUser { UserName = u.UserName })
+                .ToList() );
            
             return result;
         }
@@ -52,10 +60,12 @@ namespace news_server.Features.Admin
         public async Task<bool> SetModerator(string username)
         {
             var user = await userManager.FindByNameAsync(username);
+
             if (user != null)
             {
                 var resultAdd = await userManager.AddToRoleAsync(user, "moderator");
                 var resultDel = await userManager.RemoveFromRoleAsync(user, "user");
+
                 if (resultAdd.Succeeded && resultDel.Succeeded)
                 {
                     return true;

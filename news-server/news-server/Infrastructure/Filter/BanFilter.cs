@@ -19,9 +19,19 @@ namespace news_server.Infrastructure.Filter
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var username = context.HttpContext.User.GetUserName();
-            var user = await this.context.Users.FirstOrDefaultAsync(u => u.UserName == username);
-            var profile = await this.context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id && p.isBaned);
+            var username = context
+                .HttpContext
+                .User
+                .GetUserName();
+
+            var user = await this.context
+                .Users
+                .FirstOrDefaultAsync(u => u.UserName == username);
+
+            var profile = await this.context
+                .Profiles
+                .FirstOrDefaultAsync(p => p.UserId == user.Id && p.isBaned);
+
             if (profile != null)
             {
                 var date = user.LockoutEnd;

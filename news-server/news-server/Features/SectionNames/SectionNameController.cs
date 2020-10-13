@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.SectionNames.Models;
@@ -22,13 +23,18 @@ namespace news_server.Features.SectionNames
         {
             if (ModelState.IsValid)
             {
-                var SectionName = context.SectionsNames.FirstOrDefault(sn => sn.SectionName == model.SectionName);
+                var SectionName = await context
+                    .SectionsNames
+                    .FirstOrDefaultAsync(sn => sn.SectionName == model.SectionName);
+
                 if (SectionName == null)
                 {
                     await context
                          .SectionsNames
                          .AddAsync(new SectionsName { SectionName = model.SectionName });
+
                     await context.SaveChangesAsync();
+
                     return Ok();
                 }
                 else

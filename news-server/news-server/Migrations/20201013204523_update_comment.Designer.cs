@@ -10,8 +10,8 @@ using news_server.Data;
 namespace news_server.Migrations
 {
     [DbContext(typeof(NewsDbContext))]
-    [Migration("20201011113405_fix")]
-    partial class fix
+    [Migration("20201013204523_update_comment")]
+    partial class update_comment
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -159,6 +159,9 @@ namespace news_server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("CommentIdTo")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateComment")
                         .HasColumnType("datetime2");
 
@@ -236,21 +239,30 @@ namespace news_server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Alt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("NotificationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NotificationText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OwnerId")
+                    b.Property<int>("ProfileId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserNameTo")
+                    b.Property<int>("ProfileIdFrom")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Notifications");
                 });
@@ -332,6 +344,9 @@ namespace news_server.Migrations
 
                     b.Property<int?>("DislikeId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsNotifyed")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LikeId")
                         .HasColumnType("int");
@@ -509,7 +524,7 @@ namespace news_server.Migrations
             modelBuilder.Entity("news_server.Data.dbModels.News", b =>
                 {
                     b.HasOne("news_server.Data.dbModels.Profile", "Owner")
-                        .WithMany()
+                        .WithMany("News")
                         .HasForeignKey("OwnerId");
 
                     b.HasOne("news_server.Data.dbModels.SectionsName", "SectionsName")
@@ -519,9 +534,11 @@ namespace news_server.Migrations
 
             modelBuilder.Entity("news_server.Data.dbModels.Notification", b =>
                 {
-                    b.HasOne("news_server.Data.dbModels.Profile", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
+                    b.HasOne("news_server.Data.dbModels.Profile", "Profile")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("news_server.Data.dbModels.Profile", b =>

@@ -14,18 +14,23 @@ namespace news_server.Data.Seeder
 
             if (userRoleResult == null)
             {
-                await roleManager.CreateAsync(new IdentityRole { Name = "user" });
+                await roleManager
+                    .CreateAsync(new IdentityRole { Name = "user" });
             }
             if (moderatorRoleResult == null)
             {
-                await roleManager.CreateAsync(new IdentityRole { Name = "moderator" });
+                await roleManager
+                    .CreateAsync(new IdentityRole { Name = "moderator" });
             }
             if (adminRoleResult == null)
             {
-                await roleManager.CreateAsync(new IdentityRole { Name = "admin" });
+                await roleManager
+                    .CreateAsync(new IdentityRole { Name = "admin" });
             }
 
-            var userResult = await userManager.FindByNameAsync("admin");
+            var userResult = await userManager
+                .FindByNameAsync("admin");
+
             if (userResult == null)
             {
                 var admin = new User
@@ -33,8 +38,11 @@ namespace news_server.Data.Seeder
                     UserName = "admin",
                     Email = "admin@mail.ru"
                 };
-                await userManager.CreateAsync(admin, "1236985Admin");
-                await userManager.AddToRoleAsync(admin, "admin");
+                await userManager
+                    .CreateAsync(admin, "1236985Admin");
+
+                await userManager
+                    .AddToRoleAsync(admin, "admin");
             }
         }
     }

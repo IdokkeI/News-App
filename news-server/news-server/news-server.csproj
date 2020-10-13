@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Data\Migrations\**" />
+    <Compile Remove="Features\Moderator\Models\**" />
     <Content Remove="Data\Migrations\**" />
+    <Content Remove="Features\Moderator\Models\**" />
     <EmbeddedResource Remove="Data\Migrations\**" />
+    <EmbeddedResource Remove="Features\Moderator\Models\**" />
     <None Remove="Data\Migrations\**" />
+    <None Remove="Features\Moderator\Models\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,10 +24,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Moderator\Models\" />
   </ItemGroup>
 
 </Project>

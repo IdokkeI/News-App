@@ -18,6 +18,8 @@ namespace news_server.Data.dbModels
 
         public bool isEdit { get; set; }
 
+        public int? CommentIdTo { get; set; }
+
         public News News { get; set; }
 
         public int NewsId { get; set; }
