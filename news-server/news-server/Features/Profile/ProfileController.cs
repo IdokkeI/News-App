@@ -4,21 +4,24 @@ using System.Threading.Tasks;
 
 namespace news_server.Features.Profile
 {
-    //[Authorize]
-    //public class ProfileController: ApiController
-    //{
-    //    private readonly IProfileService profileService;
 
-    //    public ProfileController(IProfileService profileService)
-    //    {
-    //        this.profileService = profileService;
-    //    }
+    [Authorize]
+    public class ProfileController : ApiController
+    {
+        private readonly IProfileService profileService;
 
-    //    [HttpGet(nameof(GetUsers))]
-    //    public async Task<ActionResult> GetUsers()
-    //    {
-    //        var result = await profileService.GetUsers();
-    //        return Ok(result);
-    //    }
-    //}
+        public ProfileController(IProfileService profileService)
+        {
+            this.profileService = profileService;
+        }
+
+        [HttpGet(nameof(GetUserByName))]
+        public async Task<ActionResult> GetUserByName(string username)
+        {
+            var result = await profileService.GetUserByName(username);
+            return Ok(result);
+        }
+
+
+  
 }

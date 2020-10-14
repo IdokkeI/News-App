@@ -6,6 +6,6 @@ namespace news_server.Features.SharedStatistic.Models
     public interface IStatisticService
     {
         Task<bool> SetState(int objId, string username, string state, string link);
-        Task<Params> GetStatisticById(int objId);
+       Params GetStatisticById(int objId);
     }
 }

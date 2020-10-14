@@ -2,19 +2,22 @@
 using news_server.Data;
 using System.Threading.Tasks;
 using news_server.Data.dbModels;
-
+using news_server.Features.Notify;
+using CProfile = news_server.Data.dbModels.Profile;
 namespace news_server.Features.Subscriber
 {
     public class SubService: ISubService
     {
         private readonly NewsDbContext context;
+        private readonly INotificationService notificationService;
 
-        public SubService(NewsDbContext context)
+        public SubService(NewsDbContext context, INotificationService notificationService)
         {
             this.context = context;
+            this.notificationService = notificationService;
         }
 
-        public async Task<bool> SubState(int SubTo, string username, string state)
+        public async Task<bool> SubState(int SubTo, string username, string state, string link)
         {
             if (!string.IsNullOrEmpty(state) && state == "sub")
             {
@@ -24,6 +27,7 @@ namespace news_server.Features.Subscriber
 
                 var ownerProfile = await context
                     .Profiles
+                    .Include(p => p.User)
                     .FirstOrDefaultAsync(p => p.UserId == user.Id);
 
                 var subProfile = await context
@@ -49,6 +53,9 @@ namespace news_server.Features.Subscriber
                             Profile = ownerProfile,
                             ProfileIdSub = subProfile.Id
                         });
+
+                    var profileFrom = ownerProfile.Id;
+                    await SetNotification(subProfile, profileFrom, link);
 
                     await context.SaveChangesAsync();
 
@@ -92,6 +99,15 @@ namespace news_server.Features.Subscriber
             
             return false;          
             
+        }
+
+        private async Task SetNotification(CProfile profileTo, int profileFrom, string link)
+        {
+            var userNameFrom = profileTo.User.UserName;
+            var text = $"Пользователь {userNameFrom} <alt> на вас";
+            var alt = "подписался";
+
+            await notificationService.AddNotification(profileTo, profileFrom, text, link, alt);
         }
     }
 }

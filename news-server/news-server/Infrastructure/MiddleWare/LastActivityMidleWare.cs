@@ -44,8 +44,7 @@ namespace news_server.Infrastructure.MiddleWare
                     profile.LastActiveOn = DateTime.Now;
                     context.Profiles.Update(profile);
                     await context.SaveChangesAsync();
-                }
-              
+                }              
             }
             await next.Invoke(httpcontext);
         }

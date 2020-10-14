@@ -19,24 +19,22 @@ namespace news_server.Features.StatisticComment
             this.context = context;
         }
 
-        public async Task<Params> GetStatisticById(int commentId)
+        public Params GetStatisticById  (int commentId)
         {            
-            var listComments = await context
+            var listComments = context
                 .StatisticComments
                 .Where(sc => sc.Id == commentId)
-                .ToListAsync();
+                .ToList();
 
-            var countLike = await Task.Run ( () =>
-                listComments
+            var countLike = listComments
                     .Where(sc => sc.LikeId != null)
                     .ToList()
-                    .Count);
+                    .Count;
 
-            var countDislike = await Task.Run ( () => 
-                listComments
+            var countDislike = listComments
                 .Where(sc => sc.DislikeId != null)
                 .ToList()
-                .Count);
+                .Count;
 
             return new Params
             {

@@ -1,10 +1,9 @@
-﻿using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace news_server.Features.Subscriber
 {
     public interface ISubService
     {
-        Task<bool> SubState(int SubTo, string username, string state);
+        Task<bool> SubState(int SubTo, string username, string state, string link = null);
     }
 }

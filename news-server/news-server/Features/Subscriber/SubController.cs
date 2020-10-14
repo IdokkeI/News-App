@@ -24,7 +24,14 @@ namespace news_server.Features.Subscriber
         {
             var username = User.GetUserName();
 
-            var result = await subService.SubState(model.SubTo, username, model.State);
+            string link = Url
+                    .Action(
+                        "GetProfileById",
+                        "Profile",
+                        new { profileId = model.SubTo },
+                     protocol: HttpContext.Request.Scheme);
+
+            var result = await subService.SubState(model.SubTo, username, model.State, link);
 
             if (result)
             {
