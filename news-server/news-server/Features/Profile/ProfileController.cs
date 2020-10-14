@@ -21,7 +21,7 @@ namespace news_server.Features.Profile
             var result = await profileService.GetProfileByName(username);
             return Ok(result);
         }
-        
+
         [HttpGet(nameof(GetProfileById))]
         public async Task<ActionResult> GetProfileById(int profileId)
         {
@@ -30,5 +30,5 @@ namespace news_server.Features.Profile
         }
 
 
-  
+    }
 }
