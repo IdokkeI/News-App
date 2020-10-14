@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CProfile = news_server.Data.dbModels.Profile;
 
 namespace news_server.Features.Notify
 {
@@ -57,7 +58,7 @@ namespace news_server.Features.Notify
         }
 
         public async Task AddNotification(
-            Profile profileTo, 
+            CProfile profileTo, 
             int profileFrom, 
             string text,
             string link,

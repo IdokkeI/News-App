@@ -9,5 +9,7 @@ namespace news_server.Features.News
         Task<bool> CreateNews(CreateNewsModel model, string userName);
         Task<IEnumerable<GetNewsModel>> GetNews();
         Task<GetNewsByIdModel> GetNewsById(int newsId);
+        Task<List<GetNewsModel>> GetProfileNewsAsync(int profileId);
+        List<GetNewsModel> GetProfileNews(int profileId);
     }
 }

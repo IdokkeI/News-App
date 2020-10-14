@@ -29,8 +29,8 @@ namespace news_server.Features.Comment
                       new { newsId = model.NewsId },
                    protocol: HttpContext.Request.Scheme);
 
-            var commentId = model.CommentId;
-            var result = await commentService.CreateComment(model, username, link, commentId);
+            var commentIdTo = model.CommentIdTo;
+            var result = await commentService.CreateComment(model, username, link, commentIdTo);
 
             if (result)
             {

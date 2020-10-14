@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CProfile = news_server.Data.dbModels.Profile;
 
 namespace news_server.Features.Comment
 {
@@ -53,7 +54,8 @@ namespace news_server.Features.Comment
                     DateComment = now,
                     Text = model.TextComment,
                     Owner = userProfile,
-                    UserNameTo = model.UsernameAddresTo                    
+                    UserNameTo = model.UsernameAddresTo,
+                    CommentIdTo = model.CommentIdTo
                 });
 
                 if (!string.IsNullOrEmpty(model.UsernameAddresTo))
@@ -66,14 +68,12 @@ namespace news_server.Features.Comment
                             .FirstOrDefaultAsync(u => u.UserName == model.UsernameAddresTo))
                             ?.Id;
 
-                    if (userToId == null)
-                    {
-                        return false;
-                    }
-
                     var profileTo = await context.Profiles.FirstOrDefaultAsync(p => p.UserId == userToId);
-                    
-                    await SetNotificationAsync(profileTo, profileFrom, link, userFromName, commentId);
+
+                    if (profileTo != null)
+                    {
+                        await SetNotificationAsync(profileTo, profileFrom, link, userFromName, commentId);
+                    }     
                 }                
 
                 await context.SaveChangesAsync();
@@ -82,7 +82,7 @@ namespace news_server.Features.Comment
             return false;
         }
 
-        private async Task SetNotificationAsync(Profile profileTo, int profileFrom, string link, string userFromName, int? commentId)
+        private async Task SetNotificationAsync(CProfile profileTo, int profileFrom, string link, string userFromName, int? commentId)
         {
             var text = $"Пользователь {userFromName} ответил на ваш";
             var alt = "комментарий";

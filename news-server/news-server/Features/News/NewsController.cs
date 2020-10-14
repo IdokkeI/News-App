@@ -28,18 +28,19 @@ namespace news_server.Features.News
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
         {
-            var userName = User.GetUserName();
-            var result = await newsService.CreateNews(model, userName);
+            if (ModelState.IsValid)
+            {
+                var userName = User.GetUserName();
+                var result = await newsService.CreateNews(model, userName);
 
-            if (result)
-            {
-                return Ok();
-            }
-            if (ModelState.Count == 0)
-            {
-                ModelState.AddModelError("duplicate", "Заголовок используется");
-                return BadRequest(ModelState);
-            }
+                if (result)
+                {
+                    return Ok();
+                }
+
+                ModelState.AddModelError("errors", "Заголовок используется");
+            }            
+           
             return BadRequest(ModelState);
         }
 

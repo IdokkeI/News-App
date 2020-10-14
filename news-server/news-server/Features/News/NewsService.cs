@@ -6,6 +6,7 @@ using news_server.Features.StatisticNews;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using CNews = news_server.Data.dbModels.News;
 
@@ -27,6 +28,41 @@ namespace news_server.Features.News
             this.commentService = commentService;
         }
 
+        public async Task<List<GetNewsModel>> GetProfileNewsAsync(int profileId)
+        {
+            var result = await context
+                    .News
+                    .Include(n => n.Owner)
+                    .Where(n => n.Owner.Id == profileId)
+                    .Select(n => new GetNewsModel
+                    {
+                        NewsId = n.Id,
+                        Photo = n.Photo,
+                        Title = n.Title,
+                        PublishDate = n.PublishOn,
+                        Params = statisticNewsService.GetStatisticById(n.Id)
+                    })
+                    .ToListAsync();
+            return result;
+        }
+        
+        public List<GetNewsModel> GetProfileNews(int profileId)
+        {
+            var result = context
+                    .News
+                    .Include(n => n.Owner)
+                    .Where(n => n.Owner.Id == profileId)
+                    .Select(n => new GetNewsModel
+                    {
+                        NewsId = n.Id,
+                        Photo = n.Photo,
+                        Title = n.Title,
+                        PublishDate = n.PublishOn,
+                        Params = statisticNewsService.GetStatisticById(n.Id)
+                    })
+                    .ToList();
+            return result;
+        }
 
         public async Task<bool> CreateNews(CreateNewsModel model, string userName)
         {

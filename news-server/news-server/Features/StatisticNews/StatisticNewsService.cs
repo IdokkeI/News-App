@@ -45,30 +45,28 @@ namespace news_server.Features.StatisticNews
             return false;
         }
 
-        public async Task<Params> GetStatisticById(int newsId)
+        public Params GetStatisticById(int newsId)
         {
-            var countViews = (await context
+            var countViews =context
                 .StatisticNews
                 .Where(sn => sn.NewsId == newsId)
-                .ToListAsync())
+                .ToList()
                 .Count;
 
-            var listviews = await context
+            var listviews = context
                 .StatisticNews
                 .Where(sn => sn.NewsId == newsId)
-                .ToListAsync();
+                .ToList();
 
-            var countLike = await Task.Run( () => 
-                listviews
+            var countLike = listviews
                     .Where(sn => sn.LikeId != null)
                     .ToList()
-                    .Count);
+                    .Count;
 
-            var countDislike = await Task.Run ( () => 
-                listviews
+            var countDislike = listviews
                     .Where(sn => sn.DislikeId != null)
                     .ToList()
-                    .Count);
+                    .Count;
 
             return new Params 
             { 
