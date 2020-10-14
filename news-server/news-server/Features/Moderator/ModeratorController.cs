@@ -60,7 +60,7 @@ namespace news_server.Features.Moderator
         public async Task<ActionResult> GetUsers()
         {
             var username = User.GetUserName();
-            var result = await profileService.GetUsers(username);
+            var result = await profileService.GetUserByName(username);
             return Ok(result);
         }
     }
