@@ -22,7 +22,7 @@ namespace news_server.Features.Profile
             this.newsService = newsService;
         }
 
-        public async Task<List<GetUserPmodel>> GetUserByName(string username)
+        public async Task<List<GetUserPmodel>> GetProfileByName(string username)
         {
             var result = await context
                 .Profiles

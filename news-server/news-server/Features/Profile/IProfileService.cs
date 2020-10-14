@@ -7,7 +7,7 @@ namespace news_server.Features.Profile
 {
     public interface IProfileService
     {
-        Task<List<GetUserPmodel>> GetUserByName(string username);
+        Task<List<GetUserPmodel>> GetProfileByName(string username);
         Task<GetProfileById> GetProfileById(int profileId);
     }
 }

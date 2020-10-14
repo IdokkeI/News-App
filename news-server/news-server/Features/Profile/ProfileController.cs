@@ -14,10 +14,17 @@ namespace news_server.Features.Profile
             this.profileService = profileService;
         }
 
-        [HttpGet(nameof(GetUserByName))]
-        public async Task<ActionResult> GetUserByName(string username)
+        [HttpGet(nameof(GetProfileByName))]
+        public async Task<ActionResult> GetProfileByName(string username)
         {
-            var result = await profileService.GetUserByName(username);
+            var result = await profileService.GetProfileByName(username);
+            return Ok(result);
+        }
+        
+        [HttpGet(nameof(GetProfileById))]
+        public async Task<ActionResult> GetProfileById(int profileId)
+        {
+            var result = await profileService.GetProfileById(profileId);
             return Ok(result);
         }
 

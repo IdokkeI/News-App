@@ -32,6 +32,7 @@ namespace news_server.Features.Subscriber
 
                 var subProfile = await context
                     .Profiles
+                    .Include(p => p.User)
                     .FirstOrDefaultAsync(p => p.Id == SubTo);
 
 
@@ -54,8 +55,8 @@ namespace news_server.Features.Subscriber
                             ProfileIdSub = subProfile.Id
                         });
 
-                    var profileFrom = ownerProfile.Id;
-                    await SetNotification(subProfile, profileFrom, link);
+                    
+                    await SetNotification(subProfile, ownerProfile, link);
 
                     await context.SaveChangesAsync();
 
@@ -101,9 +102,10 @@ namespace news_server.Features.Subscriber
             
         }
 
-        private async Task SetNotification(CProfile profileTo, int profileFrom, string link)
+        private async Task SetNotification(CProfile profileTo, CProfile ownerProfile, string link)
         {
-            var userNameFrom = profileTo.User.UserName;
+            var profileFrom = ownerProfile.Id;
+            var userNameFrom = ownerProfile.User.UserName;
             var text = $"Пользователь {userNameFrom} <alt> на вас";
             var alt = "подписался";
 
