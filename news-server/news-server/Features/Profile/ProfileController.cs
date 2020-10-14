@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace news_server.Features.Profile
 {
+
     [Authorize]
     public class ProfileController : ApiController
     {
@@ -29,5 +30,5 @@ namespace news_server.Features.Profile
         }
 
 
-    }
+  
 }

@@ -13,7 +13,7 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='home'>
         <Link to="login" className="enter">Вход</Link>
         <Link to="registration" className="registration" >Регистрация</Link>
       </div>
