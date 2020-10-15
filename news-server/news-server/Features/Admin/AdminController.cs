@@ -14,14 +14,7 @@ namespace news_server.Features.Admin
         {
             this.adminService = adminService;
         }
-
-        [HttpGet(nameof(GetUsers))]
-        [Produces("application/json")]
-        public async Task<ActionResult> GetUsers() 
-        {
-            var result = await adminService.GetUsers();
-            return Ok(result);
-        }
+        
 
         [HttpGet(nameof(GetModerators))]
         [Produces("application/json")]

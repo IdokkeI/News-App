@@ -2,6 +2,8 @@
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Admin.Model;
+using news_server.Features.Notify;
+using news_server.Features.Profile;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,10 +13,17 @@ namespace news_server.Features.Admin
     public class AdminService : IAdminService
     {
         private readonly UserManager<User> userManager;
+        private readonly INotificationService notificationService;
+        private readonly IProfileService profileService;
 
-        public AdminService(UserManager<User> userManager)
+        public AdminService(
+            UserManager<User> userManager, 
+            INotificationService notificationService,
+            IProfileService profileService)
         {
             this.userManager = userManager;
+            this.notificationService = notificationService;
+            this.profileService = profileService;
         }
 
         public async Task<bool> DemoteModerator(string username)
@@ -27,6 +36,12 @@ namespace news_server.Features.Admin
                 var resultAdd = await userManager.AddToRoleAsync(user, "user");
                 if (resultAdd.Succeeded && resultDel.Succeeded)
                 {
+                    var profileToId = (await profileService.GetProfileByUserName(user.UserName)).ProfileId;
+                    var profileTo = await profileService.GetSimpleProfileById(profileToId);
+                    var profileFrom = -1;
+                    var text = "У вас забрали права модератора";
+                    await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
+
                     return true;
                 }                
             }
@@ -45,18 +60,6 @@ namespace news_server.Features.Admin
             return result;
         }
 
-        public async Task<List<GetUser>> GetUsers()
-        {
-            var users = await userManager.GetUsersInRoleAsync("user");
-
-            var result = await Task.Run( () => 
-                users
-                .Select(u => new GetUser { UserName = u.UserName })
-                .ToList() );
-           
-            return result;
-        }
-
         public async Task<bool> SetModerator(string username)
         {
             var user = await userManager.FindByNameAsync(username);
@@ -68,6 +71,12 @@ namespace news_server.Features.Admin
 
                 if (resultAdd.Succeeded && resultDel.Succeeded)
                 {
+                    var profileToId = (await profileService.GetProfileByUserName(user.UserName)).ProfileId;
+                    var profileTo = await profileService.GetSimpleProfileById(profileToId);
+                    var profileFrom = -1;
+                    var text = "Вам дали права модератора";
+                    await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
+
                     return true;
                 }
             }
