@@ -15,8 +15,8 @@ namespace news_server.Features.Profile
             this.profileService = profileService;
         }
 
-        [HttpGet(nameof(GetProfileByName))]
-        public async Task<ActionResult> GetProfileByName(string username)
+        [HttpGet(nameof(GetProfilesExceptName))]
+        public async Task<ActionResult> GetProfilesExceptName(string username)
         {
             var result = await profileService.GetProfilesExceptName(username);
             return Ok(result);
@@ -29,6 +29,11 @@ namespace news_server.Features.Profile
             return Ok(result);
         }
 
-
+        [HttpGet(nameof(GetProfileByUserName))]
+        public async Task<ActionResult> GetProfileByUserName(string username)
+        {
+            var result = await profileService.GetProfileByUserName(username);
+            return Ok(result);
+        }
     }
 }
