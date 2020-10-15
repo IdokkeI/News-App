@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using news_server.Data.dbModels;
 using news_server.Features.Notify;
 using CProfile = news_server.Data.dbModels.Profile;
+using System.Collections.Generic;
+using news_server.Shared.Models;
+using System.Linq;
+
 namespace news_server.Features.Subscriber
 {
     public class SubService: ISubService
@@ -15,6 +19,33 @@ namespace news_server.Features.Subscriber
         {
             this.context = context;
             this.notificationService = notificationService;
+        }
+
+        public async Task<List<GetUserPmodel>> GetSubscribers(int profileId)
+        {
+            var subs = await context.
+                Subscriptions
+                .Include(s => s.Profile)
+                .Include(s => s.Profile.User)
+                .Where(s => s.ProfileId == profileId)
+                .Select(s => new GetUserPmodel
+                {
+                    ProfileID = s.ProfileIdSub,
+                    UserName = GetUserNameByProfileId(s.ProfileIdSub)
+                })
+                .ToListAsync();
+
+            return subs;
+        }
+
+        private string GetUserNameByProfileId(int profileIdSub)
+        {
+            var username = context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefault(p => p.Id == profileIdSub)?.User.UserName;
+
+            return username;
         }
 
         public async Task<bool> SubState(int SubTo, string username, string state, string link)
@@ -106,8 +137,8 @@ namespace news_server.Features.Subscriber
         {
             var profileFrom = ownerProfile.Id;
             var userNameFrom = ownerProfile.User.UserName;
-            var text = $"Пользователь {userNameFrom} <alt> на вас";
-            var alt = "подписался";
+            var text = $"Пользователь <alt> подписался на вас";
+            var alt = userNameFrom;
 
             await notificationService.AddNotification(profileTo, profileFrom, text, link, alt);
         }

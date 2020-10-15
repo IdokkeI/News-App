@@ -18,7 +18,7 @@ namespace news_server.Features.Profile
         [HttpGet(nameof(GetProfileByName))]
         public async Task<ActionResult> GetProfileByName(string username)
         {
-            var result = await profileService.GetProfileByName(username);
+            var result = await profileService.GetProfilesExceptName(username);
             return Ok(result);
         }
 
