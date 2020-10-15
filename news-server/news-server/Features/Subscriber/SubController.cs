@@ -40,5 +40,11 @@ namespace news_server.Features.Subscriber
             return BadRequest();
         }
                 
+        [HttpGet(nameof(GetSubscribersById))]
+        public async Task<ActionResult> GetSubscribersById(int profileId)
+        {
+            var result = await subService.GetSubscribers(profileId);
+            return Ok(result);
+        }
     }
 }
