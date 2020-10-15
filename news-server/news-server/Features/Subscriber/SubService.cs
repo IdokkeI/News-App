@@ -7,6 +7,7 @@ using CProfile = news_server.Data.dbModels.Profile;
 using System.Collections.Generic;
 using news_server.Shared.Models;
 using System.Linq;
+using news_server.Features.Profile;
 
 namespace news_server.Features.Subscriber
 {
@@ -14,11 +15,16 @@ namespace news_server.Features.Subscriber
     {
         private readonly NewsDbContext context;
         private readonly INotificationService notificationService;
+        private readonly IProfileService profileService;
 
-        public SubService(NewsDbContext context, INotificationService notificationService)
+        public SubService(
+            NewsDbContext context, 
+            INotificationService notificationService,
+            IProfileService profileService)
         {
             this.context = context;
             this.notificationService = notificationService;
+            this.profileService = profileService;
         }
 
         public async Task<List<GetUserPmodel>> GetSubscribers(int profileId)
@@ -31,22 +37,12 @@ namespace news_server.Features.Subscriber
                 .Select(s => new GetUserPmodel
                 {
                     ProfileID = s.ProfileIdSub,
-                    UserName = GetUserNameByProfileId(s.ProfileIdSub)
+                    UserName = profileService.GetUserNameByProfileId(s.ProfileIdSub)
                 })
                 .ToListAsync();
 
             return subs;
-        }
-
-        private string GetUserNameByProfileId(int profileIdSub)
-        {
-            var username = context
-                .Profiles
-                .Include(p => p.User)
-                .FirstOrDefault(p => p.Id == profileIdSub)?.User.UserName;
-
-            return username;
-        }
+        }       
 
         public async Task<bool> SubState(int SubTo, string username, string state, string link)
         {
@@ -69,7 +65,7 @@ namespace news_server.Features.Subscriber
 
                 var isExist = await context
                     .Subscriptions
-                    .FirstOrDefaultAsync(s => s.ProfileIdSub == SubTo);
+                    .FirstOrDefaultAsync(s => s.ProfileIdSub == ownerProfile.Id && s.Profile == subProfile);
 
                 if (ownerProfile == subProfile)
                 {
@@ -82,8 +78,8 @@ namespace news_server.Features.Subscriber
                         .Subscriptions
                         .AddAsync(new Subscriptions
                         {
-                            Profile = ownerProfile,
-                            ProfileIdSub = subProfile.Id
+                            Profile = subProfile,
+                            ProfileIdSub = ownerProfile.Id
                         });
 
                     

@@ -26,9 +26,9 @@ namespace news_server.Features.Subscriber
 
             string link = Url
                     .Action(
-                        "GetProfileById",
+                        "GetProfileByUserName",
                         "Profile",
-                        new { profileId = model.SubTo },
+                        new { username = username },
                      protocol: HttpContext.Request.Scheme);
 
             var result = await subService.SubState(model.SubTo, username, model.State, link);
