@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using news_server.Features.Notify;
 using news_server.Infrastructure.Extensions;
+using news_server.Infrastructure.Filter;
 using news_server.Infrastructure.MiddleWare;
 
 namespace news_server
@@ -23,8 +25,12 @@ namespace news_server
                 .AddIdentityService()
                 .AddJwtAuthentication(Configuration)
                 .AddAppServices()
-                .AddSwaggerService()
-                .AddControllers();
+                .AddSwaggerService()                
+                .AddControllers(option => 
+                    option.Filters.Add(typeof(DemoteFilter)));
+
+            services
+                .AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,8 +52,9 @@ namespace news_server
                 .UseAuthorization()
                 .UseLastActivity()
                 .UseEndpoints(endpoints =>
-                {
+                {                    
                     endpoints.MapControllers();
+                    endpoints.MapHub<Notify>("/notyficationHub");
                 });
         }
     }

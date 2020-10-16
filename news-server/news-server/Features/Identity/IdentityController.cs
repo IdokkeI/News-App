@@ -6,6 +6,7 @@ using news_server.Features.Identity.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CProfile = news_server.Data.dbModels.Profile;
 
 namespace news_server.Features.Identity
 {    
@@ -77,7 +78,7 @@ namespace news_server.Features.Identity
 
                     await userManager.CreateAsync(createUser, model.Password);
                     await userManager.AddToRoleAsync(createUser, "user");
-                    await context.Profiles.AddAsync(new Profile
+                    await context.Profiles.AddAsync(new CProfile
                     {
                         User = createUser,
                         RegisterOn = DateTime.Now

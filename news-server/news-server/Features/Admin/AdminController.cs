@@ -14,14 +14,7 @@ namespace news_server.Features.Admin
         {
             this.adminService = adminService;
         }
-
-        [HttpGet(nameof(GetUsers))]
-        [Produces("application/json")]
-        public async Task<ActionResult> GetUsers() 
-        {
-            var result = await adminService.GetUsers();
-            return Ok(result);
-        }
+        
 
         [HttpGet(nameof(GetModerators))]
         [Produces("application/json")]
@@ -37,10 +30,12 @@ namespace news_server.Features.Admin
             if (!string.IsNullOrEmpty(model.UserName))
             {
                 var result = await adminService.SetModerator(model.UserName);
+
                 if (result)
                 {
                     return Ok();
                 }
+
                 ModelState.AddModelError("notfound", "Пользователь не найден");
             }
             
@@ -53,10 +48,12 @@ namespace news_server.Features.Admin
             if (!string.IsNullOrEmpty(model.UserName))
             {
                 var result = await adminService.DemoteModerator(model.UserName);
+
                 if (result)
                 {
                     return Ok();
                 }
+
                 ModelState.AddModelError("notfound", "Пользователь не найден");
             }
            

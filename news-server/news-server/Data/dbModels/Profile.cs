@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace news_server.Data.dbModels
 {
@@ -15,6 +16,10 @@ namespace news_server.Data.dbModels
         public DateTime? LastActiveOn { get; set; }
 
         public bool isBaned { get; set; }
+
+        public List<News> News { get; set; }
+
+        public List<Notification> Notifications { get; set; }
 
     }
 }

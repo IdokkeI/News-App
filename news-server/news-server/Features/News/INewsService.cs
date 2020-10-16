@@ -7,8 +7,11 @@ namespace news_server.Features.News
     public interface INewsService
     {
         Task<bool> CreateNews(CreateNewsModel model, string userName);
+        Task<bool> EditNews(EditNewsModel model, string userName);
         Task<IEnumerable<GetNewsModel>> GetNews();
         Task<GetNewsByIdModel> GetNewsById(int newsId);
-        Task<bool> EditNews(EditNewsModel model, string userName);
+        Task<List<GetNewsModel>> GetProfileNewsAsync(int profileId);
+        List<GetNewsModel> GetProfileNews (int profileId);
+
     }
 }

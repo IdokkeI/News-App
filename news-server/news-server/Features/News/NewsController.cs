@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using news_server.Features.News.Models;
+using news_server.Features.StatisticNews;
 using news_server.Infrastructure.Extensions;
+using news_server.Infrastructure.Filter;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,10 +13,14 @@ namespace news_server.Features.News
     public class NewsController: ApiController
     {
         private readonly INewsService newsService;
+        private readonly StatisticNewsService statisticNewsService;
 
-        public NewsController(INewsService newsService)
+        public NewsController(
+            INewsService newsService,
+            StatisticNewsService statisticNewsService)
         {
             this.newsService = newsService;
+            this.statisticNewsService = statisticNewsService;
         }
 
         [Authorize]
@@ -22,17 +28,19 @@ namespace news_server.Features.News
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
         {
-            var userName = User.GetUserName();
-            var result = await newsService.CreateNews(model, userName);
-            if (result)
+            if (ModelState.IsValid)
             {
-                return Ok();
-            }
-            if (ModelState.Count == 0)
-            {
-                ModelState.AddModelError("duplicate", "Заголовок используется");
-                return BadRequest(ModelState);
-            }
+                var userName = User.GetUserName();
+                var result = await newsService.CreateNews(model, userName);
+
+                if (result)
+                {
+                    return Ok();
+                }
+
+                ModelState.AddModelError("errors", "Заголовок используется");
+            }            
+           
             return BadRequest(ModelState);
         }
 
@@ -49,8 +57,14 @@ namespace news_server.Features.News
         public async Task<ActionResult> GetNewsById(int newsId)
         {
             var news = await newsService.GetNewsById(newsId);
+
             if (news != null)
             {
+                if (!string.IsNullOrEmpty(User.GetUserName()))
+                {
+                    var username = User.GetUserName();
+                    await statisticNewsService.SetState(newsId, username, "view", string.Empty);
+                }
                 return Ok(news);
             }
             return NotFound();

@@ -9,6 +9,5 @@ namespace news_server.Features.Admin
         Task<bool> SetModerator(string username);
         Task<List<GetUser>> GetModerators();
         Task<bool> DemoteModerator(string username);
-        Task<List<GetUser>> GetUsers();
     }
 }

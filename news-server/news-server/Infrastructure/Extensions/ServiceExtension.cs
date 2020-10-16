@@ -14,6 +14,12 @@ using news_server.Features.StatisticNews;
 using news_server.Features.StatisticComment;
 using news_server.Features.Admin;
 using news_server.Features.Moderator;
+using news_server.Infrastructure.Filter;
+using news_server.Features.Subscriber;
+using news_server.Features.Notify;
+using Microsoft.AspNetCore.SignalR;
+using news_server.Features.Notify.Provider;
+using news_server.Features.Profile;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -91,7 +97,11 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<IAdminService, AdminService>();
             services.AddScoped<IModeratorService, ModeratorService>();
             services.AddScoped<BanFilter>();
-
+            services.AddTransient<ISubService, SubService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddTransient<IUserIdProvider, NewsUserProvider>();
+            services.AddScoped<IProfileService, ProfileService>();
+            
             return services;
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using news_server.Features.SharedStatistic.Models;
 using news_server.Features.StatisticNews.Models;
 using news_server.Infrastructure.Extensions;
+using news_server.Infrastructure.Filter;
 using System.Threading.Tasks;
 
 namespace news_server.Features.StatisticNews
@@ -17,13 +18,23 @@ namespace news_server.Features.StatisticNews
             this.StatisticNewsService = StatisticNewsService;
         }
 
-        [HttpPost(nameof(SetLike))]
-        public async Task<ActionResult> SetLike(StatisticModel model)
+        [HttpPost(nameof(SetState))]
+        [ServiceFilter(typeof(BanFilter))]
+        public async Task<ActionResult> SetState(StatisticModel model)
         {
             var username = User.GetUserName();
-            var result = await StatisticNewsService.SetState(model.ObjectId, username, model.State);
+           
+            string link = Url
+                    .Action(
+                        "GetNewsById",
+                        "News",
+                        new { newsId = model.ObjectId },
+                     protocol: HttpContext.Request.Scheme);
+
+            var result = await StatisticNewsService.SetState(model.ObjectId, username, model.State, link);
+
             if (result)
-            {
+            {         
                 return Ok();
             }
             return BadRequest();
