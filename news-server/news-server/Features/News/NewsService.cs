@@ -84,5 +84,37 @@ namespace news_server.Features.News
             }).FirstOrDefaultAsync();
             return news;
         }
+
+        public async Task<bool> EditNews(EditNewsModel model, string userName)
+        {
+            var profile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == userName);
+
+            var news = await context
+                .News
+                .FirstOrDefaultAsync(n => n.Id == model.NewsId && n.Owner == profile);
+
+            if (news == null)
+            {
+                return false;
+            }
+
+            news.isAproove = false;
+            news.Title = model.Title;
+            news.Photo = model.Photo;
+            news.Text = model.Text;
+            news.isModifyed = true;
+            news.PublishOn = DateTime.Now;
+
+            context
+                .News
+                .Update(news);
+
+            await context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
