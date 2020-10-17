@@ -1,6 +1,6 @@
 import React from 'react'
 import './Header.scss'
-import {Route} from "react-router-dom";
+import {NavLink, Route} from "react-router-dom";
 import Registration from "./Registration/Registration";
 import Login from "./Login/Login";
 import Home from "../Home";
@@ -11,6 +11,7 @@ const Header = () => {
             <Route path="/" exact component={Home} />
             <Route path="/registration" render ={ ()=><Registration/> }/>
             <Route path="/login" render ={ ()=><Login/> }/>
+            <NavLink to="/CreatePost" className="createPost" >Создать пост</NavLink>
         </div>
 
     </header>
