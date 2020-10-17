@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CNews = news_server.Data.dbModels.News;
 using CProfile = news_server.Data.dbModels.Profile;
+using news_server.Shared.Models;
 
 namespace news_server.Features.Moderator
 {
