@@ -23,9 +23,7 @@ namespace news_server.Data.dbModels
 
         public Profile Owner { get; set; }
 
-        public bool isModifyed { get; set; }
-
-        public DateTime? ModifyedOn { get; set; }
+        public bool isModifyed { get; set; }        
 
     }
 }

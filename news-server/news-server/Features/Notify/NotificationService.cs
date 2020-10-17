@@ -2,6 +2,8 @@
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Notify.Model;
+using news_server.Features.Services;
+using news_server.Features.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,26 +15,14 @@ namespace news_server.Features.Notify
     public class NotificationService : INotificationService
     {
         private readonly NewsDbContext context;
+        private readonly UserSerivce userSerivce;
 
-        public NotificationService(NewsDbContext context)
+        public NotificationService(NewsDbContext context, UserSerivce userSerivce)
         {
             this.context = context;
+            this.userSerivce = userSerivce;
         }
-
-        private string GetUserNameByProfileId(int id)
-        {
-            var profile = context
-                .Profiles
-                .FirstOrDefault(p => p.Id == id);
-
-            var username = context
-                .Users
-                .FirstOrDefault(u => u.Id == profile.UserId)
-                .UserName;
-
-            return username;
-        }
-
+               
         public async Task<List<GetNotificationsModel>> GetNotifications(string username)
         {
             var user = await context
@@ -48,15 +38,18 @@ namespace news_server.Features.Notify
                 .Where(n => n.Profile == profileTo)
                 .Select(n => new GetNotificationsModel 
                 {
-                    UserNameFrom = GetUserNameByProfileId(n.ProfileIdFrom),
+                    Id = n.Id,
+                    Url = n.Url,
+                    Alt = n.Alt,
                     NotificationText = n.NotificationText,
-                    NotificationDate = n.NotificationDate
+                    NotificationDate = n.NotificationDate,
+                    CommentId = n.CommentId
                 })
                 .ToListAsync();
 
             return result;
         }
-
+                
         public async Task AddNotification(
             CProfile profileTo, 
             int profileFrom, 

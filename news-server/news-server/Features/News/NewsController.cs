@@ -69,5 +69,17 @@ namespace news_server.Features.News
             }
             return NotFound();
         }
+
+        [HttpPut(nameof(EditNews))]
+        public async Task<ActionResult> EditNews(EditNewsModel model)
+        {
+            var username = User.GetUserName();
+            var result = await newsService.EditNews(model, username);
+            if (result)
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 }
