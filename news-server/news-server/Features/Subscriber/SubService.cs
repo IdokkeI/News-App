@@ -123,10 +123,8 @@ namespace news_server.Features.Subscriber
                 await context.SaveChangesAsync();
 
                 return true;                
-            }
-            
-            return false;          
-            
+            }            
+            return false;  
         }
 
         private async Task SetNotification(CProfile profileTo, CProfile ownerProfile, string link)

@@ -36,6 +36,7 @@ namespace news_server.Features.Moderator
                     protocol: HttpContext.Request.Scheme);
 
             var result = await moderatorService.ApprooveNews(newsId, link);
+
             if (result)
             {
                 return Ok();
