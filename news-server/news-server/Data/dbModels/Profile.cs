@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace news_server.Data.dbModels
 {
     public class Profile
-    {
-        
+    {        
         public int Id { get; set; }
 
         public User User { get; set; }
@@ -15,7 +15,11 @@ namespace news_server.Data.dbModels
 
         public DateTime? LastActiveOn { get; set; }
 
-        public bool isBanned { get; set; }
+        public bool isBaned { get; set; }
+
+        public List<News> News { get; set; }
+
+        public List<Notification> Notifications { get; set; }
 
     }
 }

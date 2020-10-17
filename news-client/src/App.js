@@ -1,27 +1,21 @@
 import React from 'react';
-import './Style/App.css';
+import './Style/App.scss';
+import  {BrowserRouter} from "react-router-dom";
 
-// import  render  from "react-dom";
-import  {BrowserRouter, Route} from "react-router-dom";
-
-import Registration from './registration';
-import Enter from './enter'
-import Home from './Home'
+import Header from './Components/Header/Header.jsx'
+import NewsWorkspace from "./Components/NewsWorkspace/NewsWorkspace";
+import Footer from "./Components/Footer/Footer";
 
 
 function App() {
   return (
-
     <BrowserRouter>
-    <div>
-      <div className="Enter_registr">
-      <Route path="/" exact component={Home} />
-      <Route path="/registration" component={Registration} />
+      <div>
+          <Header />
+          <NewsWorkspace />
+          <Footer />
       </div>
-      
-      <Route path="/enter" component={Enter} />
-    </div>
-  </BrowserRouter>
+    </BrowserRouter>
 );
 }
 

@@ -11,5 +11,7 @@ namespace news_server.Features.Comment.Models
         public string TextComment { get; set; }
 
         public string UsernameAddresTo { get; set; }
+
+        public int? CommentIdTo { get; set; }
     }
 }
