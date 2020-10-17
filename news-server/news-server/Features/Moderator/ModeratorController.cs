@@ -63,5 +63,12 @@ namespace news_server.Features.Moderator
             var result = await profileService.GetProfilesExceptName(username);
             return Ok(result);
         }
+
+        [HttpGet(nameof(GetBanUsers))]
+        public async Task<ActionResult> GetBanUsers()
+        {
+            var result = await moderatorService.GetBanUsers();
+            return Ok(result);
+        }
     }
 }

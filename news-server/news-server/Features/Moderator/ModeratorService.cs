@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CNews = news_server.Data.dbModels.News;
 using CProfile = news_server.Data.dbModels.Profile;
+using news_server.Shared.Models;
 
 namespace news_server.Features.Moderator
 {
@@ -133,5 +134,21 @@ namespace news_server.Features.Moderator
                 .ToListAsync();
             return notApproved;
         }
+
+        public async Task<List<GetUserPmodel>> GetBanUsers()
+        {
+            var banUsers = await context
+                .Profiles
+                .Include(p => p.User)
+                .Where(p => p.isBaned)
+                .Select(p => new GetUserPmodel
+                {
+                    ProfileID = p.Id,
+                    UserName = p.User.UserName
+                })
+                .ToListAsync();
+            return banUsers;
+        }
+
     }
 }
