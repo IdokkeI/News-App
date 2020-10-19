@@ -39,5 +39,20 @@ namespace news_server.Features.Comment
 
             return BadRequest();
         }
+
+        [HttpPut(nameof(EditComment))]
+        public async Task<ActionResult> EditComment(EditCommentModel model)
+        {
+            var username = User.GetUserName();
+            var comment = await commentService.EditComment(
+                model.CommentId,
+                username,
+                model.Text);
+            if (comment)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
 }
