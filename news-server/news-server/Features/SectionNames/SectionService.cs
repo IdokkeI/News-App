@@ -76,11 +76,12 @@ namespace news_server.Features.SectionNames
                    Params = statisticNewsService.GetStatisticById(n.Id)
                })
                .OrderBy(s => s.PublishDate)
-               .OrderBy(s => s.Params.Views)
-               .OrderBy(s => s.Params.Likes)
+               .ThenByDescending(s => s.Params.Views)
+               .ThenByDescending(s => s.Params.Likes)
                .Skip(page * 20 - 20)
                .Take(20)
                .ToListAsync();
+
             return news;
         }
     }

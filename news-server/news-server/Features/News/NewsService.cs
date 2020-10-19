@@ -26,7 +26,7 @@ namespace news_server.Features.News
             this.statisticNewsService = statisticNewsService;
             this.commentService = commentService;
         }
-                
+        
 
         public List<GetNewsModel> GetProfileNews(int profileId, int page)
         {
@@ -43,8 +43,8 @@ namespace news_server.Features.News
                         Params = statisticNewsService.GetStatisticById(n.Id)
                     })
                     .OrderBy(n => n.PublishDate)
-                    .OrderBy(n => n.Params.Views)
-                    .OrderBy(n => n.Params.Likes)
+                    .ThenByDescending(n => n.Params.Views)
+                    .ThenByDescending(n => n.Params.Likes)
                     .Skip(page * 20 - 20)
                     .Take(20)
                     .ToList();
@@ -126,8 +126,8 @@ namespace news_server.Features.News
                     Params = statisticNewsService.GetStatisticById(n.Id) 
                 })
                 .OrderBy(n => n.PublishDate)
-                .OrderBy(n => n.Params.Views)
-                .OrderBy(n => n.Params.Likes)
+                .ThenByDescending(n => n.Params.Views)
+                .ThenByDescending(n => n.Params.Likes)
                 .Skip(page * 20 - 20)
                 .Take(20)
                 .ToListAsync();
