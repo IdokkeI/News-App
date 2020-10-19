@@ -3,6 +3,7 @@ using news_server.Data;
 using news_server.Features.Comment;
 using news_server.Features.News.Models;
 using news_server.Features.StatisticNews;
+using news_server.Features.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,18 @@ namespace news_server.Features.News
         private readonly NewsDbContext context;
         private readonly StatisticNewsService statisticNewsService;
         private readonly ICommentService commentService;
+        private readonly ISubService subService;
 
         public NewsService(
             NewsDbContext context, 
             StatisticNewsService statisticNewsService, 
-            ICommentService commentService)
+            ICommentService commentService,
+            ISubService subService)
         {
             this.context = context;
             this.statisticNewsService = statisticNewsService;
             this.commentService = commentService;
+            this.subService = subService;
         }
         
 
@@ -188,6 +192,39 @@ namespace news_server.Features.News
             await context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<IEnumerable<GetNewsModel>> GetInterestingNews(string username, int page)
+        {
+            var myProfile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username);
+
+            var getSubs = await subService.GetSubscribers(myProfile.Id);
+            List<int> Subs = new List<int>();
+            getSubs.ForEach(s => Subs.Add(s));
+
+            var result = await context
+                .News
+                .Include(n => n.Owner)
+                .Where(n => n.Owner.Id == myProfile.Id || Subs.Contains(n.Owner.Id))
+                .Select(n => new GetNewsModel
+                {
+                    NewsId = n.Id,
+                    Photo = n.Photo,
+                    Title = n.Title,
+                    PublishDate = n.PublishOn,
+                    Params = statisticNewsService.GetStatisticById(n.Id)
+                })
+                .OrderBy(n => n.PublishDate)
+                .ThenByDescending(n => n.Params.Views)
+                .ThenByDescending(n => n.Params.Likes)
+                .Skip(page * 20 - 20)
+                .Take(20)
+                .ToListAsync();
+
+            return result;
         }
     }
 }
