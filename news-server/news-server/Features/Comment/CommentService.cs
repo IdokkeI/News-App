@@ -3,6 +3,7 @@ using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Comment.Models;
 using news_server.Features.Notify;
+using news_server.Features.Profile;
 using news_server.Features.StatisticComment;
 using news_server.Features.StatisticNews;
 using System;
@@ -19,17 +20,20 @@ namespace news_server.Features.Comment
         private readonly StatisticCommentService statisticCommentService;
         private readonly StatisticNewsService statisticNewsService;
         private readonly INotificationService notificationService;
+        private readonly IProfileService profileService;
 
         public CommentService(
             NewsDbContext context, 
             StatisticCommentService statisticCommentService,
             StatisticNewsService statisticNewsService,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IProfileService profileService)
         {
             this.context = context;
             this.statisticCommentService = statisticCommentService;
             this.statisticNewsService = statisticNewsService;
             this.notificationService = notificationService;
+            this.profileService = profileService;
         }
 
         public async Task<bool> CreateComment(CommentCreateModel model, string userName, string link, int? commentId)
@@ -80,6 +84,29 @@ namespace news_server.Features.Comment
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> EditComment(int commentId, string username, string text)
+        {
+            var profile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username);
+            if (profile == null)
+            {
+                return false;
+            }
+            var comment = await context
+                .Comments
+                .FirstOrDefaultAsync(c => c.Id == commentId && c.OwnerId == profile.Id);
+            if (comment == null)
+            {
+                return false;
+            }
+            comment.Text = text;
+            context.Update(comment);
+            await context.SaveChangesAsync();
+            return true;
         }
 
         private async Task SetNotificationAsync(CProfile profileTo, int profileFrom, string link, string userFromName, int? commentId)
