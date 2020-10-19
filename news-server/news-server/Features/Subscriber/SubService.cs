@@ -30,8 +30,8 @@ namespace news_server.Features.Subscriber
 
         public async Task<List<GetUserPmodel>> GetSubscribers(int profileId, int page)
         {
-            var subs = await context.
-                Subscriptions
+            var subs = await Task.Run( async () => (await context
+                .Subscriptions
                 .Include(s => s.Profile)
                 .Include(s => s.Profile.User)
                 .Where(s => s.ProfileId == profileId)
@@ -40,10 +40,11 @@ namespace news_server.Features.Subscriber
                     ProfileID = s.ProfileIdSub,
                     UserName = profileService.GetUserNameByProfileId(s.ProfileIdSub)
                 })
+                .ToListAsync())
                 .OrderBy(s => s.UserName)
                 .Skip(page * 20 - 20)
                 .Take(20)
-                .ToListAsync();
+                .ToList());
 
             return subs;
         } 
@@ -69,27 +70,26 @@ namespace news_server.Features.Subscriber
 
         public async Task<bool> SubState(int SubTo, string username, string state, string link)
         {
-            if (!string.IsNullOrEmpty(state) && state == "sub")
-            {
-                var user = await context
+            var user = await context
                     .Users
                     .FirstOrDefaultAsync(user => user.UserName == username);
 
-                var ownerProfile = await context
-                    .Profiles
-                    .Include(p => p.User)
-                    .FirstOrDefaultAsync(p => p.UserId == user.Id);
+            var ownerProfile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.UserId == user.Id);
 
-                var subProfile = await context
-                    .Profiles
-                    .Include(p => p.User)
-                    .FirstOrDefaultAsync(p => p.Id == SubTo);
+            var subProfile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.Id == SubTo);
 
+            var isExist = await context
+                .Subscriptions
+                .FirstOrDefaultAsync(s => s.ProfileIdSub == subProfile.Id && s.Profile == ownerProfile);
 
-                var isExist = await context
-                    .Subscriptions
-                    .FirstOrDefaultAsync(s => s.ProfileIdSub == ownerProfile.Id && s.Profile == subProfile);
-
+            if (!string.IsNullOrEmpty(state) && state == "sub")
+            {                
                 if (ownerProfile == subProfile)
                 {
                     return true;
@@ -101,10 +101,9 @@ namespace news_server.Features.Subscriber
                         .Subscriptions
                         .AddAsync(new Subscriptions
                         {
-                            Profile = subProfile,
-                            ProfileIdSub = ownerProfile.Id
+                            Profile = ownerProfile,
+                            ProfileIdSub = subProfile.Id
                         });
-
                     
                     await SetNotification(subProfile, ownerProfile, link);
 
@@ -113,35 +112,19 @@ namespace news_server.Features.Subscriber
                     return true;
                 }
             }
-            else if (!string.IsNullOrEmpty(state) && state == "unsub")
+            if (!string.IsNullOrEmpty(state) && state == "unsub")
             {
-                var user = await context
-                    .Users
-                    .FirstOrDefaultAsync(user => user.UserName == username);
-
-                var ownerProfile = await context
-                    .Profiles
-                    .FirstOrDefaultAsync(p => p.UserId == user.Id);
-
-                var subProfile = await context
-                    .Profiles
-                    .FirstOrDefaultAsync(p => p.Id == SubTo);
-
-                var sub = await context
-                    .Subscriptions
-                    .FirstOrDefaultAsync(s => s.Profile == ownerProfile && s.ProfileIdSub == subProfile.Id);
-
                 if (ownerProfile == subProfile)
                 {
                     return true;
                 }
 
-                if (sub == null)
+                if (isExist == null)
                 {
                     return false;
                 }
 
-                context.Subscriptions.Remove(sub);
+                context.Subscriptions.Remove(isExist);
 
                 await context.SaveChangesAsync();
 

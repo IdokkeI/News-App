@@ -28,7 +28,20 @@ namespace news_server.Features.News
             this.statisticNewsService = statisticNewsService;
             this.commentService = commentService;
         }
-        
+
+
+        public async Task<List<GetNewsModel>> GetMyNews(string username, int page)
+        {
+            var profileId = (await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username)).Id;
+
+            var result = await Task.Run( () => GetProfileNews(profileId, page));
+
+            return result;
+        }
+
 
         public List<GetNewsModel> GetProfileNews(int profileId, int page)
         {
@@ -44,6 +57,7 @@ namespace news_server.Features.News
                         PublishDate = n.PublishOn,
                         Params = statisticNewsService.GetStatisticById(n.Id)
                     })
+                    .ToList()
                     .OrderBy(n => n.PublishDate)
                     .ThenByDescending(n => n.Params.Views)
                     .ThenByDescending(n => n.Params.Likes)
@@ -116,7 +130,7 @@ namespace news_server.Features.News
 
         public async Task<IEnumerable<GetNewsModel>> GetNews(int page)
         {           
-            var news = await context
+            var news = await Task.Run( async () => (await context
                 .News
                 .Where(n => n.isAproove)
                 .Select(n => new GetNewsModel
@@ -127,12 +141,14 @@ namespace news_server.Features.News
                     PublishDate = n.PublishOn,
                     Params = statisticNewsService.GetStatisticById(n.Id) 
                 })
+                .ToListAsync())
                 .OrderBy(n => n.PublishDate)
                 .ThenByDescending(n => n.Params.Views)
                 .ThenByDescending(n => n.Params.Likes)
                 .Skip(page * 20 - 20)
                 .Take(20)
-                .ToListAsync();
+                .ToList());
+
             return news;            
         }
 
@@ -202,11 +218,11 @@ namespace news_server.Features.News
             var Subs = await context
                 .Subscriptions
                 .Include(s => s.Profile)
-                .Where(s => s.ProfileId == myProfile.Id)
-                .Select(s => s.ProfileIdSub)
+                .Where(s => s.ProfileIdSub == myProfile.Id)
+                .Select(s => s.ProfileId)
                 .ToListAsync();
 
-            var result = await context
+            var result = await Task.Run( async () => (await context
                 .News
                 .Include(n => n.Owner)
                 .Where(n => n.Owner.Id == myProfile.Id || Subs.Contains(n.Owner.Id))
@@ -218,12 +234,13 @@ namespace news_server.Features.News
                     PublishDate = n.PublishOn,
                     Params = statisticNewsService.GetStatisticById(n.Id)
                 })
+                .ToListAsync())
                 .OrderBy(n => n.PublishDate)
                 .ThenByDescending(n => n.Params.Views)
                 .ThenByDescending(n => n.Params.Likes)
                 .Skip(page * 20 - 20)
                 .Take(20)
-                .ToListAsync();
+                .ToList());
 
             return result;
         }

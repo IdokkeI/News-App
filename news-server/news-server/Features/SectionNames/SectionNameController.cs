@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace news_server.Features.SectionNames
 {
-    [Authorize(Roles = "admin, moderator")]
+    
     public class SectionNameController: ApiController
     {
         private readonly ISectionService sectionService;
@@ -15,7 +15,7 @@ namespace news_server.Features.SectionNames
             this.sectionService = sectionService;
         }
 
-        
+        [Authorize(Roles = "admin, moderator")]
         [HttpPost(nameof(AddSection))]
         public async Task<ActionResult> AddSection(AddSectionNameModel model)
         {
@@ -33,7 +33,7 @@ namespace news_server.Features.SectionNames
             return BadRequest(ModelState);
         }
 
-
+        [Authorize(Roles = "admin, moderator")]
         [HttpPut(nameof(UpdateSection))]
         public async Task<ActionResult> UpdateSection(UpdateSectionModel model)
         {
