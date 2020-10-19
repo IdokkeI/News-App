@@ -36,6 +36,7 @@ namespace news_server.Features.Moderator
                     protocol: HttpContext.Request.Scheme);
 
             var result = await moderatorService.ApprooveNews(newsId, link);
+
             if (result)
             {
                 return Ok();
@@ -61,6 +62,13 @@ namespace news_server.Features.Moderator
         {
             var username = User.GetUserName();
             var result = await profileService.GetProfilesExceptName(username);
+            return Ok(result);
+        }
+
+        [HttpGet(nameof(GetBanUsers))]
+        public async Task<ActionResult> GetBanUsers()
+        {
+            var result = await moderatorService.GetBanUsers();
             return Ok(result);
         }
     }

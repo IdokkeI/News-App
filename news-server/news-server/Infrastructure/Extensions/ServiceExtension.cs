@@ -20,6 +20,8 @@ using news_server.Features.Notify;
 using Microsoft.AspNetCore.SignalR;
 using news_server.Features.Notify.Provider;
 using news_server.Features.Profile;
+using news_server.Features.Services;
+using news_server.Features.SectionNames;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -101,7 +103,9 @@ namespace news_server.Infrastructure.Extensions
             services.AddScoped<INotificationService, NotificationService>();
             services.AddTransient<IUserIdProvider, NewsUserProvider>();
             services.AddScoped<IProfileService, ProfileService>();
-            
+            services.AddTransient<UserSerivce>();
+            services.AddScoped<ISectionService, SectionService>();
+
             return services;
         }
     }

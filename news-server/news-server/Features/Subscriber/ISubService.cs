@@ -8,6 +8,6 @@ namespace news_server.Features.Subscriber
     {
         Task<bool> SubState(int SubTo, string username, string state, string link = null);
         Task<List<GetUserPmodel>> GetSubscribers(int profileId);
-        
+
     }
 }

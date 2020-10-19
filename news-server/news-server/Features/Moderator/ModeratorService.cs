@@ -5,12 +5,14 @@ using news_server.Features.News.Models;
 using news_server.Features.Notify;
 using news_server.Features.Profile;
 using news_server.Features.Subscriber;
+using news_server.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CNews = news_server.Data.dbModels.News;
 using CProfile = news_server.Data.dbModels.Profile;
+using news_server.Shared.Models;
 
 namespace news_server.Features.Moderator
 {
@@ -43,9 +45,11 @@ namespace news_server.Features.Moderator
             {
                 news.isAproove = true;
                 news.PublishOn = DateTime.Now;
+                var isModifyed = news.isModifyed;
+                news.isModifyed = false;
                 context.News.Update(news);
-
-                await SetNotificationAsync(news, link);
+                                
+                await SetNotificationAsync(news, link, isModifyed);
 
                 await context.SaveChangesAsync();
 
@@ -54,37 +58,55 @@ namespace news_server.Features.Moderator
             return false;
         }
 
-        private async Task SetNotificationAsync(CNews news, string link)
+        private async Task SetNotificationAsync(CNews news, string link, bool isModifyed = false)
         {
+            string text;
+            if (isModifyed)
+            {
+                text = $"Ваша <alt> обновлена";
+            }
+            else
+            {
+                text = $"Ваша <alt> опубликована";
+            }
+
             var profileTo = news.Owner;
-            var profileFrom = -1;
-            var text = $"Ваша <alt> опубликована";
-            var alt = "статья";
+            var profileFrom = -1;            
+            string alt = "статья";            
 
             await notificationService.AddNotification(profileTo, profileFrom, text, link, alt);
 
-            await NoticeSubs(profileTo, link);
+            await NoticeSubs(profileTo, link, isModifyed);
             
         }
 
-        private async Task NoticeSubs(CProfile profileFrom, string link)
+        private async Task NoticeSubs(CProfile profileFrom, string link, bool isModifyed = false)
         {
-            var subs = await subService.GetSubscribers(profileFrom.Id);
-            var text = $"Пользователь {profileFrom.User.UserName} опубликовал <alt>";
+            string text;
+            if (isModifyed)
+            {
+                text = $"Пользователь {profileFrom.User.UserName} обновил <alt>";
+            }
+            else
+            {
+                text = $"Пользователь {profileFrom.User.UserName} опубликовал <alt>";
+            }
+
+            var subs = await subService.GetSubscribers(profileFrom.Id);            
             var alt = "статью";
 
             List<Notification> notifications = new List<Notification>();
 
             subs
-                .ForEach( async sub => 
+                .ForEach(sub => 
                 {
-                    var profileTo = await profileService.GetSimpleProfileById(sub.ProfileID);
+                    var profileTo = profileService.GetSimpleProfileById(sub.ProfileID);
                     
                     var notification = new Notification
                     {
                         NotificationDate = DateTime.Now,
                         ProfileIdFrom = profileFrom.Id,
-                        Profile = profileTo,
+                        Profile = profileTo.Result,
                         NotificationText = text,
                         Url = link,
                         Alt = alt,
@@ -132,6 +154,22 @@ namespace news_server.Features.Moderator
                 .OrderBy(n => n.PublishDate)
                 .ToListAsync();
             return notApproved;
+        }
+
+        public async Task<List<GetUserPmodel>> GetBanUsers()
+        {
+            var banUsers = await context
+                .Profiles
+                .Include(p => p.User)
+                .Where(p => p.isBaned)
+                .Select(p => new GetUserPmodel
+                {
+                    ProfileID = p.Id,
+                    UserName = p.User.UserName
+                })
+                .ToListAsync();
+
+            return banUsers;
         }
     }
 }
