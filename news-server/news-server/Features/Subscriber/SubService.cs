@@ -27,6 +27,28 @@ namespace news_server.Features.Subscriber
             this.profileService = profileService;
         }
 
+
+        public async Task<List<GetUserPmodel>> GetSubscribers(int profileId, int page)
+        {
+            var subs = await context.
+                Subscriptions
+                .Include(s => s.Profile)
+                .Include(s => s.Profile.User)
+                .Where(s => s.ProfileId == profileId)
+                .Select(s => new GetUserPmodel
+                {
+                    ProfileID = s.ProfileIdSub,
+                    UserName = profileService.GetUserNameByProfileId(s.ProfileIdSub)
+                })
+                .OrderBy(s => s.UserName)
+                .Skip(page * 20 - 20)
+                .Take(20)
+                .ToListAsync();
+
+            return subs;
+        } 
+        
+
         public async Task<List<GetUserPmodel>> GetSubscribers(int profileId)
         {
             var subs = await context.
@@ -43,6 +65,7 @@ namespace news_server.Features.Subscriber
 
             return subs;
         }       
+
 
         public async Task<bool> SubState(int SubTo, string username, string state, string link)
         {
@@ -126,6 +149,7 @@ namespace news_server.Features.Subscriber
             }            
             return false;  
         }
+
 
         private async Task SetNotification(CProfile profileTo, CProfile ownerProfile, string link)
         {

@@ -16,14 +16,15 @@ namespace news_server.Features.Notify
             this.notificationService = notificationService;
         }
 
+
         [HttpGet]
         [ServiceFilter(typeof(BanFilter))]
-        public async Task<ActionResult> GetNotifications()
+        public async Task<ActionResult> GetNotifications(int page)
         {
             var username = User.GetUserName();
 
             var result = await notificationService
-                .GetNotifications(username);
+                .GetNotifications(username, page);
 
             return Ok(result);
             

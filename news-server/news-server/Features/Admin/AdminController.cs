@@ -17,12 +17,12 @@ namespace news_server.Features.Admin
         
 
         [HttpGet(nameof(GetModerators))]
-        [Produces("application/json")]
-        public async Task<ActionResult> GetModerators() 
+        public async Task<ActionResult> GetModerators(int page) 
         {
-            var result = await adminService.GetModerators();
+            var result = await adminService.GetModerators(page);
             return Ok(result);
         }
+
 
         [HttpPost(nameof(SetModerator))]
         public async Task<ActionResult> SetModerator(GetUser model)
@@ -41,6 +41,7 @@ namespace news_server.Features.Admin
             
             return BadRequest(ModelState);
         }
+
 
         [HttpPost(nameof(DemoteModerator))]
         public async Task<ActionResult> DemoteModerator(GetUser model)

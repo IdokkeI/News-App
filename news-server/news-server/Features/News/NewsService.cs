@@ -26,10 +26,11 @@ namespace news_server.Features.News
             this.statisticNewsService = statisticNewsService;
             this.commentService = commentService;
         }
+                
 
-        public async Task<List<GetNewsModel>> GetProfileNewsAsync(int profileId)
+        public List<GetNewsModel> GetProfileNews(int profileId, int page)
         {
-            var result = await context
+            var result = context
                     .News
                     .Include(n => n.Owner)
                     .Where(n => n.Owner.Id == profileId)
@@ -41,10 +42,16 @@ namespace news_server.Features.News
                         PublishDate = n.PublishOn,
                         Params = statisticNewsService.GetStatisticById(n.Id)
                     })
-                    .ToListAsync();
+                    .OrderBy(n => n.PublishDate)
+                    .OrderBy(n => n.Params.Views)
+                    .OrderBy(n => n.Params.Likes)
+                    .Skip(page * 20 - 20)
+                    .Take(20)
+                    .ToList();
             return result;
         }
         
+
         public List<GetNewsModel> GetProfileNews(int profileId)
         {
             var result = context
@@ -60,8 +67,10 @@ namespace news_server.Features.News
                         Params = statisticNewsService.GetStatisticById(n.Id)
                     })
                     .ToList();
+
             return result;
         }
+
 
         public async Task<bool> CreateNews(CreateNewsModel model, string userName)
         {
@@ -102,7 +111,8 @@ namespace news_server.Features.News
             return false;
         }
 
-        public async Task<IEnumerable<GetNewsModel>> GetNews()
+
+        public async Task<IEnumerable<GetNewsModel>> GetNews(int page)
         {           
             var news = await context
                 .News
@@ -115,13 +125,19 @@ namespace news_server.Features.News
                     PublishDate = n.PublishOn,
                     Params = statisticNewsService.GetStatisticById(n.Id) 
                 })
+                .OrderBy(n => n.PublishDate)
+                .OrderBy(n => n.Params.Views)
+                .OrderBy(n => n.Params.Likes)
+                .Skip(page * 20 - 20)
+                .Take(20)
                 .ToListAsync();
             return news;            
         }
 
-        public async Task<GetNewsByIdModel> GetNewsById(int newsId)
+
+        public async Task<GetNewsByIdModel> GetNewsById(int newsId, int page)
         {
-            var comments = await commentService.GetCommentsByNewsId(newsId);
+            var comments = await commentService.GetCommentsByNewsId(newsId, page);
 
             var news = await context
                 .News
@@ -135,11 +151,12 @@ namespace news_server.Features.News
                     Title = n.Title,
                     Text = n.Text,
                     Comments = comments            
-                })
+                })                
                 .FirstOrDefaultAsync();
 
             return news;
         }
+
 
         public async Task<bool> EditNews(EditNewsModel model, string userName)
         {

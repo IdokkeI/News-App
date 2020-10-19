@@ -5,7 +5,6 @@ using CProfile = news_server.Data.dbModels.Profile;
 using CComment = news_server.Data.dbModels.Comment;
 using CStatisticComment = news_server.Data.dbModels.StatisticComment;
 using System.Threading.Tasks;
-using news_server.Features.News.SharedStatistic.Models;
 using System.Linq;
 
 namespace news_server.Features.StatisticComment
@@ -18,6 +17,7 @@ namespace news_server.Features.StatisticComment
         {
             this.context = context;
         }
+
 
         public Params GetStatisticById  (int commentId)
         {            
@@ -43,6 +43,7 @@ namespace news_server.Features.StatisticComment
             };
         }
 
+
         public async Task<bool> SetState(int commentId, string username, string state, string link)
         {
             var comment = await context
@@ -62,6 +63,7 @@ namespace news_server.Features.StatisticComment
 
             return false;
         }
+
 
         private async Task SetState(CProfile user, CComment comment, string state)
         {

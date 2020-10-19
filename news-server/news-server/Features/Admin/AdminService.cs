@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Admin.Model;
 using news_server.Features.Notify;
@@ -26,6 +25,7 @@ namespace news_server.Features.Admin
             this.profileService = profileService;
         }
 
+
         public async Task<bool> DemoteModerator(string username)
         {
             var user = await userManager.FindByNameAsync(username);
@@ -45,20 +45,24 @@ namespace news_server.Features.Admin
                     return true;
                 }                
             }
-
             return false;
         }
 
-        public async Task<List<GetUser>> GetModerators()
+
+        public async Task<List<GetUser>> GetModerators(int page)
         {
             var moderators = await userManager.GetUsersInRoleAsync("moderator");
 
-            var result = moderators
+            var result = await Task.Run( () => moderators
                 .Select(m => new GetUser { UserName = m.UserName })
-                .ToList();
+                .OrderBy(u => u.UserName)
+                .Skip(page * 20 - 20)
+                .Take(20)
+                .ToList());
 
             return result;
         }
+
 
         public async Task<bool> SetModerator(string username)
         {

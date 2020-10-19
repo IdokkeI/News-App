@@ -7,9 +7,9 @@ namespace news_server.Features.Moderator
 {
     public interface IModeratorService
     {
-        Task<List<GetNewsBaseModel>> NotApproovedNews();
+        Task<List<GetNewsBaseModel>> NotApproovedNews(int page);
         Task<bool> ApprooveNews(int newsId, string link);
-        Task<List<GetUserPmodel>> GetBanUsers();
+        Task<List<GetUserPmodel>> GetBanUsers(int page);
         Task<bool> BanUser(int profileId, int dayCount);       
         
     }

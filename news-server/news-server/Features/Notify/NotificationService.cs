@@ -3,7 +3,6 @@ using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Notify.Model;
 using news_server.Features.Services;
-using news_server.Features.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +14,13 @@ namespace news_server.Features.Notify
     public class NotificationService : INotificationService
     {
         private readonly NewsDbContext context;
-        private readonly UserSerivce userSerivce;
 
-        public NotificationService(NewsDbContext context, UserSerivce userSerivce)
+        public NotificationService(NewsDbContext context)
         {
             this.context = context;
-            this.userSerivce = userSerivce;
         }
                
-        public async Task<List<GetNotificationsModel>> GetNotifications(string username)
+        public async Task<List<GetNotificationsModel>> GetNotifications(string username, int page)
         {
             var user = await context
                 .Users
@@ -45,6 +42,9 @@ namespace news_server.Features.Notify
                     NotificationDate = n.NotificationDate,
                     CommentId = n.CommentId
                 })
+                .OrderBy(n => n.NotificationDate)
+                .Skip(page * 20 - 20)
+                .Take(20)
                 .ToListAsync();
 
             return result;
@@ -68,6 +68,7 @@ namespace news_server.Features.Notify
                 Alt = alt,
                 CommentId = commentId
             };
+
             await context.Notifications.AddAsync(notification);
             await context.SaveChangesAsync();
         }

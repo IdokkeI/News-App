@@ -21,6 +21,7 @@ namespace news_server.Features.StatisticNews
             this.notificationService = notificationService;
         }
 
+
         public async Task<bool> SetState(
             int newsId, 
             string username, 
@@ -115,9 +116,7 @@ namespace news_server.Features.StatisticNews
                             if (user.Id != news.Owner.Id)
                             {
                                 await SetNotificationAsync(user, news, link);
-                            }
-                                
-                                                                                  
+                            }                                                                                  
                         }
                         else
                         {
@@ -129,8 +128,7 @@ namespace news_server.Features.StatisticNews
                             
                             isViews.Like = user;
                             context.StatisticNews.Update(isViews);
-                        }
-                        
+                        }                        
                     }
                     else
                     {
@@ -142,8 +140,7 @@ namespace news_server.Features.StatisticNews
                         
                         isDislike.Dislike = null;
                         isDislike.Like = user;
-                        context.StatisticNews.Update(isDislike);
-                        
+                        context.StatisticNews.Update(isDislike);                        
                     }                    
                 }
                 else
@@ -173,8 +170,7 @@ namespace news_server.Features.StatisticNews
                         {
                             isViews.Dislike = user;
                             context.StatisticNews.Update(isViews);
-                        }
-                        
+                        }                        
                     }
                     else
                     {
@@ -205,6 +201,7 @@ namespace news_server.Features.StatisticNews
             }
             await context.SaveChangesAsync();
         }
+
 
         private async Task SetNotificationAsync(CProfile user, CNews news, string link)
         {

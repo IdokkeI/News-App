@@ -18,6 +18,7 @@ namespace news_server.Features.StatisticComment
             this.commentService = commentService;
         }
 
+
         [HttpPost(nameof(SetState))]
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> SetState(StatisticModel model)
