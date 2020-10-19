@@ -9,5 +9,6 @@ namespace news_server.Features.Comment
         Task<bool> CreateComment(CommentCreateModel model, string userName, string link, int? commentId = -1);
         Task<bool> EditComment(int commentId, string username, string text);
         Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id, int page);
+
     }
 }

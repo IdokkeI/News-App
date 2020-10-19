@@ -47,8 +47,8 @@ namespace news_server.Features.Comment
         {
             var username = User.GetUserName();
             var comment = await commentService.EditComment(
-                model.CommentId, 
-                username, 
+                model.CommentId,
+                username,
                 model.Text);
             if (comment)
             {

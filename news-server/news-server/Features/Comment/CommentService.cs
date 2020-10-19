@@ -23,7 +23,8 @@ namespace news_server.Features.Comment
             NewsDbContext context, 
             StatisticCommentService statisticCommentService,
             StatisticNewsService statisticNewsService,
-            INotificationService notificationService)
+            INotificationService notificationService
+            )
         {
             this.context = context;
             this.statisticCommentService = statisticCommentService;

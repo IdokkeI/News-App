@@ -1,4 +1,4 @@
-﻿namespace news_server.Features.Comment.Models
+namespace news_server.Features.Comment.Models
 {
     public class EditCommentModel
     {
