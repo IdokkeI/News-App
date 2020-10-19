@@ -18,6 +18,7 @@ namespace news_server.Features.StatisticNews
             this.StatisticNewsService = StatisticNewsService;
         }
 
+
         [HttpPost(nameof(SetState))]
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> SetState(StatisticModel model)

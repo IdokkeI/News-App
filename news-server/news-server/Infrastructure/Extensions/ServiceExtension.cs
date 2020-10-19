@@ -97,14 +97,14 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticNewsService>();
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
-            services.AddScoped<IModeratorService, ModeratorService>();
+            services.AddTransient<IModeratorService, ModeratorService>();
             services.AddScoped<BanFilter>();
             services.AddTransient<ISubService, SubService>();
-            services.AddScoped<INotificationService, NotificationService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IUserIdProvider, NewsUserProvider>();
-            services.AddScoped<IProfileService, ProfileService>();
+            services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<UserSerivce>();
-            services.AddScoped<ISectionService, SectionService>();
+            services.AddTransient<ISectionService, SectionService>();
 
             return services;
         }

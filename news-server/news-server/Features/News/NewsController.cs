@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using news_server.Features.Comment.Models;
 using news_server.Features.News.Models;
 using news_server.Features.StatisticNews;
 using news_server.Infrastructure.Extensions;
@@ -23,6 +24,7 @@ namespace news_server.Features.News
             this.statisticNewsService = statisticNewsService;
         }
 
+
         [Authorize]
         [HttpPost(nameof(CreateNews))]
         [ServiceFilter(typeof(BanFilter))]
@@ -44,33 +46,33 @@ namespace news_server.Features.News
             return BadRequest(ModelState);
         }
 
-        [Produces("application/json")]
+
         [HttpGet(nameof(GetNews))]
-        public async Task<IEnumerable<GetNewsModel>> GetNews()
+        public async Task<IEnumerable<GetNewsModel>> GetNews(int page)
         {
-            var news = await newsService.GetNews();
+            var news = await newsService.GetNews(page);
             return news;
         }
 
-        [Produces("application/json")]
+
         [HttpGet(nameof(GetNewsById))]
-        public async Task<ActionResult> GetNewsById(int newsId)
+        public async Task<ActionResult> GetNewsById(GetCommentsByNewsIdReqModel model)
         {
-            var news = await newsService.GetNewsById(newsId);
+            var news = await newsService.GetNewsById(model.NewsId, model.Page);
 
             if (news != null)
             {
                 if (!string.IsNullOrEmpty(User.GetUserName()))
                 {
                     var username = User.GetUserName();
-                    await statisticNewsService.SetState(newsId, username, "view", string.Empty);
+                    await statisticNewsService.SetState(model.NewsId, username, "view", string.Empty);
                 }
                 return Ok(news);
             }
             return NotFound();
         }
 
-
+        [Authorize]
         [HttpPut(nameof(EditNews))]
         public async Task<ActionResult> EditNews(EditNewsModel model)
 

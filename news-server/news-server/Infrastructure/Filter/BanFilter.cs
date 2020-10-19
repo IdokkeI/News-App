@@ -17,6 +17,7 @@ namespace news_server.Infrastructure.Filter
             this.context = context;
         }
 
+
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var username = context
@@ -35,7 +36,19 @@ namespace news_server.Infrastructure.Filter
             if (profile != null)
             {
                 var date = user.LockoutEnd;
-                context.Result = new ContentResult { Content = $"Забанен до { date?.LocalDateTime }", StatusCode = 403 };
+                if (date > DateTime.Now)
+                {
+                    user.LockoutEnd = null;
+                    profile.isBaned = false;
+                    this.context.Users.Update(user);
+                    this.context.Profiles.Update(profile);
+                    await this.context.SaveChangesAsync();
+                    await next();
+                }
+                else
+                {
+                    context.Result = new ContentResult { Content = $"Забанен до { date?.LocalDateTime }", StatusCode = 403 };
+                }                
             }
             else
             {

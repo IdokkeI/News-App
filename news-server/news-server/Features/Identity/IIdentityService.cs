@@ -5,6 +5,6 @@ namespace news_server.Features.Identity
 {
     public interface IIdentityService
     {
-        string Authenticate(User user, string roleName);
+        Task<string> Authenticate(User user, string roleName);
     }
 }

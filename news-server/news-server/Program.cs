@@ -20,10 +20,10 @@ namespace news_server
             {
                 var db = scoped
                     .ServiceProvider
-                    .GetRequiredService<NewsDbContext>();   
-                
-                db.Database.Migrate();
+                    .GetRequiredService<NewsDbContext>();
 
+                await db.Database.MigrateAsync();
+                
                 var userManager = scoped
                     .ServiceProvider
                     .GetRequiredService<UserManager<User>>();

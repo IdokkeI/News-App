@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using news_server.Data;
-using news_server.Data.dbModels;
 using news_server.Features.Comment.Models;
 using news_server.Features.Notify;
 using news_server.Features.StatisticComment;
@@ -31,6 +30,7 @@ namespace news_server.Features.Comment
             this.statisticNewsService = statisticNewsService;
             this.notificationService = notificationService;
         }
+
 
         public async Task<bool> CreateComment(CommentCreateModel model, string userName, string link, int? commentId)
         {
@@ -82,6 +82,7 @@ namespace news_server.Features.Comment
             return false;
         }
 
+
         private async Task SetNotificationAsync(CProfile profileTo, int profileFrom, string link, string userFromName, int? commentId)
         {
             var text = $"Пользователь {userFromName} ответил на ваш";
@@ -90,7 +91,8 @@ namespace news_server.Features.Comment
             await notificationService.AddNotification(profileTo, profileFrom, text, link, alt, commentId);   
         }
 
-        public async Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id)
+
+        public async Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id, int page)
         {
             var comments = await context
                 .Comments
@@ -105,9 +107,40 @@ namespace news_server.Features.Comment
                         UserNameTo = c.UserNameTo,
                         Params = statisticCommentService.GetStatisticById(c.Id)
                     })
+                .OrderBy(c => c.DateComment)
+                .Skip(page * 20 - 20)
+                .Take(20)                
                 .ToListAsync();
             
             return comments;
+        }
+
+
+        public async Task<bool> EditComment(int commentId, string username, string text)
+        {
+            var profile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username);
+
+            if (profile == null)
+            {
+                return false;
+            }
+
+            var comment = await context
+                .Comments
+                .FirstOrDefaultAsync(c => c.Id == commentId && c.OwnerId == profile.Id);
+
+            if (comment == null)
+            {
+                return false;
+            }
+
+            comment.Text = text;
+            context.Update(comment);
+            await context.SaveChangesAsync();
+            return true;
         }
     }
 }

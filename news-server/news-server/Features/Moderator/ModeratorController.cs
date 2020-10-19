@@ -19,9 +19,9 @@ namespace news_server.Features.Moderator
         }
 
         [HttpGet(nameof(GetNotApprovedNews))]
-        public async Task<ActionResult> GetNotApprovedNews()
+        public async Task<ActionResult> GetNotApprovedNews(int page)
         {
-            var result = await moderatorService.NotApproovedNews();
+            var result = await moderatorService.NotApproovedNews(page);
             return Ok(result);
         }
 
@@ -58,17 +58,17 @@ namespace news_server.Features.Moderator
         }
         
         [HttpGet(nameof(GetUsers))]
-        public async Task<ActionResult> GetUsers()
+        public async Task<ActionResult> GetUsers(int page)
         {
             var username = User.GetUserName();
-            var result = await profileService.GetProfilesExceptName(username);
+            var result = await profileService.GetProfilesExceptName(username, page);
             return Ok(result);
         }
 
         [HttpGet(nameof(GetBanUsers))]
-        public async Task<ActionResult> GetBanUsers()
+        public async Task<ActionResult> GetBanUsers(int page)
         {
-            var result = await moderatorService.GetBanUsers();
+            var result = await moderatorService.GetBanUsers(page);
             return Ok(result);
         }
     }
