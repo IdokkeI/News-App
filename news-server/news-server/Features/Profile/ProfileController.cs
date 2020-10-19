@@ -17,7 +17,7 @@ namespace news_server.Features.Profile
         }
 
 
-        [HttpGet(nameof(GetProfilesExceptName))]
+        [HttpPost(nameof(GetProfilesExceptName))]
         public async Task<ActionResult> GetProfilesExceptName(GetProfileUserNameModel model)
         {
             var result = await profileService.GetProfilesExceptName(model.UserName, model.Page);
@@ -25,7 +25,7 @@ namespace news_server.Features.Profile
         }
 
 
-        [HttpGet(nameof(GetProfileById))]
+        [HttpPost(nameof(GetProfileById))]
         public async Task<ActionResult> GetProfileById(GetProfileIdModel model)
         {
             var result = await profileService.GetProfileById(model.ProfileId, model.Page);
@@ -33,7 +33,7 @@ namespace news_server.Features.Profile
         }
 
 
-        [HttpGet(nameof(GetProfileByUserName))]
+        [HttpPost(nameof(GetProfileByUserName))]
         public async Task<ActionResult> GetProfileByUserName(GetProfileUserNameModel model)
         {
             var result = await profileService.GetProfileByUserName(model.UserName, model.Page);

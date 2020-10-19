@@ -50,7 +50,7 @@ namespace news_server.Features.SectionNames
         }
 
 
-        [HttpGet(nameof(GetNewsBySectionName))]
+        [HttpPost(nameof(GetNewsBySectionName))]
         public async Task<ActionResult> GetNewsBySectionName(GetNewsBySectionNameModel model)
         {
             if (!string.IsNullOrEmpty(model.SectionName))

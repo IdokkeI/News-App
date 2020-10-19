@@ -17,18 +17,16 @@ namespace news_server.Features.News
         private readonly NewsDbContext context;
         private readonly StatisticNewsService statisticNewsService;
         private readonly ICommentService commentService;
-        private readonly ISubService subService;
 
         public NewsService(
             NewsDbContext context, 
             StatisticNewsService statisticNewsService, 
-            ICommentService commentService,
-            ISubService subService)
+            ICommentService commentService
+            )
         {
             this.context = context;
             this.statisticNewsService = statisticNewsService;
             this.commentService = commentService;
-            this.subService = subService;
         }
         
 
@@ -201,9 +199,12 @@ namespace news_server.Features.News
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.User.UserName == username);
 
-            var getSubs = await subService.GetSubscribers(myProfile.Id);
-            List<int> Subs = new List<int>();
-            getSubs.ForEach(s => Subs.Add(s));
+            var Subs = await context
+                .Subscriptions
+                .Include(s => s.Profile)
+                .Where(s => s.ProfileId == myProfile.Id)
+                .Select(s => s.ProfileIdSub)
+                .ToListAsync();
 
             var result = await context
                 .News

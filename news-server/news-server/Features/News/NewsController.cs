@@ -55,7 +55,7 @@ namespace news_server.Features.News
         }
 
 
-        [HttpGet(nameof(GetNewsById))]
+        [HttpPost(nameof(GetNewsById))]
         public async Task<ActionResult> GetNewsById(GetCommentsByNewsIdReqModel model)
         {
             var news = await newsService.GetNewsById(model.NewsId, model.Page);
@@ -71,6 +71,16 @@ namespace news_server.Features.News
             }
             return NotFound();
         }
+
+        [Authorize]
+        [HttpGet(nameof(GetInterestingNews))]
+        public async Task<ActionResult> GetInterestingNews(int page)
+        {
+            var username = User.GetUserName();
+            var result = await newsService.GetInterestingNews(username, page);
+            return Ok(result);
+        }
+
 
         [Authorize]
         [HttpPut(nameof(EditNews))]
