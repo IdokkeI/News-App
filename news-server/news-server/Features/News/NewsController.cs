@@ -48,14 +48,22 @@ namespace news_server.Features.News
 
 
         [HttpGet(nameof(GetNews))]
-        public async Task<IEnumerable<GetNewsModel>> GetNews(int page)
+        public async Task<IEnumerable<GetNewsModel>> GetNews(int page = 1)
         {
             var news = await newsService.GetNews(page);
             return news;
         }
 
+        [HttpGet(nameof(GetMyNews))]
+        public async Task<IEnumerable<GetNewsModel>> GetMyNews(int page = 1)
+        {
+            var username = User.GetUserName();
+            var news = await newsService.GetMyNews(username, page);
+            return news;
+        }
 
-        [HttpGet(nameof(GetNewsById))]
+
+        [HttpPost(nameof(GetNewsById))]
         public async Task<ActionResult> GetNewsById(GetCommentsByNewsIdReqModel model)
         {
             var news = await newsService.GetNewsById(model.NewsId, model.Page);
@@ -71,6 +79,16 @@ namespace news_server.Features.News
             }
             return NotFound();
         }
+
+        [Authorize]
+        [HttpGet(nameof(GetInterestingNews))]
+        public async Task<ActionResult> GetInterestingNews(int page)
+        {
+            var username = User.GetUserName();
+            var result = await newsService.GetInterestingNews(username, page);
+            return Ok(result);
+        }
+
 
         [Authorize]
         [HttpPut(nameof(EditNews))]

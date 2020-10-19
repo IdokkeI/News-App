@@ -58,7 +58,7 @@ namespace news_server.Features.Comment
         }
 
 
-        [HttpGet(nameof(GetCommentsByNewsId))]
+        [HttpPost(nameof(GetCommentsByNewsId))]
         public async Task<ActionResult> GetCommentsByNewsId(GetCommentsByNewsIdReqModel model)
         {
             var result = await commentService.GetCommentsByNewsId(model.NewsId, model.Page);
