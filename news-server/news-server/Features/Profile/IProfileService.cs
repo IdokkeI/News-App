@@ -8,9 +8,10 @@ namespace news_server.Features.Profile
 {
     public interface IProfileService
     {
-        Task<List<GetUserPmodel>> GetProfilesExceptName(string username);
-        Task<GetProfileById> GetProfileById(int profileId);
+        Task<List<GetUserPmodel>> GetProfilesExceptName(string username, int page);        
+        Task<GetProfileById> GetProfileById(int profileId, int page);
         Task<CProfile> GetSimpleProfileById(int profileId);
+        Task<GetProfileById> GetProfileByUserName(string username, int page);
         Task<GetProfileById> GetProfileByUserName(string username);
         string GetUserNameByProfileId(int profileIdSub);
     }

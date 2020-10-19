@@ -58,7 +58,7 @@ namespace news_server.Features.SectionNames
             return true;
         }
 
-        public async Task<List<GetNewsModel>> GetNewsBySectionName(string sectionName)
+        public async Task<List<GetNewsModel>> GetNewsBySectionName(string sectionName, int page)
         {
             var section = await context
                 .SectionsNames
@@ -75,6 +75,11 @@ namespace news_server.Features.SectionNames
                    PublishDate = n.PublishOn,
                    Params = statisticNewsService.GetStatisticById(n.Id)
                })
+               .OrderBy(s => s.PublishDate)
+               .OrderBy(s => s.Params.Views)
+               .OrderBy(s => s.Params.Likes)
+               .Skip(page * 20 - 20)
+               .Take(20)
                .ToListAsync();
             return news;
         }

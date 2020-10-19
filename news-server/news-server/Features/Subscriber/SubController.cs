@@ -39,11 +39,12 @@ namespace news_server.Features.Subscriber
             }
             return BadRequest();
         }
-                
+               
+        
         [HttpGet(nameof(GetSubscribersById))]
-        public async Task<ActionResult> GetSubscribersById(int profileId)
+        public async Task<ActionResult> GetSubscribersById(GetSubscribersByIdModel model)
         {
-            var result = await subService.GetSubscribers(profileId);
+            var result = await subService.GetSubscribers(model.ProfileId, model.Page);
             return Ok(result);
         }
     }

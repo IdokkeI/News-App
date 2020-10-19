@@ -7,7 +7,6 @@ using news_server.Shared.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace news_server.Features.Profile
 {
@@ -22,9 +21,8 @@ namespace news_server.Features.Profile
             this.newsService = newsService;
         }
 
-        
 
-        public async Task<List<GetUserPmodel>> GetProfilesExceptName(string username)
+        public async Task<List<GetUserPmodel>> GetProfilesExceptName(string username, int page)
         {
             var result = await context
                 .Profiles
@@ -35,10 +33,14 @@ namespace news_server.Features.Profile
                     ProfileID = p.Id,
                     UserName = p.User.UserName
                 })
+                .OrderBy(p => p.UserName)
+                .Skip(page * 20 - 20)
+                .Take(20)
                 .ToListAsync();
 
             return result;
         }
+
 
         public async Task<CProfile> GetSimpleProfileById(int profileId)
         {
@@ -48,6 +50,7 @@ namespace news_server.Features.Profile
 
             return result;
         }
+
 
         public string GetUserNameByProfileId(int profileIdSub)
         {
@@ -59,9 +62,31 @@ namespace news_server.Features.Profile
             return username;
         }
 
+
+        public async Task<GetProfileById> GetProfileByUserName(string username, int page)
+        {
+            var result = await context
+              .Subscriptions
+              .Include(s => s.Profile)
+              .Include(s => s.Profile.User)
+              .Select(s => new GetProfileById
+              {
+                  ProfileId = s.ProfileId,
+                  UserName = s.Profile.User.UserName,
+                  UserNews = newsService.GetProfileNews(s.ProfileId, page)
+              })
+              .OrderBy(s => s.UserName)
+              .Skip(page * 20 - 20)
+              .Take(20)
+              .FirstOrDefaultAsync(s => s.UserName == username);
+
+            return result;
+        }
+
+        
         public async Task<GetProfileById> GetProfileByUserName(string username)
         {
-            var result = await Task.Run(() => context
+            var result = await context
               .Subscriptions
               .Include(s => s.Profile)
               .Include(s => s.Profile.User)
@@ -71,14 +96,15 @@ namespace news_server.Features.Profile
                   UserName = s.Profile.User.UserName,
                   UserNews = newsService.GetProfileNews(s.ProfileId)
               })
-              .FirstOrDefault(s => s.UserName == username));
+              .FirstOrDefaultAsync(s => s.UserName == username);
 
             return result;
         }
 
-        public async Task<GetProfileById> GetProfileById(int profileId)
+
+        public async Task<GetProfileById> GetProfileById(int profileId, int page)
         {
-            var result = await Task.Run( () => context
+            var result = await context
                 .Subscriptions
                 .Include(s => s.Profile)
                 .Include(s => s.Profile.User)
@@ -86,9 +112,9 @@ namespace news_server.Features.Profile
                 { 
                     ProfileId = s.ProfileId,
                     UserName = s.Profile.User.UserName,
-                    UserNews = newsService.GetProfileNews(s.ProfileId)
+                    UserNews = newsService.GetProfileNews(s.ProfileId, page)
                 })
-                .FirstOrDefault(s => s.ProfileId == profileId));
+                .FirstOrDefaultAsync(s => s.ProfileId == profileId);
 
             return result;
         }

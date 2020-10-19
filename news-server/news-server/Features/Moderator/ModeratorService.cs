@@ -12,7 +12,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CNews = news_server.Data.dbModels.News;
 using CProfile = news_server.Data.dbModels.Profile;
-using news_server.Shared.Models;
 
 namespace news_server.Features.Moderator
 {
@@ -140,7 +139,7 @@ namespace news_server.Features.Moderator
             return true;
         }
 
-        public async Task<List<GetNewsBaseModel>> NotApproovedNews()
+        public async Task<List<GetNewsBaseModel>> NotApproovedNews(int page)
         {
             var notApproved = await context.News
                 .Where(n => !n.isAproove)
@@ -152,11 +151,13 @@ namespace news_server.Features.Moderator
                     Title = n.Title
                 })
                 .OrderBy(n => n.PublishDate)
+                .Skip(page * 20 - 20)
+                .Take(20)
                 .ToListAsync();
             return notApproved;
         }
 
-        public async Task<List<GetUserPmodel>> GetBanUsers()
+        public async Task<List<GetUserPmodel>> GetBanUsers(int page)
         {
             var banUsers = await context
                 .Profiles
@@ -167,6 +168,9 @@ namespace news_server.Features.Moderator
                     ProfileID = p.Id,
                     UserName = p.User.UserName
                 })
+                .OrderBy(p => p.UserName)
+                .Skip(page * 20 - 20)
+                .Take(20)
                 .ToListAsync();
 
             return banUsers;

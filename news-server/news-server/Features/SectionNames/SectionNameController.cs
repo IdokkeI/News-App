@@ -33,6 +33,7 @@ namespace news_server.Features.SectionNames
             return BadRequest(ModelState);
         }
 
+
         [HttpPut(nameof(UpdateSection))]
         public async Task<ActionResult> UpdateSection(UpdateSectionModel model)
         {
@@ -48,12 +49,13 @@ namespace news_server.Features.SectionNames
             return BadRequest(ModelState);
         }
 
+
         [HttpGet(nameof(GetNewsBySectionName))]
-        public async Task<ActionResult> GetNewsBySectionName(string sectionName)
+        public async Task<ActionResult> GetNewsBySectionName(GetNewsBySectionNameModel model)
         {
-            if (!string.IsNullOrEmpty(sectionName))
+            if (!string.IsNullOrEmpty(model.SectionName))
             {
-                var result = await sectionService.GetNewsBySectionName(sectionName);
+                var result = await sectionService.GetNewsBySectionName(model.SectionName, model.Page);
                 return Ok(result);
             }
             return BadRequest();

@@ -17,7 +17,8 @@ namespace news_server.Features.Comment
             this.commentService = commentService;
         }
 
-        [HttpPost]
+
+        [HttpPost(nameof(CreateComment))]
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateComment(CommentCreateModel model)
         {
@@ -40,6 +41,7 @@ namespace news_server.Features.Comment
             return BadRequest();
         }
 
+
         [HttpPut(nameof(EditComment))]
         public async Task<ActionResult> EditComment(EditCommentModel model)
         {
@@ -53,6 +55,14 @@ namespace news_server.Features.Comment
                 return Ok();
             }
             return BadRequest();
+        }
+
+
+        [HttpGet(nameof(GetCommentsByNewsId))]
+        public async Task<ActionResult> GetCommentsByNewsId(GetCommentsByNewsIdReqModel model)
+        {
+            var result = await commentService.GetCommentsByNewsId(model.NewsId, model.Page);
+            return Ok(result);
         }
     }
 }
