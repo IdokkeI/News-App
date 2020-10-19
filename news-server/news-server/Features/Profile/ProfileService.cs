@@ -69,16 +69,14 @@ namespace news_server.Features.Profile
               .Subscriptions
               .Include(s => s.Profile)
               .Include(s => s.Profile.User)
+              .Where(s => s.Profile.User.UserName == username)
               .Select(s => new GetProfileById
               {
                   ProfileId = s.ProfileId,
                   UserName = s.Profile.User.UserName,
                   UserNews = newsService.GetProfileNews(s.ProfileId, page)
-              })
-              .OrderBy(s => s.UserName)
-              .Skip(page * 20 - 20)
-              .Take(20)
-              .FirstOrDefaultAsync(s => s.UserName == username);
+              })              
+              .FirstOrDefaultAsync();
 
             return result;
         }
@@ -90,13 +88,14 @@ namespace news_server.Features.Profile
               .Subscriptions
               .Include(s => s.Profile)
               .Include(s => s.Profile.User)
+              .Where(s => s.Profile.User.UserName == username)
               .Select(s => new GetProfileById
               {
                   ProfileId = s.ProfileId,
                   UserName = s.Profile.User.UserName,
                   UserNews = newsService.GetProfileNews(s.ProfileId)
               })
-              .FirstOrDefaultAsync(s => s.UserName == username);
+              .FirstOrDefaultAsync();
 
             return result;
         }
@@ -108,13 +107,14 @@ namespace news_server.Features.Profile
                 .Subscriptions
                 .Include(s => s.Profile)
                 .Include(s => s.Profile.User)
+                .Where(s => s.ProfileId == profileId)
                 .Select(s => new GetProfileById 
                 { 
                     ProfileId = s.ProfileId,
                     UserName = s.Profile.User.UserName,
                     UserNews = newsService.GetProfileNews(s.ProfileId, page)
                 })
-                .FirstOrDefaultAsync(s => s.ProfileId == profileId);
+                .FirstOrDefaultAsync();
 
             return result;
         }

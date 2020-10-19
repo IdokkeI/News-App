@@ -40,6 +40,7 @@ namespace news_server.Features.Moderator
                 .Include(n => n.Owner)
                 .Include(n => n.Owner.User)
                 .FirstOrDefaultAsync(n => n.Id == newsId);
+
             if (!news.isAproove)
             {
                 news.isAproove = true;
@@ -154,6 +155,7 @@ namespace news_server.Features.Moderator
                 .Skip(page * 20 - 20)
                 .Take(20)
                 .ToListAsync();
+
             return notApproved;
         }
 
