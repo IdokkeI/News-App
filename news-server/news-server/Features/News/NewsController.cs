@@ -64,6 +64,19 @@ namespace news_server.Features.News
 
 
         [AllowAnonymous]
+        [HttpPost(nameof(FindNews))]
+        public async Task<ActionResult> FindNews(FindNewsModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var news = await newsService.FindNews(model.Text, model.Page);
+                return Ok(news);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [AllowAnonymous]
         [HttpPost(nameof(GetNewsById))]
         public async Task<ActionResult> GetNewsById(int newsId)
         {
