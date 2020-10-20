@@ -25,10 +25,10 @@ namespace news_server
                 .AddIdentityService()
                 .AddJwtAuthentication(Configuration)
                 .AddAppServices()
-                .AddSwaggerService()                
+                .AddSwaggerService()
                 .AddControllers(option => 
                     option.Filters.Add(typeof(DemoteFilter)));
-
+           
             services
                 .AddSignalR();
         }

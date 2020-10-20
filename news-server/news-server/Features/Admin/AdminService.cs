@@ -51,7 +51,7 @@ namespace news_server.Features.Admin
                     var profileFrom = -1;
                     var text = "У вас забрали права модератора";
                     await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
-
+                                           
                     return true;
                 }                
             }
@@ -60,17 +60,17 @@ namespace news_server.Features.Admin
 
 
         public async Task<List<GetUser>> GetModerators(int page)
-        {
+        {        
             var moderators = await userManager.GetUsersInRoleAsync("moderator");
 
-            var result = await Task.Run( () => moderators
+            var result = await Task.Run(() => moderators
                 .Select(m => new GetUser { UserName = m.UserName })
                 .OrderBy(u => u.UserName)
                 .Skip(page * 20 - 20)
                 .Take(20)
                 .ToList());
 
-            return result;
+            return result;            
         }
 
 

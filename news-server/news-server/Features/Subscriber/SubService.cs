@@ -79,33 +79,33 @@ namespace news_server.Features.Subscriber
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.UserId == user.Id);
 
-            var subProfile = await context
+            var subProfileTo = await context
                 .Profiles
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.Id == SubTo);
 
             var isExist = await context
                 .Subscriptions
-                .FirstOrDefaultAsync(s => s.ProfileIdSub == subProfile.Id && s.Profile == ownerProfile);
+                .FirstOrDefaultAsync(s => s.ProfileIdSub == ownerProfile.Id && s.Profile == subProfileTo);
 
             if (!string.IsNullOrEmpty(state) && state == "sub")
             {                
-                if (ownerProfile == subProfile)
+                if (ownerProfile == subProfileTo)
                 {
                     return true;
                 }
 
-                if (subProfile != null && isExist == null)
+                if (subProfileTo != null && isExist == null)
                 {
                     await context
                         .Subscriptions
                         .AddAsync(new Subscriptions
                         {
-                            Profile = ownerProfile,
-                            ProfileIdSub = subProfile.Id
+                            Profile = subProfileTo,
+                            ProfileIdSub = ownerProfile.Id
                         });
                     
-                    await SetNotification(subProfile, ownerProfile, link);
+                    await SetNotification(subProfileTo, ownerProfile, link);
 
                     await context.SaveChangesAsync();
 
@@ -114,7 +114,7 @@ namespace news_server.Features.Subscriber
             }
             if (!string.IsNullOrEmpty(state) && state == "unsub")
             {
-                if (ownerProfile == subProfile)
+                if (ownerProfile == subProfileTo)
                 {
                     return true;
                 }

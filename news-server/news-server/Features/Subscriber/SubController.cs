@@ -39,7 +39,7 @@ namespace news_server.Features.Subscriber
             }
             return BadRequest();
         }
-               
+        
         
         [HttpPost(nameof(GetSubscribersById))]
         public async Task<ActionResult> GetSubscribersById(GetSubscribersByIdModel model)
