@@ -19,7 +19,7 @@ namespace news_server.Features.Notify
 
         [HttpGet(nameof(GetNotifications))]
         [ServiceFilter(typeof(BanFilter))]
-        public async Task<ActionResult> GetNotifications(int page)
+        public async Task<ActionResult> GetNotifications(int page = 1)
         {
             var username = User.GetUserName();
 

@@ -137,6 +137,7 @@ namespace news_server.Features.Moderator
             context.Profiles.Update(profile);
             context.Users.Update(user);
             await context.SaveChangesAsync();
+
             return true;
         }
 
