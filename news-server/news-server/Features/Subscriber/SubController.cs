@@ -41,6 +41,14 @@ namespace news_server.Features.Subscriber
         }
         
         
+        [HttpGet(nameof(GetMySubscribers))]
+        public async Task<ActionResult> GetMySubscribers(int page = 1)
+        {
+            var username = User.GetUserName();
+            var result = await subService.GetMySubscribers(username, page);
+            return Ok(result);
+        }
+
         [HttpPost(nameof(GetSubscribersById))]
         public async Task<ActionResult> GetSubscribersById(GetSubscribersByIdModel model)
         {

@@ -255,6 +255,9 @@ namespace news_server.Migrations
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isViewed")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProfileId");
