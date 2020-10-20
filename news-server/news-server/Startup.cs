@@ -52,7 +52,7 @@ namespace news_server
                 .UseEndpoints(endpoints =>
                 {                    
                     endpoints.MapControllers();
-                    endpoints.MapHub<Notify>("/notyficationHub");
+                    endpoints.MapHub<NotifyHub>("/notyficationHub");
                 });
         }
     }
