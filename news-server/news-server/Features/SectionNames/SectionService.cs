@@ -76,7 +76,7 @@ namespace news_server.Features.SectionNames
                    Params = statisticNewsService.GetStatisticById(n.Id)
                })
                .ToListAsync())
-               .OrderBy(s => s.PublishDate)
+               .OrderByDescending(s => s.PublishDate)
                .ThenByDescending(s => s.Params.Views)
                .ThenByDescending(s => s.Params.Likes)
                .Skip(page * 20 - 20)

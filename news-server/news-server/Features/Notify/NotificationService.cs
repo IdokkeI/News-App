@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Notify.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,8 @@ namespace news_server.Features.Notify
             this.context = context;
             this.hubContext = hubContext;
         }
-               
+            
+        
         public async Task Viewed(string username, int notificationId)
         {
             var profile = await context
@@ -37,6 +39,7 @@ namespace news_server.Features.Notify
             context.Notifications.Update(notification);
             await context.SaveChangesAsync();
         }
+
 
         public async Task<List<GetNotificationsModel>> GetNotifications(string username, int page)
         {
@@ -61,7 +64,7 @@ namespace news_server.Features.Notify
                     CommentId = n.CommentId,
                     isViewed = n.isViewed
                 })
-                .OrderBy(n => n.NotificationDate)
+                .OrderByDescending(n => n.NotificationDate)
                 .Skip(page * 20 - 20)
                 .Take(20)
                 .ToListAsync();
@@ -69,6 +72,7 @@ namespace news_server.Features.Notify
             return result;
         }
                 
+
         public async Task AddNotification(
             CProfile profileTo, 
             int profileFrom, 
@@ -90,11 +94,34 @@ namespace news_server.Features.Notify
 
             await context.Notifications.AddAsync(notification);
             await context.SaveChangesAsync();
+
+            await Notify(profileTo, notification);
         }
 
-        private async Task Notify()
+
+        private async Task Notify(CProfile profileTo, Notification notification)
         {
-            //hubContext.Clients.User().SendAsync("SignalNotification", "hello from server");
+            var username = (await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p == profileTo))
+                .User
+                .UserName;
+
+            var notify = new GetNotificationsModel
+            {
+                Id = notification.Id,
+                NotificationText = notification.NotificationText,
+                Url = notification.Url,
+                Alt = notification.Alt,
+                CommentId = notification.CommentId,
+                NotificationDate = notification.NotificationDate,
+                isViewed = notification.isViewed
+            };
+
+            var result = JsonConvert.SerializeObject(notify);
+
+            await hubContext.Clients.User(username).SendAsync("SignalNotification", result);
         }
     }
 }
