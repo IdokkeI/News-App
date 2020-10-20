@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Admin.Model;
 using news_server.Features.Notify;
 using news_server.Features.Profile;
+using news_server.Infrastructure.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +33,7 @@ namespace news_server.Features.Admin
             this.context = context;
         }
 
+        private const string key = "getModerators";
 
         public async Task<bool> DemoteModerator(string username)
         {
@@ -51,7 +55,7 @@ namespace news_server.Features.Admin
                     var profileFrom = -1;
                     var text = "У вас забрали права модератора";
                     await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
-
+                                           
                     return true;
                 }                
             }
@@ -60,17 +64,17 @@ namespace news_server.Features.Admin
 
 
         public async Task<List<GetUser>> GetModerators(int page)
-        {
+        {        
             var moderators = await userManager.GetUsersInRoleAsync("moderator");
 
-            var result = await Task.Run( () => moderators
+            var result = await Task.Run(() => moderators
                 .Select(m => new GetUser { UserName = m.UserName })
                 .OrderBy(u => u.UserName)
                 .Skip(page * 20 - 20)
                 .Take(20)
                 .ToList());
 
-            return result;
+            return result;            
         }
 
 
@@ -96,6 +100,7 @@ namespace news_server.Features.Admin
                     var text = "Вам дали права модератора";
                     await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
 
+                   
                     return true;
                 }
             }

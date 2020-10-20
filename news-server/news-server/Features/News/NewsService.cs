@@ -3,7 +3,6 @@ using news_server.Data;
 using news_server.Features.Comment;
 using news_server.Features.News.Models;
 using news_server.Features.StatisticNews;
-using news_server.Features.Subscriber;
 using System;
 using System.Collections.Generic;
 using System.Linq;
