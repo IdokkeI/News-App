@@ -138,6 +138,7 @@ namespace news_server.Features.Comment
             }
 
             comment.Text = text;
+            comment.isEdit = true;
             context.Update(comment);
             await context.SaveChangesAsync();
 
