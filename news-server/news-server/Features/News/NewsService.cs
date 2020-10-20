@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Features.News.Models;
 using news_server.Features.StatisticNews;
@@ -234,6 +233,40 @@ namespace news_server.Features.News
                 .ToList());
 
             return result;
+        }
+
+
+        public async Task<List<GetNewsModel>> FindNews(string text, int page)
+        {
+            var news = await context
+                .News
+                .Where(n => n.Text.Contains(text) || n.Title.Contains(text))
+                .ToListAsync();
+
+            var result = await Task.Run(()
+               =>
+                   news
+                       .Select(n => new GetNewsModel
+                       {
+                           NewsId = n.Id,
+                           Photo = n.Photo,
+                           Title = n.Title,
+                           PublishDate = n.PublishOn,
+                           Params = statisticNewsService.GetStatisticById(n.Id)
+                       })
+                       .ToList());
+
+            var newsResult = await Task.Run(()
+               =>
+                   result
+                       .OrderByDescending(n => n.PublishDate)
+                       .ThenByDescending(n => n.Params.Views)
+                       .ThenByDescending(n => n.Params.Likes)
+                       .Skip(page * 20 - 20)
+                       .Take(20)
+                       .ToList());
+
+            return newsResult;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace news_server.Features.News
         Task<List<GetNewsModel>> GetMyNews(string username, int page = 1);
         List<GetNewsModel> GetProfileNews (int profileId, int page = 1);
         List<GetNewsModel> GetProfileNews (int profileId);
+        Task<List<GetNewsModel>> FindNews(string text, int page = 1);
 
     }
 }
