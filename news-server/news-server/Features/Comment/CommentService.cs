@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using news_server.Data;
 using news_server.Features.Comment.Models;
 using news_server.Features.Notify;
@@ -141,6 +140,7 @@ namespace news_server.Features.Comment
             comment.Text = text;
             context.Update(comment);
             await context.SaveChangesAsync();
+
             return true;
         }
     }

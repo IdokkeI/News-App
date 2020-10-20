@@ -2,7 +2,6 @@
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Notify.Model;
-using news_server.Features.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +19,21 @@ namespace news_server.Features.Notify
             this.context = context;
         }
                
+        public async Task Viewed(string username, int notificationId)
+        {
+            var profile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(u => u.User.UserName == username);
+
+            var notification = await context
+                .Notifications
+                .FirstOrDefaultAsync(n => n.Id == notificationId && n.Profile == profile);
+            notification.isViewed = true;
+            context.Notifications.Update(notification);
+            await context.SaveChangesAsync();
+        }
+
         public async Task<List<GetNotificationsModel>> GetNotifications(string username, int page)
         {
             var user = await context
@@ -40,7 +54,8 @@ namespace news_server.Features.Notify
                     Alt = n.Alt,
                     NotificationText = n.NotificationText,
                     NotificationDate = n.NotificationDate,
-                    CommentId = n.CommentId
+                    CommentId = n.CommentId,
+                    isViewed = n.isViewed
                 })
                 .OrderBy(n => n.NotificationDate)
                 .Skip(page * 20 - 20)

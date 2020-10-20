@@ -25,6 +25,7 @@ namespace news_server.Features.Profile
         }
 
 
+        [AllowAnonymous]
         [HttpPost(nameof(GetProfileById))]
         public async Task<ActionResult> GetProfileById(GetProfileIdModel model)
         {
@@ -33,6 +34,7 @@ namespace news_server.Features.Profile
         }
 
 
+        [AllowAnonymous]
         [HttpPost(nameof(GetProfileByUserName))]
         public async Task<ActionResult> GetProfileByUserName(GetProfileUserNameModel model)
         {

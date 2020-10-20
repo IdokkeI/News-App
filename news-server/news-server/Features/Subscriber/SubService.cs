@@ -27,6 +27,16 @@ namespace news_server.Features.Subscriber
             this.profileService = profileService;
         }
 
+        public async Task<List<GetUserPmodel>> GetMySubscribers(string username, int page = 1)
+        {
+            var profileId = (await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username))
+                .Id;
+            var result = await GetSubscribers(profileId, page);
+            return result;
+        }
 
         public async Task<List<GetUserPmodel>> GetSubscribers(int profileId, int page)
         {

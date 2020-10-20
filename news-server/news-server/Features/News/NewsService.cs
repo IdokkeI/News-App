@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using news_server.Data;
-using news_server.Features.Comment;
 using news_server.Features.News.Models;
 using news_server.Features.StatisticNews;
 using System;
@@ -15,19 +15,14 @@ namespace news_server.Features.News
     {
         private readonly NewsDbContext context;
         private readonly StatisticNewsService statisticNewsService;
-        private readonly ICommentService commentService;
 
         public NewsService(
             NewsDbContext context, 
-            StatisticNewsService statisticNewsService, 
-            ICommentService commentService
-            )
+            StatisticNewsService statisticNewsService)
         {
             this.context = context;
             this.statisticNewsService = statisticNewsService;
-            this.commentService = commentService;
         }
-
 
         public async Task<List<GetNewsModel>> GetMyNews(string username, int page)
         {
@@ -152,26 +147,23 @@ namespace news_server.Features.News
         }
 
 
-        public async Task<GetNewsByIdModel> GetNewsById(int newsId, int page)
-        {
-            var comments = await commentService.GetCommentsByNewsId(newsId, page);
-
+        public async Task<GetNewsByIdModel> GetNewsById(int newsId)
+        {           
             var news = await context
-                .News
-                .Where(n => n.Id == newsId && n.isAproove)
-                .Select(n =>  new GetNewsByIdModel
-                { 
-                    NewsId = n.Id,
-                    Params = statisticNewsService.GetStatisticById(n.Id),
-                    PublishDate = n.PublishOn,
-                    Photo = n.Photo,
-                    Title = n.Title,
-                    Text = n.Text,
-                    Comments = comments            
-                })                
-                .FirstOrDefaultAsync();
+            .News
+            .Where(n => n.Id == newsId && n.isAproove)
+            .Select(n => new GetNewsByIdModel
+            {
+                NewsId = n.Id,
+                Params = statisticNewsService.GetStatisticById(n.Id),
+                PublishDate = n.PublishOn,
+                Photo = n.Photo,
+                Title = n.Title,
+                Text = n.Text,
+            })
+            .FirstOrDefaultAsync();
 
-            return news;
+            return news;                   
         }
 
 

@@ -9,5 +9,6 @@ namespace news_server.Features.Notify
     {
         public Task<List<GetNotificationsModel>> GetNotifications(string username, int page);
         Task AddNotification(CProfile profileTo, int profileFrom, string text, string link, string alt, int? commentId = null);
+        Task Viewed(string username, int notificationId);
     }
 }

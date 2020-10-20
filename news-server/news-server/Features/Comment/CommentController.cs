@@ -58,6 +58,7 @@ namespace news_server.Features.Comment
         }
 
 
+        [AllowAnonymous]
         [HttpPost(nameof(GetCommentsByNewsId))]
         public async Task<ActionResult> GetCommentsByNewsId(GetCommentsByNewsIdReqModel model)
         {
