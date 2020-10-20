@@ -33,7 +33,6 @@ namespace news_server.Features.Admin
             this.context = context;
         }
 
-        private const string key = "getModerators";
 
         public async Task<bool> DemoteModerator(string username)
         {
