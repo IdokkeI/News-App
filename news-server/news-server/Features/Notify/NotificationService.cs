@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Notify.Model;
@@ -13,10 +14,13 @@ namespace news_server.Features.Notify
     public class NotificationService : INotificationService
     {
         private readonly NewsDbContext context;
+        private readonly IHubContext<NotifyHub> hubContext;
 
-        public NotificationService(NewsDbContext context)
+        public NotificationService(NewsDbContext context,
+            IHubContext<NotifyHub> hubContext)
         {
             this.context = context;
+            this.hubContext = hubContext;
         }
                
         public async Task Viewed(string username, int notificationId)
@@ -86,6 +90,11 @@ namespace news_server.Features.Notify
 
             await context.Notifications.AddAsync(notification);
             await context.SaveChangesAsync();
+        }
+
+        private async Task Notify()
+        {
+            //hubContext.Clients.User().SendAsync("SignalNotification", "hello from server");
         }
     }
 }

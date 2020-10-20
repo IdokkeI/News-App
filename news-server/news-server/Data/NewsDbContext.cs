@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using news_server.Data.dbModels;
+using news_server.Features.Notify;
 
 namespace news_server.Data
 {
     public class NewsDbContext : IdentityDbContext<User>
     {
-        
         public NewsDbContext(DbContextOptions<NewsDbContext> options)
             : base(options)
         {
