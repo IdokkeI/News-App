@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Admin.Model;
 using news_server.Features.Notify;
 using news_server.Features.Profile;
-using news_server.Infrastructure.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,7 +96,6 @@ namespace news_server.Features.Admin
                     var text = "Вам дали права модератора";
                     await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
 
-                   
                     return true;
                 }
             }
