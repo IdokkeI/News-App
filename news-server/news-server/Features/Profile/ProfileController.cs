@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using news_server.Features.Profile.Models;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Profile
@@ -15,24 +16,29 @@ namespace news_server.Features.Profile
             this.profileService = profileService;
         }
 
-        [HttpGet(nameof(GetProfilesExceptName))]
-        public async Task<ActionResult> GetProfilesExceptName(string username)
+
+        [HttpPost(nameof(GetProfilesExceptName))]
+        public async Task<ActionResult> GetProfilesExceptName(GetProfileUserNameModel model)
         {
-            var result = await profileService.GetProfilesExceptName(username);
+            var result = await profileService.GetProfilesExceptName(model.UserName, model.Page);
             return Ok(result);
         }
 
-        [HttpGet(nameof(GetProfileById))]
-        public async Task<ActionResult> GetProfileById(int profileId)
+
+        [AllowAnonymous]
+        [HttpPost(nameof(GetProfileById))]
+        public async Task<ActionResult> GetProfileById(GetProfileIdModel model)
         {
-            var result = await profileService.GetProfileById(profileId);
+            var result = await profileService.GetProfileById(model.ProfileId, model.Page);
             return Ok(result);
         }
 
-        [HttpGet(nameof(GetProfileByUserName))]
-        public async Task<ActionResult> GetProfileByUserName(string username)
+
+        [AllowAnonymous]
+        [HttpPost(nameof(GetProfileByUserName))]
+        public async Task<ActionResult> GetProfileByUserName(GetProfileUserNameModel model)
         {
-            var result = await profileService.GetProfileByUserName(username);
+            var result = await profileService.GetProfileByUserName(model.UserName, model.Page);
             return Ok(result);
         }
     }

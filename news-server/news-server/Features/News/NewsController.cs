@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace news_server.Features.News
 {
-    
+    [Authorize]
     public class NewsController: ApiController
     {
         private readonly INewsService newsService;
@@ -23,7 +23,7 @@ namespace news_server.Features.News
             this.statisticNewsService = statisticNewsService;
         }
 
-        [Authorize]
+
         [HttpPost(nameof(CreateNews))]
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
@@ -44,28 +44,63 @@ namespace news_server.Features.News
             return BadRequest(ModelState);
         }
 
-        [Produces("application/json")]
+
+        [AllowAnonymous]
         [HttpGet(nameof(GetNews))]
-        public async Task<IEnumerable<GetNewsModel>> GetNews()
+        public async Task<IEnumerable<GetNewsModel>> GetNews(int page = 1)
         {
-            var news = await newsService.GetNews();
+            var news = await newsService.GetNews(page);
             return news;
         }
 
-        [Produces("application/json")]
-        [HttpGet(nameof(GetNewsById))]
+        [Authorize]
+        [HttpGet(nameof(GetMyNews))]
+        public async Task<IEnumerable<GetNewsModel>> GetMyNews(int page = 1)
+        {
+            var username = User.GetUserName();
+            var news = await newsService.GetMyNews(username, page);
+            return news;
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost(nameof(GetNewsById))]
         public async Task<ActionResult> GetNewsById(int newsId)
         {
             var news = await newsService.GetNewsById(newsId);
 
             if (news != null)
-            {
-                if (!string.IsNullOrEmpty(User.GetUserName()))
+            {                
+                var username = User.GetUserName();
+                if (username != null)
                 {
-                    var username = User.GetUserName();
                     await statisticNewsService.SetState(newsId, username, "view", string.Empty);
                 }
+                
                 return Ok(news);
+            }
+            return NotFound();
+        }
+
+
+        [HttpGet(nameof(GetInterestingNews))]
+        public async Task<ActionResult> GetInterestingNews(int page = 1)
+        {
+            var username = User.GetUserName();
+            var result = await newsService.GetInterestingNews(username, page);
+            return Ok(result);
+        }
+
+
+        [HttpPut(nameof(EditNews))]
+        public async Task<ActionResult> EditNews(EditNewsModel model)
+
+        {
+            var username = User.GetUserName();
+            var result = await newsService.EditNews(model, username);
+            if (result)
+            {
+                return Ok();
             }
             return NotFound();
         }

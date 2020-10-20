@@ -39,11 +39,20 @@ namespace news_server.Features.Subscriber
             }
             return BadRequest();
         }
-                
-        [HttpGet(nameof(GetSubscribersById))]
-        public async Task<ActionResult> GetSubscribersById(int profileId)
+        
+        
+        [HttpGet(nameof(GetMySubscribers))]
+        public async Task<ActionResult> GetMySubscribers(int page = 1)
         {
-            var result = await subService.GetSubscribers(profileId);
+            var username = User.GetUserName();
+            var result = await subService.GetMySubscribers(username, page);
+            return Ok(result);
+        }
+
+        [HttpPost(nameof(GetSubscribersById))]
+        public async Task<ActionResult> GetSubscribersById(GetSubscribersByIdModel model)
+        {
+            var result = await subService.GetSubscribers(model.ProfileId, model.Page);
             return Ok(result);
         }
     }

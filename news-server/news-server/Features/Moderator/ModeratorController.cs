@@ -18,12 +18,14 @@ namespace news_server.Features.Moderator
             this.profileService = profileService;
         }
 
+
         [HttpGet(nameof(GetNotApprovedNews))]
-        public async Task<ActionResult> GetNotApprovedNews()
+        public async Task<ActionResult> GetNotApprovedNews(int page = 1)
         {
-            var result = await moderatorService.NotApproovedNews();
+            var result = await moderatorService.NotApproovedNews(page);
             return Ok(result);
         }
+
 
         [HttpPost(nameof(ApproveNews))]
         public async Task<ActionResult> ApproveNews(int newsId)
@@ -36,6 +38,7 @@ namespace news_server.Features.Moderator
                     protocol: HttpContext.Request.Scheme);
 
             var result = await moderatorService.ApprooveNews(newsId, link);
+
             if (result)
             {
                 return Ok();
@@ -43,6 +46,7 @@ namespace news_server.Features.Moderator
 
             return BadRequest();
         }
+
 
         [HttpPost(nameof(BanUser))]
         public async Task<ActionResult> BanUser(int profileId, int dayCount)
@@ -56,11 +60,20 @@ namespace news_server.Features.Moderator
             return BadRequest();
         }
         
+
         [HttpGet(nameof(GetUsers))]
-        public async Task<ActionResult> GetUsers()
+        public async Task<ActionResult> GetUsers(int page = 1)
         {
             var username = User.GetUserName();
-            var result = await profileService.GetProfilesExceptName(username);
+            var result = await profileService.GetProfilesExceptName(username, page);
+            return Ok(result);
+        }
+
+
+        [HttpGet(nameof(GetBanUsers))]
+        public async Task<ActionResult> GetBanUsers(int page = 1)
+        {
+            var result = await moderatorService.GetBanUsers(page);
             return Ok(result);
         }
     }

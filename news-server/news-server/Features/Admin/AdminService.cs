@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Admin.Model;
+using news_server.Features.Notify;
+using news_server.Features.Profile;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +14,22 @@ namespace news_server.Features.Admin
     public class AdminService : IAdminService
     {
         private readonly UserManager<User> userManager;
+        private readonly INotificationService notificationService;
+        private readonly IProfileService profileService;
+        private readonly NewsDbContext context;
 
-        public AdminService(UserManager<User> userManager)
+        public AdminService(
+            UserManager<User> userManager, 
+            INotificationService notificationService,
+            IProfileService profileService,
+            NewsDbContext context)
         {
             this.userManager = userManager;
+            this.notificationService = notificationService;
+            this.profileService = profileService;
+            this.context = context;
         }
+
 
         public async Task<bool> DemoteModerator(string username)
         {
@@ -27,35 +41,38 @@ namespace news_server.Features.Admin
                 var resultAdd = await userManager.AddToRoleAsync(user, "user");
                 if (resultAdd.Succeeded && resultDel.Succeeded)
                 {
+                    var profileToId = (await context
+                        .Profiles
+                        .Include(p => p.User)
+                        .FirstOrDefaultAsync(p => p.User.UserName == username))
+                        .Id;
+                    
+                    var profileTo = await profileService.GetSimpleProfileById(profileToId);
+                    var profileFrom = -1;
+                    var text = "У вас забрали права модератора";
+                    await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
+                                           
                     return true;
                 }                
             }
-
             return false;
         }
 
-        public async Task<List<GetUser>> GetModerators()
-        {
+
+        public async Task<List<GetUser>> GetModerators(int page)
+        {        
             var moderators = await userManager.GetUsersInRoleAsync("moderator");
 
-            var result = moderators
+            var result = await Task.Run(() => moderators
                 .Select(m => new GetUser { UserName = m.UserName })
-                .ToList();
+                .OrderBy(u => u.UserName)
+                .Skip(page * 20 - 20)
+                .Take(20)
+                .ToList());
 
-            return result;
+            return result;            
         }
 
-        public async Task<List<GetUser>> GetUsers()
-        {
-            var users = await userManager.GetUsersInRoleAsync("user");
-
-            var result = await Task.Run( () => 
-                users
-                .Select(u => new GetUser { UserName = u.UserName })
-                .ToList() );
-           
-            return result;
-        }
 
         public async Task<bool> SetModerator(string username)
         {
@@ -68,6 +85,17 @@ namespace news_server.Features.Admin
 
                 if (resultAdd.Succeeded && resultDel.Succeeded)
                 {
+                    var profileToId = (await context
+                        .Profiles
+                        .Include(p => p.User)
+                        .FirstOrDefaultAsync(p => p.User.UserName == username))
+                        .Id;
+
+                    var profileTo = await profileService.GetSimpleProfileById(profileToId);
+                    var profileFrom = -1;
+                    var text = "Вам дали права модератора";
+                    await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
+
                     return true;
                 }
             }

@@ -25,15 +25,15 @@ namespace news_server.Features.Identity
         
         
         [HttpPost(nameof(Login))]
-        [Produces("application/json")]
         public async Task<ActionResult> Login(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
+                var username = user.UserName;
                 var role = await userManager.GetRolesAsync(user);
                 var roleName = role.FirstOrDefault();
-                var token = identityService.Authenticate(user, roleName);
+                var token = await identityService.Authenticate(user, roleName);
                 int access = 0;
                 if (roleName == "admin")
                 {
@@ -51,12 +51,12 @@ namespace news_server.Features.Identity
                 var result = new
                 {
                     token,
-                    access
+                    access,
+                    username
                 };
 
                 return Ok(result);
             }
-
             return BadRequest();
         }
         

@@ -22,22 +22,23 @@ namespace news_server.Features.Notify
             this.context = context;
             this.hubContext = hubContext;
         }
-
-        private string GetUserNameByProfileId(int id)
+               
+        public async Task Viewed(string username, int notificationId)
         {
-            var profile = context
+            var profile = await context
                 .Profiles
-                .FirstOrDefault(p => p.Id == id);
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(u => u.User.UserName == username);
 
-            var username = context
-                .Users
-                .FirstOrDefault(u => u.Id == profile.UserId)
-                .UserName;
-
-            return username;
+            var notification = await context
+                .Notifications
+                .FirstOrDefaultAsync(n => n.Id == notificationId && n.Profile == profile);
+            notification.isViewed = true;
+            context.Notifications.Update(notification);
+            await context.SaveChangesAsync();
         }
 
-        public async Task<List<GetNotificationsModel>> GetNotifications(string username)
+        public async Task<List<GetNotificationsModel>> GetNotifications(string username, int page)
         {
             var user = await context
                 .Users
@@ -52,15 +53,22 @@ namespace news_server.Features.Notify
                 .Where(n => n.Profile == profileTo)
                 .Select(n => new GetNotificationsModel 
                 {
-                    UserNameFrom = GetUserNameByProfileId(n.ProfileIdFrom),
+                    Id = n.Id,
+                    Url = n.Url,
+                    Alt = n.Alt,
                     NotificationText = n.NotificationText,
-                    NotificationDate = n.NotificationDate
+                    NotificationDate = n.NotificationDate,
+                    CommentId = n.CommentId,
+                    isViewed = n.isViewed
                 })
+                .OrderBy(n => n.NotificationDate)
+                .Skip(page * 20 - 20)
+                .Take(20)
                 .ToListAsync();
 
             return result;
         }
-
+                
         public async Task AddNotification(
             CProfile profileTo, 
             int profileFrom, 
@@ -79,6 +87,7 @@ namespace news_server.Features.Notify
                 Alt = alt,
                 CommentId = commentId
             };
+
             await context.Notifications.AddAsync(notification);
             await context.SaveChangesAsync();
         }

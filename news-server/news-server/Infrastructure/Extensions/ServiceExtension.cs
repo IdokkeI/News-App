@@ -20,6 +20,8 @@ using news_server.Features.Notify;
 using Microsoft.AspNetCore.SignalR;
 using news_server.Features.Notify.Provider;
 using news_server.Features.Profile;
+using news_server.Features.Services;
+using news_server.Features.SectionNames;
 
 namespace news_server.Infrastructure.Extensions
 {
@@ -95,13 +97,15 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticNewsService>();
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
-            services.AddScoped<IModeratorService, ModeratorService>();
+            services.AddTransient<IModeratorService, ModeratorService>();
             services.AddScoped<BanFilter>();
             services.AddTransient<ISubService, SubService>();
-            services.AddScoped<INotificationService, NotificationService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IUserIdProvider, NewsUserProvider>();
-            services.AddScoped<IProfileService, ProfileService>();
-            
+            services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<UserSerivce>();
+            services.AddTransient<ISectionService, SectionService>();
+
             return services;
         }
     }

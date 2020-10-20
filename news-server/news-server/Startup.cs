@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using news_server.Features.Notify;
 using news_server.Infrastructure.Extensions;
+using news_server.Infrastructure.Filter;
 using news_server.Infrastructure.MiddleWare;
 
 namespace news_server
@@ -25,8 +26,9 @@ namespace news_server
                 .AddJwtAuthentication(Configuration)
                 .AddAppServices()
                 .AddSwaggerService()                
-                .AddControllers();
-
+                .AddControllers(option => 
+                    option.Filters.Add(typeof(DemoteFilter)));
+           
             services
                 .AddSignalR();
         }

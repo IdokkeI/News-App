@@ -5,5 +5,6 @@ namespace news_server.Shared.Models
     public class GetUserPmodel: GetUser
     {
         public int ProfileID { get; set; }
+        
     }
 }
