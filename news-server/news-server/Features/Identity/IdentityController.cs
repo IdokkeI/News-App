@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Identity.Models;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CProfile = news_server.Data.dbModels.Profile;
@@ -15,12 +17,18 @@ namespace news_server.Features.Identity
         private readonly UserManager<User> userManager;
         private readonly IIdentityService identityService;
         private readonly NewsDbContext context;
+        private readonly IWebHostEnvironment env;
 
-        public IdentityController(UserManager<User> userManager, IIdentityService identityService, NewsDbContext context)
+        public IdentityController(
+            UserManager<User> userManager, 
+            IIdentityService identityService, 
+            NewsDbContext context,
+            IWebHostEnvironment env)
         {
             this.userManager = userManager;
             this.identityService = identityService;
             this.context = context;
+            this.env = env;
         }
         
         
@@ -31,6 +39,7 @@ namespace news_server.Features.Identity
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 var username = user.UserName;
+                var photo = user.Photo;
                 var role = await userManager.GetRolesAsync(user);
                 var roleName = role.FirstOrDefault();
                 var token = await identityService.Authenticate(user, roleName);
@@ -52,7 +61,8 @@ namespace news_server.Features.Identity
                 {
                     token,
                     access,
-                    username
+                    username,
+                    photo
                 };
 
                 return Ok(result);
@@ -73,7 +83,8 @@ namespace news_server.Features.Identity
                     var createUser = new User
                     {
                         UserName = model.UserName,
-                        Email = model.Email
+                        Email = model.Email,
+                        Photo = Path.Combine(env.WebRootPath, "user.png")
                     };
 
                     await userManager.CreateAsync(createUser, model.Password);
@@ -84,6 +95,10 @@ namespace news_server.Features.Identity
                         RegisterOn = DateTime.Now
                     });
                     await context.SaveChangesAsync();
+
+                    var path = Path.Combine(env.WebRootPath, createUser.UserName);
+                    Directory.CreateDirectory(path);
+
                     return Ok();
                 }
                 else

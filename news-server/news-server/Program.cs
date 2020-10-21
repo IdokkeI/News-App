@@ -22,6 +22,10 @@ namespace news_server
                     .ServiceProvider
                     .GetRequiredService<NewsDbContext>();
 
+                var env = scoped
+                    .ServiceProvider
+                    .GetRequiredService<IWebHostEnvironment>();
+
                 await db.Database.MigrateAsync();
                 
                 var userManager = scoped
@@ -32,7 +36,7 @@ namespace news_server
                     .ServiceProvider
                     .GetRequiredService<RoleManager<IdentityRole>>();
 
-                await Seeder.Seed(userManager, roleManager);
+                await Seeder.Seed(userManager, roleManager, env);
             }
             host.Run();
         }   

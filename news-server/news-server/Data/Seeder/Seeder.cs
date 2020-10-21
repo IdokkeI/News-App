@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using news_server.Data.dbModels;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace news_server.Data.Seeder
 {
     public class Seeder
     {
-        public async static Task Seed(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+
+        public async static Task Seed(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IWebHostEnvironment env)
         {
             var userRoleResult = await roleManager.FindByNameAsync("user");
             var moderatorRoleResult = await roleManager.FindByNameAsync("moderator");
@@ -36,7 +39,8 @@ namespace news_server.Data.Seeder
                 var admin = new User
                 {
                     UserName = "admin",
-                    Email = "admin@mail.ru"
+                    Email = "admin@mail.ru",
+                    Photo = Path.Combine(env.WebRootPath, "admin.png")
                 };
                 await userManager
                     .CreateAsync(admin, "1236985Admin");
