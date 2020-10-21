@@ -30,11 +30,7 @@ namespace news_server.Infrastructure.Filter
                 if (!isInRole)
                 {
                     context.Result = new StatusCodeResult(401);
-                }
-                else
-                {
-                    await next();
-                }
+                }                
             }
             await next();
         }

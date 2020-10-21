@@ -45,6 +45,7 @@ namespace news_server
                 app.UseHsts();
             }
             app
+                .UseStaticFiles()
                 .UseSwaggerMW()
                 .UseCorsMW()
                 .UseRouting()
