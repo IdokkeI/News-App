@@ -15,7 +15,7 @@ namespace news_server.Features.Profile
         Task<GetProfileById> GetProfileByUserName(string username, int page);
         Task<GetProfileById> GetProfileByUserName(string username);
         string GetUserNameByProfileId(int profileIdSub);
-        Task UploadProfileImage(string username, IFormFile image);
+        Task<string> UploadProfileImage(string username, IFormFile image);
         Task SendEmail(string email, string link);
     }
 }
