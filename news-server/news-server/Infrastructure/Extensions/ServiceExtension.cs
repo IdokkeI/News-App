@@ -126,7 +126,8 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IModeratorService, ModeratorService>();
-            services.AddScoped<BanFilter>();
+            services.AddTransient<BanFilter>();
+            services.AddTransient<DemoteFilter>();
             services.AddTransient<ISubService, SubService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IUserIdProvider, NewsUserProvider>();
