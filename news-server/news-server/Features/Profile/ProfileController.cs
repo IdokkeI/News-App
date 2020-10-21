@@ -8,7 +8,6 @@ using news_server.Features.Identity;
 using news_server.Features.Notify;
 using news_server.Features.Profile.Models;
 using news_server.Infrastructure.Extensions;
-using System;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Profile
@@ -64,8 +63,8 @@ namespace news_server.Features.Profile
         public async Task<ActionResult> UploadProfileImage(IFormFile image)
         {
             var username = User.GetUserName();
-            await profileService.UploadProfileImage(username, image);
-            return Ok();
+            var result = await profileService.UploadProfileImage(username, image);
+            return Ok(result);
         }
 
         [Authorize]

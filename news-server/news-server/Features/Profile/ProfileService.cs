@@ -129,7 +129,7 @@ namespace news_server.Features.Profile
             return result;
         }
 
-        public async Task UploadProfileImage(string username, IFormFile image)
+        public async Task<string> UploadProfileImage(string username, IFormFile image)
         {
             var dirPath = Path.Combine(env.WebRootPath, username, "profile");
             var filePath = Path.Combine(dirPath, image.FileName);
@@ -158,7 +158,7 @@ namespace news_server.Features.Profile
 
             await context.SaveChangesAsync();
 
-            await hubContext.Clients.User(username).SendAsync("SignalUpatePhotoProfile", filePath);
+            return filePath;
         }
 
         public async Task SendEmail(string email, string link)
