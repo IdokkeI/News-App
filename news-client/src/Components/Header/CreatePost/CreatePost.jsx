@@ -3,7 +3,7 @@ import './CreatePost.scss'
 
 const CreatePost = () => {
     return <div className='createPost'>
-        Создание нового постa
+
     </div>
 }
 
