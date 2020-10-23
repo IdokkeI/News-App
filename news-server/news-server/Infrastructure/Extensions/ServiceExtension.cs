@@ -81,7 +81,7 @@ namespace news_server.Infrastructure.Extensions
         public static IServiceCollection AddDataBaseContext(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddDbContext<NewsDbContext>(options =>
-               options.UseMySql(
+               options.UseSqlServer(
                    Configuration.GetConnectionString("DefaultConnection")));
             return services;
         }

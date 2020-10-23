@@ -9,22 +9,12 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\**" />
     <Compile Remove="Features\Moderator\Models\**" />
-    <Compile Remove="Migrations\**" />
     <Content Remove="Data\Migrations\**" />
     <Content Remove="Features\Moderator\Models\**" />
-    <Content Remove="Migrations\**" />
     <EmbeddedResource Remove="Data\Migrations\**" />
     <EmbeddedResource Remove="Features\Moderator\Models\**" />
-    <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Data\Migrations\**" />
     <None Remove="Features\Moderator\Models\**" />
-    <None Remove="Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Migrations\20201022110144_initDbMySql.cs" />
-    <Compile Include="Migrations\20201022110144_initDbMySql.Designer.cs" />
-    <Compile Include="Migrations\NewsDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,9 +22,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.2" />
   </ItemGroup>
 
