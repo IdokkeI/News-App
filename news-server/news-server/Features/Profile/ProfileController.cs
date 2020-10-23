@@ -35,10 +35,11 @@ namespace news_server.Features.Profile
         }
 
         [Authorize(Roles = "moderator, user")]
-        [HttpPost(nameof(GetProfilesExceptName))]
-        public async Task<ActionResult> GetProfilesExceptName(GetProfileUserNameModel model)
+        [HttpGet(nameof(GetProfiles))]
+        public async Task<ActionResult> GetProfiles(int page = 1)
         {
-            var result = await profileService.GetProfilesExceptName(model.UserName, model.Page);
+            var username = User.GetUserName();
+            var result = await profileService.GetProfilesExceptName(username, page);
             return Ok(result);
         }
 
