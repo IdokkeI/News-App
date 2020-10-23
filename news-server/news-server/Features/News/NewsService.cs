@@ -215,7 +215,7 @@ namespace news_server.Features.News
             var result = await Task.Run( async () => (await context
                 .News
                 .Include(n => n.Owner)
-                .Where(n => n.Owner.Id == myProfile.Id || Subs.Contains(n.Owner.Id))
+                .Where(n => (n.Owner.Id == myProfile.Id || Subs.Contains(n.Owner.Id)) && n.isAproove)
                 .Select(n => new GetNewsModel
                 {
                     NewsId = n.Id,

@@ -132,7 +132,8 @@ namespace news_server.Features.Profile
         public async Task<string> UploadProfileImage(string username, IFormFile image)
         {
             var dirPath = Path.Combine(env.WebRootPath, username, "profile");
-            var filePath = Path.Combine(dirPath, image.FileName);
+            Directory.CreateDirectory(dirPath);
+            var filePath = Path.Combine(dirPath, image.FileName.Replace(' ', '_'));
 
             var files = new DirectoryInfo(dirPath).GetFiles();
 

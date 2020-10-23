@@ -36,12 +36,10 @@ namespace news_server.Features.News
                 if (result)
                 {
                     return Ok();
-                }
-
-                ModelState.AddModelError("errors", "Заголовок используется");
+                }                                
             }            
            
-            return BadRequest(ModelState);
+            return BadRequest();
         }
 
 
