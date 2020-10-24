@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using news_server.Features.Comment.Models;
 using news_server.Features.News.Models;
 using news_server.Features.StatisticNews;
 using news_server.Infrastructure.Extensions;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace news_server.Features.News
 {
-    
+    [Authorize]
     public class NewsController: ApiController
     {
         private readonly INewsService newsService;
@@ -25,7 +24,6 @@ namespace news_server.Features.News
         }
 
 
-        [Authorize]
         [HttpPost(nameof(CreateNews))]
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> CreateNews(CreateNewsModel model)
@@ -38,41 +36,73 @@ namespace news_server.Features.News
                 if (result)
                 {
                     return Ok();
-                }
-
-                ModelState.AddModelError("errors", "Заголовок используется");
+                }                                
             }            
            
-            return BadRequest(ModelState);
+            return BadRequest();
         }
 
 
+        [AllowAnonymous]
         [HttpGet(nameof(GetNews))]
-        public async Task<IEnumerable<GetNewsModel>> GetNews(int page)
+        public async Task<IEnumerable<GetNewsModel>> GetNews(int page = 1)
         {
             var news = await newsService.GetNews(page);
             return news;
         }
 
-
-        [HttpGet(nameof(GetNewsById))]
-        public async Task<ActionResult> GetNewsById(GetCommentsByNewsIdReqModel model)
+        [Authorize(Roles = "moderator, user")]
+        [HttpGet(nameof(GetMyNews))]
+        public async Task<IEnumerable<GetNewsModel>> GetMyNews(int page = 1)
         {
-            var news = await newsService.GetNewsById(model.NewsId, model.Page);
+            var username = User.GetUserName();
+            var news = await newsService.GetMyNews(username, page);
+            return news;
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost(nameof(FindNews))]
+        public async Task<ActionResult> FindNews(FindNewsModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var news = await newsService.FindNews(model.Text, model.Page);
+                return Ok(news);
+            }
+            return BadRequest(ModelState);
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost(nameof(GetNewsById))]
+        public async Task<ActionResult> GetNewsById(int newsId)
+        {
+            var news = await newsService.GetNewsById(newsId);
 
             if (news != null)
-            {
-                if (!string.IsNullOrEmpty(User.GetUserName()))
+            {                
+                var username = User.GetUserName();
+                if (username != null)
                 {
-                    var username = User.GetUserName();
-                    await statisticNewsService.SetState(model.NewsId, username, "view", string.Empty);
+                    await statisticNewsService.SetState(newsId, username, "view", string.Empty);
                 }
+                
                 return Ok(news);
             }
             return NotFound();
         }
 
-        [Authorize]
+
+        [HttpGet(nameof(GetInterestingNews))]
+        public async Task<ActionResult> GetInterestingNews(int page = 1)
+        {
+            var username = User.GetUserName();
+            var result = await newsService.GetInterestingNews(username, page);
+            return Ok(result);
+        }
+
+
         [HttpPut(nameof(EditNews))]
         public async Task<ActionResult> EditNews(EditNewsModel model)
 

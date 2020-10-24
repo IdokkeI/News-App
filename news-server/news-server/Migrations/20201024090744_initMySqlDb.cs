@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace news_server.Migrations
 {
-    public partial class init : Migration
+    public partial class initMySqlDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +40,8 @@ namespace news_server.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Photo = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +53,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SectionName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -64,7 +66,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -85,7 +87,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -170,7 +172,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: true),
                     RegisterOn = table.Column<DateTime>(nullable: false),
                     LastActiveOn = table.Column<DateTime>(nullable: true),
@@ -192,7 +194,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SectionsNameId = table.Column<int>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Photo = table.Column<string>(nullable: true),
@@ -200,8 +202,7 @@ namespace news_server.Migrations
                     PublishOn = table.Column<DateTime>(nullable: false),
                     isAproove = table.Column<bool>(nullable: false),
                     OwnerId = table.Column<int>(nullable: true),
-                    isModifyed = table.Column<bool>(nullable: false),
-                    ModifyedOn = table.Column<DateTime>(nullable: true)
+                    isModifyed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -225,14 +226,15 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ProfileIdFrom = table.Column<int>(nullable: false),
                     NotificationText = table.Column<string>(nullable: true),
                     Url = table.Column<string>(nullable: true),
                     Alt = table.Column<string>(nullable: true),
                     ProfileId = table.Column<int>(nullable: false),
                     CommentId = table.Column<int>(nullable: true),
-                    NotificationDate = table.Column<DateTime>(nullable: false)
+                    NotificationDate = table.Column<DateTime>(nullable: false),
+                    isViewed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -250,7 +252,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ProfileId = table.Column<int>(nullable: false),
                     ProfileIdSub = table.Column<int>(nullable: false)
                 },
@@ -270,12 +272,13 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     OwnerId = table.Column<int>(nullable: false),
                     Text = table.Column<string>(nullable: true),
                     DateComment = table.Column<DateTime>(nullable: false),
                     UserNameTo = table.Column<string>(nullable: true),
                     isEdit = table.Column<bool>(nullable: false),
+                    CommentIdTo = table.Column<int>(nullable: true),
                     NewsId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -300,7 +303,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LikeId = table.Column<int>(nullable: true),
                     DislikeId = table.Column<int>(nullable: true),
                     NewsId = table.Column<int>(nullable: false),
@@ -341,7 +344,7 @@ namespace news_server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     LikeId = table.Column<int>(nullable: true),
                     DislikeId = table.Column<int>(nullable: true),
                     CommentId = table.Column<int>(nullable: true)
@@ -378,8 +381,7 @@ namespace news_server.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -405,8 +407,7 @@ namespace news_server.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_NewsId",

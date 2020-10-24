@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using news_server.Features.Admin.Model;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Admin
@@ -17,7 +16,7 @@ namespace news_server.Features.Admin
         
 
         [HttpGet(nameof(GetModerators))]
-        public async Task<ActionResult> GetModerators(int page) 
+        public async Task<ActionResult> GetModerators(int page = 1) 
         {
             var result = await adminService.GetModerators(page);
             return Ok(result);
@@ -25,11 +24,11 @@ namespace news_server.Features.Admin
 
 
         [HttpPost(nameof(SetModerator))]
-        public async Task<ActionResult> SetModerator(GetUser model)
+        public async Task<ActionResult> SetModerator(string username)
         {
-            if (!string.IsNullOrEmpty(model.UserName))
+            if (!string.IsNullOrEmpty(username))
             {
-                var result = await adminService.SetModerator(model.UserName);
+                var result = await adminService.SetModerator(username);
 
                 if (result)
                 {
@@ -37,18 +36,17 @@ namespace news_server.Features.Admin
                 }
 
                 ModelState.AddModelError("notfound", "Пользователь не найден");
-            }
-            
+            }            
             return BadRequest(ModelState);
         }
 
 
         [HttpPost(nameof(DemoteModerator))]
-        public async Task<ActionResult> DemoteModerator(GetUser model)
+        public async Task<ActionResult> DemoteModerator(string username)
         {
-            if (!string.IsNullOrEmpty(model.UserName))
+            if (!string.IsNullOrEmpty(username))
             {
-                var result = await adminService.DemoteModerator(model.UserName);
+                var result = await adminService.DemoteModerator(username);
 
                 if (result)
                 {
@@ -56,8 +54,7 @@ namespace news_server.Features.Admin
                 }
 
                 ModelState.AddModelError("notfound", "Пользователь не найден");
-            }
-           
+            }           
             return BadRequest(ModelState);
         }
     }

@@ -41,20 +41,23 @@ namespace news_server.Features.Moderator
                 .Include(n => n.Owner.User)
                 .FirstOrDefaultAsync(n => n.Id == newsId);
 
-            if (!news.isAproove)
+            if (news != null)
             {
-                news.isAproove = true;
-                news.PublishOn = DateTime.Now;
-                var isModifyed = news.isModifyed;
-                news.isModifyed = false;
-                context.News.Update(news);
-                                
-                await SetNotificationAsync(news, link, isModifyed);
+                if (!news.isAproove)
+                {
+                    news.isAproove = true;
+                    news.PublishOn = DateTime.Now;
+                    var isModifyed = news.isModifyed;
+                    news.isModifyed = false;
+                    context.News.Update(news);
 
-                await context.SaveChangesAsync();
+                    await SetNotificationAsync(news, link, isModifyed);
 
-                return true;
-            }
+                    await context.SaveChangesAsync();
+
+                    return true;
+                }
+            }            
             return false;
         }
 
@@ -137,6 +140,7 @@ namespace news_server.Features.Moderator
             context.Profiles.Update(profile);
             context.Users.Update(user);
             await context.SaveChangesAsync();
+
             return true;
         }
 

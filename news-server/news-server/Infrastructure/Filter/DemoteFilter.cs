@@ -20,19 +20,27 @@ namespace news_server.Infrastructure.Filter
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            string username = context.HttpContext.User.GetUserName();
-            var user = await userManager.FindByNameAsync(username);
-            var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
-
-            var isInRole = context.HttpContext.User.IsInRole(role);
-            if (!isInRole)
+            if (context.HttpContext.Request.Headers.ContainsKey("Authorization"))
             {
-                context.Result = new StatusCodeResult(401);
+                string username = context.HttpContext.User.GetUserName();
+                var user = await userManager.FindByNameAsync(username);
+                var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
+
+                var isInRole = context.HttpContext.User.IsInRole(role);
+                if (!isInRole)
+                {
+                    context.Result = new StatusCodeResult(401);
+                }
+                else
+                {
+                    await next();
+                }
             }
             else
             {
                 await next();
             }
+            
         }
     }
 }

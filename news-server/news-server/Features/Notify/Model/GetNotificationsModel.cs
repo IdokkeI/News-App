@@ -15,5 +15,7 @@ namespace news_server.Features.Notify.Model
         public int? CommentId { get; set; }
 
         public DateTime NotificationDate { get; set; }
+
+        public bool isViewed { get; set; }
     }
 }

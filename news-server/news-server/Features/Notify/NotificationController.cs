@@ -17,9 +17,9 @@ namespace news_server.Features.Notify
         }
 
 
-        [HttpGet]
+        [HttpGet(nameof(GetNotifications))]
         [ServiceFilter(typeof(BanFilter))]
-        public async Task<ActionResult> GetNotifications(int page)
+        public async Task<ActionResult> GetNotifications(int page = 1)
         {
             var username = User.GetUserName();
 
@@ -27,6 +27,18 @@ namespace news_server.Features.Notify
                 .GetNotifications(username, page);
 
             return Ok(result);
+            
+        }
+        
+        [HttpGet(nameof(Viewed))]
+        [ServiceFilter(typeof(BanFilter))]
+        public async Task<ActionResult> Viewed(int notificationId)
+        {
+            var username = User.GetUserName();
+
+            await notificationService.Viewed(username, notificationId);
+
+            return Ok();
             
         }
     }
