@@ -121,28 +121,59 @@ namespace news_server.Features.News
         }
 
 
-        public async Task<IEnumerable<GetNewsModel>> GetNews(int page)
-        {           
-            var news = await Task.Run( async () => (await context
-                .News
-                .Where(n => n.isAproove)
-                .Select(n => new GetNewsModel
-                {
-                    NewsId = n.Id,
-                    Photo = n.Photo,
-                    Title = n.Title,
-                    PublishDate = n.PublishOn,
-                    Params = statisticNewsService.GetStatisticById(n.Id) 
-                })
-                .ToListAsync())
-                .OrderByDescending(n => n.PublishDate)
-                .ThenByDescending(n => n.Params.Views)
-                .ThenByDescending(n => n.Params.Likes)
-                .Skip(page * 20 - 20)
-                .Take(20)
-                .ToList());
+        public async Task<IEnumerable<GetNewsModel>> GetNews(string username, int page)
+        {
+            if (username == null)
+            {
+                List<GetNewsModel> news = new List<GetNewsModel>();
+                news = await Task.Run(async () => (await context
+               .News
+               .Where(n => n.isAproove)
+               .Select(n => new GetNewsModel
+               {
+                   NewsId = n.Id,
+                   Photo = n.Photo,
+                   Title = n.Title,
+                   PublishDate = n.PublishOn,
+                   Params = statisticNewsService.GetStatisticById(n.Id)
+               })
+               .ToListAsync())
+               .OrderByDescending(n => n.PublishDate)
+               .ThenByDescending(n => n.Params.Views)
+               .ThenByDescending(n => n.Params.Likes)
+               .Skip(page * 20 - 20)
+               .Take(20)
+               .ToList());
+                return news;
+            }
+            else
+            {
+                List<GetNewsModelWithStates> news = new List<GetNewsModelWithStates>();
 
-            return news;            
+                news = await Task.Run(async () => (await context
+               .News
+               .Where(n => n.isAproove)
+               .Select(n => new GetNewsModelWithStates
+               {
+                   NewsId = n.Id,
+                   Photo = n.Photo,
+                   Title = n.Title,
+                   PublishDate = n.PublishOn,
+                   Params = statisticNewsService.GetStatisticById(n.Id),
+                   LocalState = statisticNewsService.LocalStateNews(n.Id, username)
+               })
+               .ToListAsync())
+               .OrderByDescending(n => n.PublishDate)
+               .ThenByDescending(n => n.Params.Views)
+               .ThenByDescending(n => n.Params.Likes)
+               .Skip(page * 20 - 20)
+               .Take(20)
+               .ToList());
+
+                return news;
+            }
+
+            
         }
 
 
@@ -216,13 +247,14 @@ namespace news_server.Features.News
                 .News
                 .Include(n => n.Owner)
                 .Where(n => (n.Owner.Id == myProfile.Id || Subs.Contains(n.Owner.Id)) && n.isAproove)
-                .Select(n => new GetNewsModel
+                .Select(n => new GetNewsModelWithStates
                 {
                     NewsId = n.Id,
                     Photo = n.Photo,
                     Title = n.Title,
                     PublishDate = n.PublishOn,
-                    Params = statisticNewsService.GetStatisticById(n.Id)
+                    Params = statisticNewsService.GetStatisticById(n.Id),
+                    LocalState = statisticNewsService.LocalStateNews(n.Id, username)
                 })
                 .ToListAsync())
                 .OrderByDescending(n => n.PublishDate)

@@ -18,6 +18,37 @@ namespace news_server.Features.StatisticComment
             this.context = context;
         }
 
+        public LocalState LocalStateComment(int commentId, string username)
+        {
+            var profile =  context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefault(p => p.User.UserName == username);
+
+            var Like = context
+                .StatisticComments
+                .Include(sc => sc.Comment)
+                .Include(sc => sc.Like)
+                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Like == profile);
+            
+            var DisLike = context
+                .StatisticComments
+                .Include(sc => sc.Comment)
+                .Include(sc => sc.Dislike)
+                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Dislike == profile);
+
+            bool isLike = false;
+            bool isDisLike = false;
+
+            isLike = Like == null ? false : true;
+            isDisLike = DisLike == null ? false : true;
+
+            return new LocalState
+            {
+                IsLike = isLike,
+                IsDislike = isDisLike
+            };
+        }
 
         public Params GetStatisticById  (int commentId)
         {            

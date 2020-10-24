@@ -3,7 +3,7 @@
 namespace news_server.Features
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]")] 
     public abstract class ApiController: ControllerBase
     {
     }

@@ -21,6 +21,34 @@ namespace news_server.Features.StatisticNews
             this.notificationService = notificationService;
         }
 
+        public LocalState LocalStateNews(int newsId, string username)
+        {
+            var profile = context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefault(p => p.User.UserName == username);
+
+            var Like = context
+                .StatisticNews
+                .Include(sc => sc.News)
+                .Include(sc => sc.Like)
+                .FirstOrDefault(sc => sc.News.Id == newsId && sc.Like == profile);
+
+            var DisLike = context
+                .StatisticComments
+                .Include(sc => sc.Comment)
+                .Include(sc => sc.Dislike)
+                .FirstOrDefault(sc => sc.Comment.Id == newsId && sc.Dislike == profile);
+
+            bool isLike = Like == null ? false : true; ;
+            bool isDisLike = DisLike == null ? false : true; ;
+
+            return new LocalState
+            {
+                IsLike = isLike,
+                IsDislike = isDisLike
+            };
+        }
 
         public async Task<bool> SetState(
             int newsId, 

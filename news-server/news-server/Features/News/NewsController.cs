@@ -47,7 +47,9 @@ namespace news_server.Features.News
         [HttpGet(nameof(GetNews))]
         public async Task<IEnumerable<GetNewsModel>> GetNews(int page = 1)
         {
-            var news = await newsService.GetNews(page);
+            var username = User.GetUserName();
+
+            var news = await newsService.GetNews(username, page);
             return news;
         }
 

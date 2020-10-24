@@ -19,7 +19,7 @@ namespace news_server.Infrastructure.Filter
 
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
+        {            
             var username = context
                 .HttpContext
                 .User
