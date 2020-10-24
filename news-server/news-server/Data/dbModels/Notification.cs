@@ -25,5 +25,7 @@ namespace news_server.Data.dbModels
         public int? CommentId { get; set; }
 
         public DateTime NotificationDate { get; set; }
+
+        public bool isViewed { get; set; }
     }
 }

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Data.dbModels;
 using news_server.Features.Notify.Model;
-using news_server.Features.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,32 @@ namespace news_server.Features.Notify
     public class NotificationService : INotificationService
     {
         private readonly NewsDbContext context;
+        private readonly IHubContext<NotifyHub> hubContext;
 
-        public NotificationService(NewsDbContext context)
+        public NotificationService(NewsDbContext context,
+            IHubContext<NotifyHub> hubContext)
         {
             this.context = context;
+            this.hubContext = hubContext;
         }
-               
+            
+        
+        public async Task Viewed(string username, int notificationId)
+        {
+            var profile = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(u => u.User.UserName == username);
+
+            var notification = await context
+                .Notifications
+                .FirstOrDefaultAsync(n => n.Id == notificationId && n.Profile == profile);
+            notification.isViewed = true;
+            context.Notifications.Update(notification);
+            await context.SaveChangesAsync();
+        }
+
+
         public async Task<List<GetNotificationsModel>> GetNotifications(string username, int page)
         {
             var user = await context
@@ -40,9 +61,10 @@ namespace news_server.Features.Notify
                     Alt = n.Alt,
                     NotificationText = n.NotificationText,
                     NotificationDate = n.NotificationDate,
-                    CommentId = n.CommentId
+                    CommentId = n.CommentId,
+                    isViewed = n.isViewed
                 })
-                .OrderBy(n => n.NotificationDate)
+                .OrderByDescending(n => n.NotificationDate)
                 .Skip(page * 20 - 20)
                 .Take(20)
                 .ToListAsync();
@@ -50,6 +72,7 @@ namespace news_server.Features.Notify
             return result;
         }
                 
+
         public async Task AddNotification(
             CProfile profileTo, 
             int profileFrom, 
@@ -71,6 +94,34 @@ namespace news_server.Features.Notify
 
             await context.Notifications.AddAsync(notification);
             await context.SaveChangesAsync();
+
+            await Notify(profileTo, notification);
+        }
+
+
+        private async Task Notify(CProfile profileTo, Notification notification)
+        {
+            var username = (await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p == profileTo))
+                .User
+                .UserName;
+
+            var notify = new GetNotificationsModel
+            {
+                Id = notification.Id,
+                NotificationText = notification.NotificationText,
+                Url = notification.Url,
+                Alt = notification.Alt,
+                CommentId = notification.CommentId,
+                NotificationDate = notification.NotificationDate,
+                isViewed = notification.isViewed
+            };
+
+            var result = JsonConvert.SerializeObject(notify);
+
+            await hubContext.Clients.User(username).SendAsync("SignalNotification", result);
         }
     }
 }

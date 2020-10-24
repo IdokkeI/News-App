@@ -25,10 +25,11 @@ namespace news_server
                 .AddIdentityService()
                 .AddJwtAuthentication(Configuration)
                 .AddAppServices()
-                .AddSwaggerService()                
+                .AddSwaggerService()
+                .AddCompression()
                 .AddControllers(option => 
                     option.Filters.Add(typeof(DemoteFilter)));
-
+                        
             services
                 .AddSignalR();
         }
@@ -45,6 +46,8 @@ namespace news_server
                 app.UseHsts();
             }
             app
+                .UseResponseCompression()
+                .UseStaticFiles()
                 .UseSwaggerMW()
                 .UseCorsMW()
                 .UseRouting()
@@ -54,7 +57,7 @@ namespace news_server
                 .UseEndpoints(endpoints =>
                 {                    
                     endpoints.MapControllers();
-                    endpoints.MapHub<Notify>("/notyficationHub");
+                    endpoints.MapHub<NotifyHub>("/notyficationHub");
                 });
         }
     }

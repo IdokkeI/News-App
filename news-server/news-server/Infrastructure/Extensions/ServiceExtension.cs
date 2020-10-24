@@ -22,11 +22,39 @@ using news_server.Features.Notify.Provider;
 using news_server.Features.Profile;
 using news_server.Features.Services;
 using news_server.Features.SectionNames;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
+using System.Linq;
 
 namespace news_server.Infrastructure.Extensions
 {
     public static class ServiceExtension
     {
+        public static IServiceCollection AddCompression(this IServiceCollection services)
+        {
+            services
+                .AddResponseCompression(option =>
+                {
+                    option.EnableForHttps = true;
+                    option.MimeTypes = ResponseCompressionDefaults
+                            .MimeTypes
+                            .Concat(new[]
+                            {
+                                "application/json",
+                                "text/plain",
+                                "text/json"
+                            });
+                    option.Providers.Add<BrotliCompressionProvider>();
+                    option.Providers.Add<GzipCompressionProvider>();
+                })
+                .Configure<BrotliCompressionProviderOptions>(option =>
+                     option.Level = CompressionLevel.Optimal)
+                .Configure<GzipCompressionProviderOptions>(option =>
+                    option.Level = CompressionLevel.Optimal);
+            return services;
+        }
+
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddAuthentication(opt =>
@@ -53,7 +81,7 @@ namespace news_server.Infrastructure.Extensions
         public static IServiceCollection AddDataBaseContext(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddDbContext<NewsDbContext>(options =>
-               options.UseSqlServer(
+               options.UseMySql(
                    Configuration.GetConnectionString("DefaultConnection")));
             return services;
         }
@@ -98,7 +126,8 @@ namespace news_server.Infrastructure.Extensions
             services.AddTransient<StatisticCommentService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IModeratorService, ModeratorService>();
-            services.AddScoped<BanFilter>();
+            services.AddTransient<BanFilter>();
+            services.AddTransient<DemoteFilter>();
             services.AddTransient<ISubService, SubService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IUserIdProvider, NewsUserProvider>();

@@ -6,7 +6,6 @@ namespace news_server.Data
 {
     public class NewsDbContext : IdentityDbContext<User>
     {
-        
         public NewsDbContext(DbContextOptions<NewsDbContext> options)
             : base(options)
         {

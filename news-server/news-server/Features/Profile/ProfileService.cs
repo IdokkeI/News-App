@@ -7,6 +7,13 @@ using news_server.Shared.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using MimeKit;
+using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.SignalR;
+using news_server.Features.Notify;
 
 namespace news_server.Features.Profile
 {
@@ -14,13 +21,21 @@ namespace news_server.Features.Profile
     {
         private readonly NewsDbContext context;
         private readonly INewsService newsService;
+        private readonly IWebHostEnvironment env;
+        private readonly IHubContext<NotifyHub> hubContext;
 
-        public ProfileService(NewsDbContext context, INewsService newsService)
+        public ProfileService(
+            NewsDbContext context, 
+            INewsService newsService,
+            IWebHostEnvironment env,
+            IHubContext<NotifyHub> hubContext
+            )
         {
             this.context = context;
             this.newsService = newsService;
+            this.env = env;
+            this.hubContext = hubContext;
         }
-
 
         public async Task<List<GetUserPmodel>> GetProfilesExceptName(string username, int page)
         {
@@ -41,7 +56,6 @@ namespace news_server.Features.Profile
             return result;
         }
 
-
         public async Task<CProfile> GetSimpleProfileById(int profileId)
         {
             var result = await context
@@ -50,7 +64,6 @@ namespace news_server.Features.Profile
 
             return result;
         }
-
 
         public string GetUserNameByProfileId(int profileIdSub)
         {
@@ -61,7 +74,6 @@ namespace news_server.Features.Profile
 
             return username;
         }
-
 
         public async Task<GetProfileById> GetProfileByUserName(string username, int page)
         {
@@ -80,7 +92,6 @@ namespace news_server.Features.Profile
 
             return result;
         }
-
         
         public async Task<GetProfileById> GetProfileByUserName(string username)
         {
@@ -100,7 +111,6 @@ namespace news_server.Features.Profile
             return result;
         }
 
-
         public async Task<GetProfileById> GetProfileById(int profileId, int page)
         {
             var result = await context
@@ -117,6 +127,61 @@ namespace news_server.Features.Profile
                 .FirstOrDefaultAsync();
 
             return result;
+        }
+
+        public async Task<string> UploadProfileImage(string username, IFormFile image)
+        {
+            var dirPath = Path.Combine(env.WebRootPath, username, "profile");
+            Directory.CreateDirectory(dirPath);
+            var filePath = Path.Combine(dirPath, image.FileName.Replace(' ', '_'));
+
+            var files = new DirectoryInfo(dirPath).GetFiles();
+
+            if (files.Length != 0)
+            {
+                for (int i = 0; i < files.Length; i++)
+                {
+                    files[i].Delete();
+                }
+            }
+
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var user = await context
+                .Users
+                .FirstOrDefaultAsync(u => u.UserName == username);
+
+            user.Photo = filePath;
+            context.Users.Update(user);
+
+            await context.SaveChangesAsync();
+
+            return filePath;
+        }
+
+        public async Task SendEmail(string email, string link)
+        {
+            var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress("", "eybrev9@mail.ru"));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = "Смена пароля";
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = $"Для смены пароля перейдите по ссылке <a href={link}>{link}</a>"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync("smtp.mail.ru", 25, false);
+                await client.AuthenticateAsync("eybrev9@mail.ru", "529440qwe");
+                await client.SendAsync(emailMessage);
+
+                await client.DisconnectAsync(true);
+            }
         }
     }
 }
