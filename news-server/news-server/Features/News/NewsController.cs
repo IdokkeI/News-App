@@ -51,7 +51,7 @@ namespace news_server.Features.News
             return news;
         }
 
-        [Authorize]
+        [Authorize(Roles = "moderator, user")]
         [HttpGet(nameof(GetMyNews))]
         public async Task<IEnumerable<GetNewsModel>> GetMyNews(int page = 1)
         {
