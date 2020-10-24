@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
-import './Login.scss'
+import './Login.scss';
 
-
-class Enter extends Component {
+class Login extends Component {
 
   
     constructor (props) {
+      
       super(props);
+     
       this.state = {
         email: '',
         password: '',
@@ -16,6 +16,7 @@ class Enter extends Component {
         passwordValid: false,
         formValid: false
       }
+      
     }
   
     handleUserInput = (e) => {
@@ -56,10 +57,12 @@ class Enter extends Component {
       return(error.length === 0 ? '' : 'has-error');
     }
 
-    handleClick =(e) => {
+    handleClick = (e) => {
       alert(this.state.email + this.state.password);
     }
+     
 
+   
   render () {
     return (
       <div className="form">
@@ -81,16 +84,15 @@ class Enter extends Component {
               </div>
               <div className="form_buttom">
                 <button type="submit" className="button button-primary" onClick={this.handleClick}>Войти</button>
-                <div className="form_buttom_back">
-                  <Link to="/" className="button button-primary">Назад</Link>
-                </div>
+                
               </div>
+             
             </form>
           </div>
         </div>
       </div>
     )
   }
- }
- export default Enter;
+}
+ export default Login;
  

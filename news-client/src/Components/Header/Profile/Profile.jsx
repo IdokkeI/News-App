@@ -1,10 +1,56 @@
-import React from 'react'
+import  React, { Component } from 'react'
 import './Profile.scss'
 
-const Profile = () => {
-    return <div className='profile'>
+import UserSettings from "./UserSettings/UserSettings"
 
-    </div>
-}
+import {Route} from 'react-router-dom';
 
-export default Profile;
+
+
+class Profile extends Component {
+    constructor() {
+      super();
+      
+      this.state = {
+        showMenu: false,
+      }
+      
+      this.showMenu = this.showMenu.bind(this);
+    }
+    
+    showMenu(event) {
+      event.preventDefault();
+      
+      this.setState({
+        showMenu: true,
+      });
+    }
+  
+    render() {
+      return (
+        <div className="profile">
+          <a className="dropbtn" onClick={this.showMenu}> Профиль</a>
+          
+          {
+            this.state.showMenu ?  
+            (
+                <div className="dropdown-content">
+                  <a href="/UserNews">Мои Новости </a>
+                  <a href="UserSubscribers"> Мои подписки </a>
+                  <a href="/UserSettings">  Настройки</a>
+                </div>
+                
+              ) : null
+              
+          }
+          <div>
+        <Route path="/UserSettings" render ={ ()=><UserSettings/> }/> 
+
+        </div>
+        </div>
+        
+
+      );
+    }
+  }
+  export default Profile;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import '../Login/Login.scss'
 import './Registration.scss'
 
@@ -61,7 +61,66 @@ class Registration extends Component {
     alert(this.state.email + this.state.nikname +  this.state.password);
   }
 
+//   async componentDidMount() {
+//     // POST request using fetch with async/await
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ title: 'One or more validation errors occurred.' })
+//     };
+//     const response = await fetch('https://localhost:5001/Identity/Register', requestOptions);
+//     const data = await response.json();
+//     this.setState({ postId: data.id });
+// }
+
+componentDidMount() {
+  fetch("https://localhost:5001/Identity/Register")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({
+          isLoaded: true,
+          items: result.items
+        });
+      },
+      
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      }
+    )
+}
+
+
+// componentDidMount() {
+//   fetch('https://localhost:5001/Identity/Register')
+//     .then(function (response) {
+//       return response.json();
+//     })
+//     .then(
+//     (result) => {
+//       let { email, password, nikname } = result.main
+//       this.setState({
+//         email,
+//         password,
+//         nikname
+        
+//       });
+//     })
+//     .catch(function (error) {
+//       console.log('Request faile', error)
+//     });
+// }
+
   render () {
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      return <div>Ошибка: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Загрузка...</div>;
+    } else {
     return (
       <div className="form">
         <div className="form_group">
@@ -88,10 +147,21 @@ class Registration extends Component {
               
               <div className="form_buttom">
                 <button type="submit" className="button button-primary" onClick={this.handleClick}>Регистрация</button>
-                <div className="form_buttom_back">
-                  <Link to="/" className="button button-primary">Назад</Link>
-                </div>
+                <button  className="button button-primary"><a href="/">Назад</a></button>
               </div>
+              <ul>
+      <li>email: {this.state.email} </li>
+      <li>password: {this.state.password} </li>
+      <li>nikname: {this.state.nikname} </li>
+    </ul>
+
+    <ul>
+          {items.map(item => (
+            <li key={item.name}>
+              {item.name} {item.price}
+            </li>
+          ))}
+        </ul>
             </form>
           </div>
         </div>
@@ -99,5 +169,7 @@ class Registration extends Component {
     )
   }
  }
+
+}
  export default Registration;
  
