@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using news_server.Features.SectionNames.Models;
+using news_server.Infrastructure.Extensions;
 using System.Threading.Tasks;
 
 namespace news_server.Features.SectionNames
@@ -55,7 +56,8 @@ namespace news_server.Features.SectionNames
         {
             if (!string.IsNullOrEmpty(model.SectionName))
             {
-                var result = await sectionService.GetNewsBySectionName(model.SectionName, model.Page);
+                var username = User.GetUserName();
+                var result = await sectionService.GetNewsBySectionName(username, model.SectionName, model.Page);
                 return Ok(result);
             }
             return BadRequest();

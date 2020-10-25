@@ -36,7 +36,7 @@ namespace news_server.Infrastructure.Filter
             if (profile != null)
             {
                 var date = user.LockoutEnd;
-                if (date > DateTime.Now)
+                if (date < DateTime.Now)
                 {
                     user.LockoutEnd = null;
                     profile.isBaned = false;

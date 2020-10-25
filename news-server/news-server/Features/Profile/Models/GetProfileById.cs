@@ -7,7 +7,7 @@ namespace news_server.Features.Profile.Models
     {
         public int ProfileId { get; set; }
         public string UserName { get; set; }
-        public List<GetNewsModel> UserNews { get; set; }
+        public List<GetNewsModelWithStates> UserNews { get; set; }
                 
     }
 }

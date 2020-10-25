@@ -69,7 +69,8 @@ namespace news_server.Features.News
         {
             if (ModelState.IsValid)
             {
-                var news = await newsService.FindNews(model.Text, model.Page);
+                var username = User.GetUserName();
+                var news = await newsService.FindNews(username, model.Text, model.Page);
                 return Ok(news);
             }
             return BadRequest(ModelState);

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using news_server.Shared.Models;
 using System.Linq;
 using news_server.Features.Profile;
+using news_server.Features.Services;
 
 namespace news_server.Features.Subscriber
 {
@@ -16,15 +17,18 @@ namespace news_server.Features.Subscriber
         private readonly NewsDbContext context;
         private readonly INotificationService notificationService;
         private readonly IProfileService profileService;
+        private readonly UserSerivce userSerivce;
 
         public SubService(
             NewsDbContext context, 
             INotificationService notificationService,
-            IProfileService profileService)
+            IProfileService profileService,
+            UserSerivce userSerivce)
         {
             this.context = context;
             this.notificationService = notificationService;
             this.profileService = profileService;
+            this.userSerivce = userSerivce;
         }
 
         public async Task<List<GetUserPmodel>> GetMySubscribers(string username, int page = 1)
@@ -40,23 +44,30 @@ namespace news_server.Features.Subscriber
 
         public async Task<List<GetUserPmodel>> GetSubscribers(int profileId, int page)
         {
-            var subs = await Task.Run( async () => (await context
-                .Subscriptions
-                .Include(s => s.Profile)
-                .Include(s => s.Profile.User)
-                .Where(s => s.ProfileId == profileId)
-                .Select(s => new GetUserPmodel
-                {
-                    ProfileID = s.ProfileIdSub,
-                    UserName = profileService.GetUserNameByProfileId(s.ProfileIdSub)
-                })
-                .ToListAsync())
-                .OrderBy(s => s.UserName)
-                .Skip(page * 20 - 20)
-                .Take(20)
-                .ToList());
+            var subs = await context
+               .Subscriptions
+               .Include(s => s.Profile)
+               .Include(s => s.Profile.User)
+               .Where(s => s.ProfileId == profileId)
+               .Select(s => new GetUserPmodel
+               {
+                   ProfileID = s.ProfileIdSub
+               })
+               .ToListAsync();
 
-            return subs;
+            var result = await Task.Run(() =>
+            {
+               subs.ForEach(s => s.UserName = profileService.GetUserNameByProfileId(s.ProfileID));
+
+               subs
+                   .OrderBy(s => s.UserName)
+                   .Skip(page * 20 - 20)
+                   .Take(20)
+                   .ToList();
+               return subs;
+            });
+            
+            return result;
         } 
         
 
@@ -69,11 +80,14 @@ namespace news_server.Features.Subscriber
                 .Where(s => s.ProfileId == profileId)
                 .Select(s => new GetUserPmodel
                 {
-                    ProfileID = s.ProfileIdSub,
-                    UserName = profileService.GetUserNameByProfileId(s.ProfileIdSub)
+                    ProfileID = s.ProfileIdSub                   
                 })
                 .ToListAsync();
 
+            subs
+                .ForEach(s => 
+                    s.UserName = userSerivce.GetUserNameByProfileId(s.ProfileID));
+            
             return subs;
         }       
 
