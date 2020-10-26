@@ -10,15 +10,15 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "news_server": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:5294;http://localhost:5295",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5295",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
