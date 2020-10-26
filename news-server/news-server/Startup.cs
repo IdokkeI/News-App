@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,7 +7,6 @@ using news_server.Features.Notify;
 using news_server.Infrastructure.Extensions;
 using news_server.Infrastructure.Filter;
 using news_server.Infrastructure.MiddleWare;
-using System.Net;
 
 namespace news_server
 {
@@ -32,11 +30,6 @@ namespace news_server
                 .AddControllers(option => 
                     option.Filters.Add(typeof(DemoteFilter)));
 
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.KnownProxies.Add(IPAddress.Parse("165.227.158.125"));
-            });
-
             services
                 .AddSignalR();
         }
@@ -52,11 +45,6 @@ namespace news_server
             {               
                 app.UseHsts();
             }
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
 
             app
                 .UseResponseCompression()
