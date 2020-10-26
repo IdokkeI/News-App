@@ -1,20 +1,4 @@
 ﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:52990",
-      "sslPort": 44333
-    }
-  },
-  "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": false,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
-      }
-    },
     "news_server": {
       "commandName": "Project",
       "launchBrowser": false,
@@ -23,5 +7,5 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
-  }
+  
 }
