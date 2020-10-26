@@ -45,6 +45,11 @@ namespace news_server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.ListenLocalhost(5295);
+                    });
+
                     webBuilder.UseStartup<Startup>();
                 });
     }
