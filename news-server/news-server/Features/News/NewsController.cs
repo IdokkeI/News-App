@@ -37,8 +37,7 @@ namespace news_server.Features.News
                 {
                     return Ok();
                 }                                
-            }            
-           
+            }    
             return BadRequest();
         }
 

@@ -166,7 +166,10 @@ namespace news_server.Features.News
             })
             .FirstOrDefaultAsync();
 
-            news.Params = statisticNewsService.GetStatisticById(newsId);
+            if (news != null)
+            {
+                news.Params = statisticNewsService.GetStatisticById(newsId);
+            }            
 
             return news;                   
         }

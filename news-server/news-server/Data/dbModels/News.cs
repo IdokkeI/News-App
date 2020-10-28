@@ -19,7 +19,7 @@ namespace news_server.Data.dbModels
 
         public bool isAproove { get; set; }
 
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Comment> Comments { get; set; }
 
         public Profile Owner { get; set; }
 

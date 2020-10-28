@@ -35,6 +35,12 @@ namespace news_server.Features.Notify
             var notification = await context
                 .Notifications
                 .FirstOrDefaultAsync(n => n.Id == notificationId && n.Profile == profile);
+
+            if (notification == null)
+            {
+                return;
+            }
+
             notification.isViewed = true;
             context.Notifications.Update(notification);
             await context.SaveChangesAsync();

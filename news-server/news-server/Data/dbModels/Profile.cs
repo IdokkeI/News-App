@@ -19,7 +19,7 @@ namespace news_server.Data.dbModels
 
         public List<News> News { get; set; }
 
-        public List<Notification> Notifications { get; set; } = new List<Notification>();
+        public List<Notification> Notifications { get; set; }
 
     }
 }

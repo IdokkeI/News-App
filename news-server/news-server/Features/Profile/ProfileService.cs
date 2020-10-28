@@ -84,7 +84,10 @@ namespace news_server.Features.Profile
               })              
               .FirstOrDefaultAsync();
 
-            result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId, page);
+            if (result != null)
+            {
+                result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId, page);
+            }            
 
             return result;
         }
@@ -123,7 +126,11 @@ namespace news_server.Features.Profile
                 })
                 .FirstOrDefaultAsync();
 
-            result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId, page);
+            if (result != null)
+            {
+                result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId, page);
+
+            }
 
             return result;
         }
