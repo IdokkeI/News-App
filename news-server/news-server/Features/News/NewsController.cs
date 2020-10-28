@@ -78,7 +78,7 @@ namespace news_server.Features.News
 
 
         [AllowAnonymous]
-        [HttpPost(nameof(GetNewsById))]
+        [HttpGet(nameof(GetNewsById))]
         public async Task<ActionResult> GetNewsById(int newsId)
         {
             var news = await newsService.GetNewsById(newsId);

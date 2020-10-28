@@ -53,8 +53,8 @@ namespace news_server.Features.Profile
         }
 
         [AllowAnonymous]
-        [HttpPost(nameof(GetProfileNewsByUserName))]
-        public async Task<ActionResult> GetProfileNewsByUserName(GetProfileUserNameModel model)
+        [HttpGet(nameof(GetProfileNewsByUserName))]
+        public async Task<ActionResult> GetProfileNewsByUserName([FromQuery]GetProfileUserNameModel model)
         {
             var myUserName = User.GetUserName();
             var result = await profileService.GetProfileNewsByUserName(myUserName, model.UserName, model.Page);

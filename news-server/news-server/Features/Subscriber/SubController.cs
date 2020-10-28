@@ -26,7 +26,7 @@ namespace news_server.Features.Subscriber
 
             string link = Url
                     .Action(
-                        "GetProfileByUserName",
+                        "GetProfileNewsByUserName",
                         "Profile",
                         new { username = username },
                      protocol: HttpContext.Request.Scheme);
