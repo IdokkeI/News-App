@@ -22,21 +22,25 @@ namespace news_server.Features.Subscriber
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> SubscribeState(SubModel model)
         {
-            var username = User.GetUserName();
-
-            string link = Url
-                    .Action(
-                        "GetProfileNewsByUserName",
-                        "Profile",
-                        new { username = username },
-                     protocol: HttpContext.Request.Scheme);
-
-            var result = await subService.SubState(model.SubTo, username, model.State, link);
-
-            if (result)
+            if (model.State == "sub" || model.State == "unsub")
             {
-                return Ok();
+                var username = User.GetUserName();
+
+                string link = Url
+                        .Action(
+                            "GetProfileNewsByUserName",
+                            "Profile",
+                            new { username = username },
+                         protocol: HttpContext.Request.Scheme);
+
+                var result = await subService.SubState(model.SubTo, username, model.State, link);
+
+                if (result)
+                {
+                    return Ok();
+                }
             }
+            
             return BadRequest();
         }
         

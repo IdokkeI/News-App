@@ -214,6 +214,11 @@ namespace news_server.Features.News
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.User.UserName == username);
 
+            if (myProfile == null)
+            {
+                return null;
+            }
+            
             var Subs = await context
                 .Subscriptions
                 .Include(s => s.Profile)

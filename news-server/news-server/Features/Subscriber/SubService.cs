@@ -33,11 +33,18 @@ namespace news_server.Features.Subscriber
 
         public async Task<List<GetUserPmodel>> GetMySubscribers(string username, int page = 1)
         {
-            var profileId = (await context
+            var profile = await context
                 .Profiles
                 .Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.User.UserName == username))
-                .Id;
+                .FirstOrDefaultAsync(p => p.User.UserName == username);
+
+            var profileId = 0;
+
+                if (profile != null)
+                {
+                    profileId = profile.Id;
+                }
+                
             var result = await GetSubscribers(profileId, page);
             return result;
         }

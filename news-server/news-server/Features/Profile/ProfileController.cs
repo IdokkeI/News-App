@@ -49,6 +49,10 @@ namespace news_server.Features.Profile
         {
             var username = User.GetUserName();
             var result = await profileService.GetProfileNewsById(username, model.ProfileId, model.Page);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
@@ -58,6 +62,10 @@ namespace news_server.Features.Profile
         {
             var myUserName = User.GetUserName();
             var result = await profileService.GetProfileNewsByUserName(myUserName, model.UserName, model.Page);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
