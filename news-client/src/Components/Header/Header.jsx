@@ -1,35 +1,50 @@
-import React from 'react'
-import './Header.scss'
-import {NavLink, Route, Link} from "react-router-dom";
+import React from "react";
+import "./Header.scss";
+import { NavLink, Switch } from "react-router-dom";
 import Registration from "./Registration/Registration";
 import Login from "./Login/Login";
-import Profile from './Profile/Profile';
-// import Home from "../Home";
+import Profile from "./Profile/Profile";
+import { getUser } from "../Utils/Common";
+import PrivateRouter from "../Utils/PrivateRouter";
+import PublicRouter from "../Utils/PublicRouter";
+import PrivateRoute from "../Utils/PrivateRouter";
+import CreatePost from "./CreatePost/CreatePost";
 
 const Header = () => {
-    return <header className='header'>        
-    
-        <div className="Enter_registr">  <nav>
-            <Link to="Login" className="enter">Вход</Link>
-            <Link to="registration"className="registration">Регистрация</Link>   
-            
-             </nav> 
-            {/* <Route path="/Profile"  render ={ ()=><Profile/> } /> */}
-            <Route path="/Login"  render ={ ()=><Login/> } />    
-            <Route path="/registration" render ={ ()=><Registration/> }/>
-            
-        </div>
-        <div className="header__profile">
-            {/* <Link to="profile"className="Profile">Profile</Link> */}
-            <Profile />
-        </div>
+  const user = getUser();
+  return (
+    <header className="header">
+      <div className="Enter_registr">
+        <NavLink activeClassName="active" className="enter" to="/login">
+          Login
+        </NavLink>
+        <NavLink
+          activeClassName="active"
+          className="registration"
+          to="/registration">
+          registration !
+        </NavLink>
+        <NavLink activeClassName="active" to="/profile">
+          {user}
+        </NavLink>
         <div className="header__createPost">
-            <NavLink to="/CreatePost" className="createPost" >Создать пост</NavLink>
-        </div>
-        
+        <NavLink to="/CreatePost" className="createPost">
+          Создать пост
+        </NavLink>
+      </div>
+      </div>
+      <div className="content">
+        <Switch>
+          <PublicRouter path="/login" component={Login} />
+          <PublicRouter path="/registration" component={Registration} />
+          <PrivateRouter path="/profile" component={Profile} />
+          <PrivateRoute path="/createPost" component={CreatePost} />
+        </Switch>
+      </div>
+
+     
     </header>
-             
-        
-}
+  );
+};
 
 export default Header;
