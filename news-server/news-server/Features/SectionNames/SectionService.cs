@@ -70,7 +70,6 @@ namespace news_server.Features.SectionNames
                .Select(n => new GetNewsModelWithStates
                {
                    NewsId = n.Id,
-                   Photo = n.Photo,
                    Title = n.Title,
                    PublishDate = n.PublishOn
                })
@@ -79,6 +78,16 @@ namespace news_server.Features.SectionNames
             var result = await newsService.SortingNewsWithStates(news, myUserName, page);
               
             return result;
+        }
+
+        public async Task<List<string>> GetSectionNames()
+        {
+            var sections = await context
+                .SectionsNames
+                .Select(sn => sn.SectionName)
+                .ToListAsync();
+
+            return sections;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace news_server.Features.News.Models
 {
@@ -10,8 +11,6 @@ namespace news_server.Features.News.Models
         [MaxLength(150)]
         [Required(ErrorMessage = "Введите заголовок")]
         public string Title { get; set; }
-
-        public string Photo { get; set; }
 
         [Required(ErrorMessage = "Введите текст новости/статьи")]
         public string Text { get; set; }

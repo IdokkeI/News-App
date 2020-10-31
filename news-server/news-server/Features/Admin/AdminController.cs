@@ -22,9 +22,16 @@ namespace news_server.Features.Admin
             return Ok(result);
         }
 
+        [HttpGet(nameof(GetUsers))]
+        public async Task<ActionResult> GetUsers(int page = 1)
+        {
+            var result = await adminService.GetUsers(page);
+            return Ok(result);
+        }
+
 
         [HttpPost(nameof(SetModerator))]
-        public async Task<ActionResult> SetModerator(string username)
+        public async Task<ActionResult> SetModerator([FromBody]string username)
         {
             if (!string.IsNullOrEmpty(username))
             {
@@ -42,7 +49,7 @@ namespace news_server.Features.Admin
 
 
         [HttpPost(nameof(DemoteModerator))]
-        public async Task<ActionResult> DemoteModerator(string username)
+        public async Task<ActionResult> DemoteModerator([FromBody]string username)
         {
             if (!string.IsNullOrEmpty(username))
             {
@@ -52,10 +59,8 @@ namespace news_server.Features.Admin
                 {
                     return Ok();
                 }
-
-                ModelState.AddModelError("notfound", "Пользователь не найден");
             }           
-            return BadRequest(ModelState);
+            return NotFound();
         }
     }
 }

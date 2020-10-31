@@ -10,8 +10,6 @@ namespace news_server.Features.News.Models
         [Required(ErrorMessage = "Введите заголовок")]
         public string Title { get; set; }
 
-        public string Photo { get; set; }
-
         [Required(ErrorMessage = "Введите текст новости/статьи")]
         public string Text { get; set; }
     }

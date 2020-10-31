@@ -10,5 +10,6 @@ namespace news_server.Features.SectionNames
         Task<bool> AddSection(AddSectionNameModel model);
         Task<bool> UpdateSection(UpdateSectionModel model);
         Task<List<GetNewsModelWithStates>> GetNewsBySectionName(string myUserName, string sectionName, int page);
+        Task<List<string>> GetSectionNames();
     }
 }

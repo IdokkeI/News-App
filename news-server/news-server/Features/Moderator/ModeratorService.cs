@@ -122,11 +122,12 @@ namespace news_server.Features.Moderator
             await context.SaveChangesAsync();
         }
                 
-        public async Task<bool> BanUser(int profileId, int dayCount)
+        public async Task<bool> BanUser(string username, int dayCount)
         {
             var profile = await context
                 .Profiles
-                .FirstOrDefaultAsync(p => p.Id == profileId);
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username);
 
             if (profile == null)
             {
@@ -151,7 +152,6 @@ namespace news_server.Features.Moderator
                 .Select(n => new GetNewsBaseModel
                 {
                     NewsId = n.Id,
-                    Photo = n.Photo,
                     PublishDate = n.PublishOn,
                     Title = n.Title
                 })
@@ -180,6 +180,26 @@ namespace news_server.Features.Moderator
                 .ToListAsync();
 
             return banUsers;
+        }
+
+        public async Task<GetNewsByIdWithOwnerNameModel> GetNotAprooveNewById(int newsId)
+        {
+            var news = await context
+            .News
+            .Include(n => n.Owner)
+            .Include(n => n.Owner.User)
+            .Where(n => n.Id == newsId && !n.isAproove)
+            .Select(n => new GetNewsByIdWithOwnerNameModel
+            {
+                UserName = n.Owner.User.UserName,
+                NewsId = n.Id,
+                PublishDate = n.PublishOn,
+                Title = n.Title,
+                Text = n.Text,
+            })
+            .FirstOrDefaultAsync();
+
+            return news;
         }
     }
 }

@@ -7,6 +7,7 @@ using news_server.Features.Notify;
 using news_server.Features.Profile;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Admin
@@ -64,8 +65,23 @@ namespace news_server.Features.Admin
 
 
         public async Task<List<GetUser>> GetModerators(int page)
-        {        
-            var moderators = await userManager.GetUsersInRoleAsync("moderator");
+        {
+            var role = "moderator";
+            var result = await GetUsersInRole(role, page);
+            return result;
+        }
+
+        public async Task<List<GetUser>> GetUsers(int page)
+        {
+            var role = "user";
+            var result = await GetUsersInRole(role, page);
+            return result;
+        }
+
+
+        private async Task<List<GetUser>> GetUsersInRole(string role, int page)
+        {
+            var moderators = await userManager.GetUsersInRoleAsync(role);
 
             var result = await Task.Run(() => moderators
                 .Select(m => new GetUser { UserName = m.UserName })
@@ -74,9 +90,8 @@ namespace news_server.Features.Admin
                 .Take(20)
                 .ToList());
 
-            return result;            
+            return result;
         }
-
 
         public async Task<bool> SetModerator(string username)
         {

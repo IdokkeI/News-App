@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using news_server.Features.Moderator.Models;
 using news_server.Features.Profile;
 using news_server.Infrastructure.Extensions;
 using System.Threading.Tasks;
@@ -27,8 +28,20 @@ namespace news_server.Features.Moderator
         }
 
 
+        [HttpGet(nameof(GetNotAprooveNewById))]
+        public async Task<ActionResult> GetNotAprooveNewById(int newsId)
+        {
+            var result = await moderatorService.GetNotAprooveNewById(newsId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+
         [HttpPost(nameof(ApproveNews))]
-        public async Task<ActionResult> ApproveNews(int newsId)
+        public async Task<ActionResult> ApproveNews([FromBody]int newsId)
         {
             string link = Url
                    .Action(
@@ -49,9 +62,9 @@ namespace news_server.Features.Moderator
 
 
         [HttpPost(nameof(BanUser))]
-        public async Task<ActionResult> BanUser(int profileId, int dayCount)
+        public async Task<ActionResult> BanUser(BanUserModel model)
         {
-            var result = await moderatorService.BanUser(profileId, dayCount);
+            var result = await moderatorService.BanUser(model.UserName, model.DayCount);
             if (result)
             {
                 return Ok();
@@ -61,13 +74,13 @@ namespace news_server.Features.Moderator
         }
         
 
-        [HttpGet(nameof(GetUsers))]
-        public async Task<ActionResult> GetUsers(int page = 1)
-        {
-            var username = User.GetUserName();
-            var result = await profileService.GetProfilesExceptName(username, page);
-            return Ok(result);
-        }
+        //[HttpGet(nameof(GetUsers))]
+        //public async Task<ActionResult> GetUsers(int page = 1)
+        //{
+        //    var username = User.GetUserName();
+        //    var result = await profileService.GetProfilesExceptName(username, page);
+        //    return Ok(result);
+        //}
 
 
         [HttpGet(nameof(GetBanUsers))]

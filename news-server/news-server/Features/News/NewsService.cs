@@ -45,7 +45,6 @@ namespace news_server.Features.News
                     .Select(n => new GetNewsModelWithStates
                     {
                         NewsId = n.Id,
-                        Photo = n.Photo,
                         Title = n.Title,
                         PublishDate = n.PublishOn
                     })
@@ -66,7 +65,6 @@ namespace news_server.Features.News
                     .Select(n => new GetNewsModelWithStates
                     {
                         NewsId = n.Id,
-                        Photo = n.Photo,
                         Title = n.Title,
                         PublishDate = n.PublishOn                        
                     })
@@ -105,18 +103,18 @@ namespace news_server.Features.News
                 var now = DateTime.Now;
 
                 if (section != null)
-                {
-                    await context
+                {                   
+                    var createNews = await context
                         .News
-                        .AddAsync( new CNews
+                        .AddAsync(new CNews
                         {
                             SectionsName = section,
                             Title = model.Title,
-                            Photo = model.Photo,
                             Text = model.Text,
-                            Owner = profile,                       
+                            Owner = profile,
                             PublishOn = now
                         });
+
 
                     await context.SaveChangesAsync();
                     return true;
@@ -127,16 +125,13 @@ namespace news_server.Features.News
 
 
         public async Task<IEnumerable<GetNewsModel>> GetNews(string username, int page)
-        {
-            List<GetNewsModelWithStates> news = new List<GetNewsModelWithStates>();
-
-            news = await context
+        {            
+            var news = await context
             .News
             .Where(n => n.isAproove)
             .Select(n => new GetNewsModelWithStates
             {
                 NewsId = n.Id,
-                Photo = n.Photo,
                 Title = n.Title,
                 PublishDate = n.PublishOn
             })
@@ -160,7 +155,6 @@ namespace news_server.Features.News
                 UserName = n.Owner.User.UserName,
                 NewsId = n.Id,                
                 PublishDate = n.PublishOn,
-                Photo = n.Photo,
                 Title = n.Title,
                 Text = n.Text,
             })
@@ -193,7 +187,6 @@ namespace news_server.Features.News
 
             news.isAproove = false;
             news.Title = model.Title;
-            news.Photo = model.Photo;
             news.Text = model.Text;
             news.isModifyed = true;
             news.PublishOn = DateTime.Now;
@@ -206,6 +199,7 @@ namespace news_server.Features.News
 
             return true;
         }
+
 
         public async Task<IEnumerable<GetNewsModel>> GetInterestingNews(string username, int page)
         {
@@ -233,7 +227,6 @@ namespace news_server.Features.News
                .Select(n => new GetNewsModelWithStates
                {
                    NewsId = n.Id,
-                   Photo = n.Photo,
                    Title = n.Title,
                    PublishDate = n.PublishOn
                })
@@ -259,6 +252,7 @@ namespace news_server.Features.News
             return newsResult;
         }
 
+
         private async Task<List<GetNewsModelWithStates>> SelectNewsWithStates(List<CNews> news)
         {
             var result = await Task.Run(()
@@ -267,25 +261,30 @@ namespace news_server.Features.News
                        .Select(n => new GetNewsModelWithStates
                        {
                            NewsId = n.Id,
-                           Photo = n.Photo,
                            Title = n.Title,
                            PublishDate = n.PublishOn
                        })
                        .ToList());
+
             return result;
         }
 
+
         public async Task<List<GetNewsModelWithStates>> SortingNewsWithStates(List<GetNewsModelWithStates> news, string username, int page)
         {
-            var result = await Task.Run(() => 
+            var listNews = await Task.Run(() => 
             {
                 news.ForEach(n => 
                 {
                     n.Params = statisticNewsService.GetStatisticById(n.NewsId);
                     n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
                 });
+                return news; 
+            });
 
-                news
+            var result = await Task.Run(() =>
+            {
+                var pageNews = listNews
                     .OrderByDescending(n => n.PublishDate)
                     .ThenByDescending(n => n.Params.Views)
                     .ThenByDescending(n => n.Params.Likes)
@@ -293,8 +292,9 @@ namespace news_server.Features.News
                     .Take(20)
                     .ToList();
 
-                return news;
+                return pageNews;
             });
+
             return result;
         }
     }

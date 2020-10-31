@@ -10,7 +10,7 @@ namespace news_server.Features.Moderator
         Task<List<GetNewsBaseModel>> NotApproovedNews(int page);
         Task<bool> ApprooveNews(int newsId, string link);
         Task<List<GetUserPmodel>> GetBanUsers(int page);
-        Task<bool> BanUser(int profileId, int dayCount);       
-        
+        Task<bool> BanUser(string userName, int dayCount);
+        Task<GetNewsByIdWithOwnerNameModel> GetNotAprooveNewById(int newsId);
     }
 }

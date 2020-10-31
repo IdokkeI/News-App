@@ -62,5 +62,13 @@ namespace news_server.Features.SectionNames
             }
             return BadRequest();
         }
+
+        [Authorize]
+        [HttpGet(nameof(GetSectionNames))]
+        public async Task<ActionResult> GetSectionNames()
+        {
+            var result = await sectionService.GetSectionNames();
+            return Ok(result);
+        }
     }
 }
