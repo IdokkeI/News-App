@@ -1,0 +1,19 @@
+header {
+    display: block;
+    background-color: rgba($color: #505c54c0, $alpha: 0.4);
+}
+
+.Enter_registr{
+    display: inline-block;
+    margin: 0;
+    padding: 15px;
+}
+.Enter_registr nav {
+    display: inline-block;
+    // padding: 0 15px 0 15px;
+    position: relative;
+}
+.Enter_registr a{
+    display: inline;
+    padding: 0 15px 0 15px;
+}
