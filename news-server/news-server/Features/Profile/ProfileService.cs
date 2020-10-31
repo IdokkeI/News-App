@@ -12,8 +12,6 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using MimeKit;
 using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.SignalR;
-using news_server.Features.Notify;
 
 namespace news_server.Features.Profile
 {
@@ -22,19 +20,16 @@ namespace news_server.Features.Profile
         private readonly NewsDbContext context;
         private readonly INewsService newsService;
         private readonly IWebHostEnvironment env;
-        private readonly IHubContext<NotifyHub> hubContext;
 
         public ProfileService(
             NewsDbContext context, 
             INewsService newsService,
-            IWebHostEnvironment env,
-            IHubContext<NotifyHub> hubContext
+            IWebHostEnvironment env
             )
         {
             this.context = context;
             this.newsService = newsService;
             this.env = env;
-            this.hubContext = hubContext;
         }
 
         public async Task<List<GetUserPmodel>> GetProfilesExceptName(string username, int page)
@@ -70,12 +65,12 @@ namespace news_server.Features.Profile
             var username = context
                 .Profiles
                 .Include(p => p.User)
-                .FirstOrDefault(p => p.Id == profileIdSub)?.User.UserName;
+                .FirstOrDefault(p => p.Id == profileIdSub).User.UserName;
 
             return username;
         }
 
-        public async Task<GetProfileById> GetProfileByUserName(string username, int page)
+        public async Task<GetProfileById> GetProfileNewsByUserName(string myUserName, string username, int page)
         {
             var result = await context
               .Subscriptions
@@ -85,15 +80,19 @@ namespace news_server.Features.Profile
               .Select(s => new GetProfileById
               {
                   ProfileId = s.ProfileId,
-                  UserName = s.Profile.User.UserName,
-                  UserNews = newsService.GetProfileNews(s.ProfileId, page)
+                  UserName = s.Profile.User.UserName                  
               })              
               .FirstOrDefaultAsync();
+
+            if (result != null)
+            {
+                result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId, page);
+            }            
 
             return result;
         }
         
-        public async Task<GetProfileById> GetProfileByUserName(string username)
+        public async Task<GetProfileById> GetProfileNewsByUserName(string myUserName, string username)
         {
             var result = await context
               .Subscriptions
@@ -103,15 +102,16 @@ namespace news_server.Features.Profile
               .Select(s => new GetProfileById
               {
                   ProfileId = s.ProfileId,
-                  UserName = s.Profile.User.UserName,
-                  UserNews = newsService.GetProfileNews(s.ProfileId)
+                  UserName = s.Profile.User.UserName                  
               })
               .FirstOrDefaultAsync();
+
+            result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId);
 
             return result;
         }
 
-        public async Task<GetProfileById> GetProfileById(int profileId, int page)
+        public async Task<GetProfileById> GetProfileNewsById(string myUserName, int profileId, int page)
         {
             var result = await context
                 .Subscriptions
@@ -121,10 +121,16 @@ namespace news_server.Features.Profile
                 .Select(s => new GetProfileById 
                 { 
                     ProfileId = s.ProfileId,
-                    UserName = s.Profile.User.UserName,
-                    UserNews = newsService.GetProfileNews(s.ProfileId, page)
+                    UserName = s.Profile.User.UserName
+                    
                 })
                 .FirstOrDefaultAsync();
+
+            if (result != null)
+            {
+                result.UserNews = await newsService.GetProfileNews(myUserName, result.ProfileId, page);
+
+            }
 
             return result;
         }

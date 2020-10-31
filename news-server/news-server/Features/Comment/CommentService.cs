@@ -92,7 +92,7 @@ namespace news_server.Features.Comment
         }
 
 
-        public async Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id, int page)
+        public async Task<List<GetCommentsModel>> GetCommentsByNewsId(int Id, int page, string username)
         {
             var comments = await context
                 .Comments
@@ -105,7 +105,8 @@ namespace news_server.Features.Comment
                         DateComment = c.DateComment,
                         isEdit = c.isEdit,
                         UserNameTo = c.UserNameTo,
-                        Params = statisticCommentService.GetStatisticById(c.Id)
+                        Params = statisticCommentService.GetStatisticById(c.Id),
+                        LocalState = statisticCommentService.LocalStateComment(c.Id, username)
                     })
                 .OrderBy(c => c.DateComment)
                 .Skip(page * 20 - 20)

@@ -10,10 +10,10 @@ namespace news_server.Features.Profile
     public interface IProfileService
     {
         Task<List<GetUserPmodel>> GetProfilesExceptName(string username, int page);        
-        Task<GetProfileById> GetProfileById(int profileId, int page);
+        Task<GetProfileById> GetProfileNewsById(string myUserName, int profileId, int page);
         Task<CProfile> GetSimpleProfileById(int profileId);
-        Task<GetProfileById> GetProfileByUserName(string username, int page);
-        Task<GetProfileById> GetProfileByUserName(string username);
+        Task<GetProfileById> GetProfileNewsByUserName(string myUserName, string username, int page);
+        Task<GetProfileById> GetProfileNewsByUserName(string myUserName, string username);
         string GetUserNameByProfileId(int profileIdSub);
         Task<string> UploadProfileImage(string username, IFormFile image);
         Task SendEmail(string email, string link);

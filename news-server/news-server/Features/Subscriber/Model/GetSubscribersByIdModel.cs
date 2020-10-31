@@ -1,8 +1,10 @@
-﻿namespace news_server.Features.Subscriber.Model
+﻿using news_server.Features.Profile.Models;
+
+namespace news_server.Features.Subscriber.Model
 {
-    public class GetSubscribersByIdModel
+    public class GetSubscribersByIdModel : PageModel
     {
         public int ProfileId { get; set; }
-        public int Page { get; set; }
+
     }
 }

@@ -12,5 +12,6 @@ namespace news_server.Features.Comment.Models
         public string UserNameTo { get; set; }
         public bool isEdit { get; set; }
         public ParamsComment Params { get; set; }
+        public LocalState LocalState { get; set; }
     }
 }

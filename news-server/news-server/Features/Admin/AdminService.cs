@@ -34,27 +34,31 @@ namespace news_server.Features.Admin
         public async Task<bool> DemoteModerator(string username)
         {
             var user = await userManager.FindByNameAsync(username);
-            var isInRole = await userManager.IsInRoleAsync(user, "moderator");
-            if (user != null && isInRole)
+            if (user != null)
             {
-                var resultDel = await userManager.RemoveFromRoleAsync(user, "moderator");
-                var resultAdd = await userManager.AddToRoleAsync(user, "user");
-                if (resultAdd.Succeeded && resultDel.Succeeded)
+                var isInRole = await userManager.IsInRoleAsync(user, "moderator");
+                if (user != null && isInRole)
                 {
-                    var profileToId = (await context
-                        .Profiles
-                        .Include(p => p.User)
-                        .FirstOrDefaultAsync(p => p.User.UserName == username))
-                        .Id;
-                    
-                    var profileTo = await profileService.GetSimpleProfileById(profileToId);
-                    var profileFrom = -1;
-                    var text = "У вас забрали права модератора";
-                    await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
-                                           
-                    return true;
-                }                
+                    var resultDel = await userManager.RemoveFromRoleAsync(user, "moderator");
+                    var resultAdd = await userManager.AddToRoleAsync(user, "user");
+                    if (resultAdd.Succeeded && resultDel.Succeeded)
+                    {
+                        var profileToId = (await context
+                            .Profiles
+                            .Include(p => p.User)
+                            .FirstOrDefaultAsync(p => p.User.UserName == username))
+                            .Id;
+
+                        var profileTo = await profileService.GetSimpleProfileById(profileToId);
+                        var profileFrom = -1;
+                        var text = "У вас забрали права модератора";
+                        await notificationService.AddNotification(profileTo, profileFrom, text, null, null);
+
+                        return true;
+                    }
+                }
             }
+           
             return false;
         }
 

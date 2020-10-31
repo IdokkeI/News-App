@@ -44,18 +44,28 @@ namespace news_server.Features.Profile
         }
 
         [AllowAnonymous]
-        [HttpPost(nameof(GetProfileById))]
-        public async Task<ActionResult> GetProfileById(GetProfileIdModel model)
+        [HttpPost(nameof(GetProfileNewsById))]
+        public async Task<ActionResult> GetProfileNewsById(GetProfileIdModel model)
         {
-            var result = await profileService.GetProfileById(model.ProfileId, model.Page);
+            var username = User.GetUserName();
+            var result = await profileService.GetProfileNewsById(username, model.ProfileId, model.Page);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
         [AllowAnonymous]
-        [HttpPost(nameof(GetProfileByUserName))]
-        public async Task<ActionResult> GetProfileByUserName(GetProfileUserNameModel model)
+        [HttpGet(nameof(GetProfileNewsByUserName))]
+        public async Task<ActionResult> GetProfileNewsByUserName([FromQuery]GetProfileUserNameModel model)
         {
-            var result = await profileService.GetProfileByUserName(model.UserName, model.Page);
+            var myUserName = User.GetUserName();
+            var result = await profileService.GetProfileNewsByUserName(myUserName, model.UserName, model.Page);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 

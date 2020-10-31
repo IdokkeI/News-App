@@ -30,7 +30,7 @@ namespace news_server.Features.Notify
             
         }
         
-        [HttpGet(nameof(Viewed))]
+        [HttpPost(nameof(Viewed))]
         [ServiceFilter(typeof(BanFilter))]
         public async Task<ActionResult> Viewed(int notificationId)
         {

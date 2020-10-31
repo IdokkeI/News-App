@@ -29,7 +29,7 @@ namespace news_server
                 .AddCompression()
                 .AddControllers(option => 
                     option.Filters.Add(typeof(DemoteFilter)));
-                        
+
             services
                 .AddSignalR();
         }
@@ -45,6 +45,7 @@ namespace news_server
             {               
                 app.UseHsts();
             }
+
             app
                 .UseResponseCompression()
                 .UseStaticFiles()

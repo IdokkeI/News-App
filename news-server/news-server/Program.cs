@@ -43,9 +43,10 @@ namespace news_server
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .ConfigureWebHostDefaults(webBuilder =>                
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                        serverOptions
+                            .ListenLocalhost(5295))
+                            .UseStartup<Startup>());
     }
 }

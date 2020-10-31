@@ -37,8 +37,7 @@ namespace news_server.Features.News
                 {
                     return Ok();
                 }                                
-            }            
-           
+            }    
             return BadRequest();
         }
 
@@ -47,7 +46,9 @@ namespace news_server.Features.News
         [HttpGet(nameof(GetNews))]
         public async Task<IEnumerable<GetNewsModel>> GetNews(int page = 1)
         {
-            var news = await newsService.GetNews(page);
+            var username = User.GetUserName();
+
+            var news = await newsService.GetNews(username, page);
             return news;
         }
 
@@ -67,7 +68,8 @@ namespace news_server.Features.News
         {
             if (ModelState.IsValid)
             {
-                var news = await newsService.FindNews(model.Text, model.Page);
+                var username = User.GetUserName();
+                var news = await newsService.FindNews(username, model.Text, model.Page);
                 return Ok(news);
             }
             return BadRequest(ModelState);
@@ -75,7 +77,7 @@ namespace news_server.Features.News
 
 
         [AllowAnonymous]
-        [HttpPost(nameof(GetNewsById))]
+        [HttpGet(nameof(GetNewsById))]
         public async Task<ActionResult> GetNewsById(int newsId)
         {
             var news = await newsService.GetNewsById(newsId);

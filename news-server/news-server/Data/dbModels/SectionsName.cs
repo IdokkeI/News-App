@@ -8,7 +8,7 @@ namespace news_server.Data.dbModels
 
         public string SectionName { get; set; }
 
-        public List<News> News { get; set; } = new List<News>();
+        public List<News> News { get; set; }
 
     }
 }

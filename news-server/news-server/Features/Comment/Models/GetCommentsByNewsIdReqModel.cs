@@ -1,8 +1,10 @@
-﻿namespace news_server.Features.Comment.Models
+﻿using news_server.Features.Profile.Models;
+
+namespace news_server.Features.Comment.Models
 {
-    public class GetCommentsByNewsIdReqModel
+    public class GetCommentsByNewsIdReqModel : PageModel
     {
         public int NewsId { get; set; }
-        public int Page { get; set; }
+
     }
 }
