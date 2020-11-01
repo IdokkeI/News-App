@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import { Route, Switch, NavLink } from "react-router-dom";
+
 import "./Profile.scss";
 
-// import UserSettings from "./UserSettings/UserSettings"
+import UserSettings from "./UserSettings/UserSettings";
+import UserNews from "./UserNews/UserNews";
+import UserSubscribers from "./UserSubscribers/UserSubscribers";
 
-// import {NavLink, Route} from 'react-router-dom';
-// import { history } from '@/_helpers';
 import { removeUserSession } from "../../Utils/Common";
 
 class Profile extends Component {
@@ -25,14 +27,43 @@ class Profile extends Component {
       showMenu: true,
     });
   }
-  handleLogout = (e) => {
-    e.preventDefault();
+  handleLogout = () => {
     removeUserSession();
     this.props.history.push("/login");
+    window.location.href = "/login";
   };
 
   render() {
-    return <input type="button" onClick={this.handleLogout} value="Logout" />;
+    return (
+      <div>
+        <a href="/UserNews">          Мои Новости
+</a>
+        <NavLink activeClassName="active" className="userNews" to="/userNews">
+          Мои Новости
+        </NavLink>
+
+        <NavLink
+          // activeClassName="active"
+          className="userSubscribers"
+          to="/userSubscribers">
+          Мои Подписки
+        </NavLink>
+        <NavLink
+          // activeClassName="active"
+          className="userSettings"
+          to="/userSettings"
+        >
+          Настройки !
+        </NavLink>
+
+        <Switch>
+          <Route exact path="/userNews" component={UserNews} />
+          <Route path="/userSubscribers" component={UserSubscribers} />
+          <Route path="/userSettings" component={UserSettings} />
+        </Switch>
+        <input type="button" onClick={this.handleLogout} value="Logout" />
+      </div>
+    );
   }
 }
 export default Profile;
