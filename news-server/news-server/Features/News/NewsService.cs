@@ -242,7 +242,7 @@ namespace news_server.Features.News
         {
             var news = await context
                 .News
-                .Where(n => n.Text.Contains(text) || n.Title.Contains(text))
+                .Where(n => (n.Text.Contains(text) || n.Title.Contains(text)) && n.isAproove)
                 .ToListAsync();
 
             var result = await SelectNewsWithStates(news);
