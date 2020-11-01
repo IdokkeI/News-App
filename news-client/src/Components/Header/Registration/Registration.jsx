@@ -65,27 +65,23 @@ class Registration extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
-  handleClick = async (e) => {
-    e.preventDefault();
-    await fetch("http://localhost:5295/Identity/Register", {
+  handleClick =  () => {
+     fetch("http://localhost:5295/Identity/Register", {
       method: "post",
-
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify(this.state),
     })
-      .then((Response) => Response.json())
-
-      .then((Result) => {
-        console.log("BRRRRR");
-        if (Result.Status === "Success") console.log("eeeha");
-        // this.props.history.push("/Dashboard");
-        else console.log(Result);
-
-        alert("Sorrrrrry !!!! Un-authenticated User !!!!!");
-      });
+      .then((Response) =>{
+        if(Response.status !== 200) {
+          alert("Пользователь с такими данными существует");
+          return
+        }else{
+          this.props.history.push("/login");
+        }
+       
+      })
   };
 
   render() {
@@ -94,7 +90,6 @@ class Registration extends Component {
         <div className="form_group">
           <div className="form_group_title">Регистрация</div>
           <div>
-            <form className="form_login">
               <div className="form_field">
                 <label htmlFor="email" className="form_field_lable">
                   E-mail
@@ -150,7 +145,7 @@ class Registration extends Component {
 
               <div className="form_buttom">
                 <button
-                  type="submit"
+                  type="button"
                   className="button button-primary"
                   onClick={this.handleClick}
                 >
@@ -160,7 +155,6 @@ class Registration extends Component {
                   <a href="/">Назад</a>
                 </button>
               </div>
-            </form>
           </div>
         </div>
       </div>
