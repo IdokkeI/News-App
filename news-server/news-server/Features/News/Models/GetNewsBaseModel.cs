@@ -8,8 +8,6 @@ namespace news_server.Features.News.Models
 
         public string Title { get; set; }
 
-        public string Photo { get; set; }
-
         public DateTime PublishDate { get; set; }
     }
 }

@@ -97,7 +97,7 @@ namespace news_server.Features.News
 
 
         [HttpGet(nameof(GetInterestingNews))]
-        public async Task<ActionResult> GetInterestingNews(int page = 1)
+        public async Task<ActionResult> GetInterestingNews(int page)
         {
             var username = User.GetUserName();
             var result = await newsService.GetInterestingNews(username, page);

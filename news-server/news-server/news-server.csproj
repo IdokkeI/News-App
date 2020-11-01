@@ -8,13 +8,9 @@
 
   <ItemGroup>
     <Compile Remove="Data\Migrations\**" />
-    <Compile Remove="Features\Moderator\Models\**" />
     <Content Remove="Data\Migrations\**" />
-    <Content Remove="Features\Moderator\Models\**" />
     <EmbeddedResource Remove="Data\Migrations\**" />
-    <EmbeddedResource Remove="Features\Moderator\Models\**" />
     <None Remove="Data\Migrations\**" />
-    <None Remove="Features\Moderator\Models\**" />
   </ItemGroup>
 
   <ItemGroup>
