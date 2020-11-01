@@ -147,12 +147,14 @@ namespace news_server.Features.News
         {           
             var news = await context
             .News
+            .Include(n => n.SectionsName)
             .Include(n => n.Owner)
             .Include(n => n.Owner.User)
-            .Where(n => n.Id == newsId && n.isAproove)
+            .Where(n => n.Id == newsId /*&& n.isAproove*/)
             .Select(n => new GetNewsByIdWithOwnerNameModel
             {
                 UserName = n.Owner.User.UserName,
+                SectionName = n.SectionsName.SectionName,
                 NewsId = n.Id,                
                 PublishDate = n.PublishOn,
                 Title = n.Title,
