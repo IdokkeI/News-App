@@ -6,7 +6,6 @@ class Registration extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
       email: "",
       password: "",
       userName: "",
@@ -16,8 +15,8 @@ class Registration extends Component {
       passwordValid: false,
       formValid: false,
       error: null,
-        isLoaded: false,
-      items:[]
+      isLoaded: false,
+      items: [],
     };
   }
 
@@ -66,46 +65,28 @@ class Registration extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
-
-  //   async componentDidMount() {
-  //     // POST request using fetch with async/await
-  //     const requestOptions = {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: JSON.stringify({ title: 'One or more validation errors occurred.' })
-  //     };
-  //     const response = await fetch('https://localhost:5001/Identity/Register', requestOptions);
-  //     const data = await response.json();
-  //     this.setState({ postId: data.id });
-  // }
-
-  handleClick  = async(e) => {
+  handleClick = async (e) => {
     e.preventDefault();
+    await fetch("http://localhost:5295/Identity/Register", {
+      method: "post",
 
-    await fetch("https://localhost:5001/Identity/Register", {
-      method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify(this.state),
     })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result,
-          });
-          this.props.history.push("/login");
+      .then((Response) => Response.json())
 
-          console.log(this.state);
-        }
-      )
-          .catch(function (error) {
-            // this.props.history.push("/login");
-        console.log('Request faile', error)
+      .then((Result) => {
+        console.log("BRRRRR");
+        if (Result.Status === "Success") console.log("eeeha");
+        // this.props.history.push("/Dashboard");
+        else console.log(Result);
+
+        alert("Sorrrrrry !!!! Un-authenticated User !!!!!");
       });
-  }
+  };
 
   render() {
     return (
@@ -129,7 +110,6 @@ class Registration extends Component {
               </div>
               <div className="form_field">
                 <label htmlFor="password_field" className="form_field_lable">
-                  
                   Пароль
                 </label>
                 <input
@@ -153,7 +133,7 @@ class Registration extends Component {
                   onChange={this.handleUserInput}
                 />
               </div>
-             
+
               <div className="form_field">
                 <label htmlFor="password_field" className="form_field_lable">
                   Подтвердите пароль
@@ -180,7 +160,6 @@ class Registration extends Component {
                   <a href="/">Назад</a>
                 </button>
               </div>
-             
             </form>
           </div>
         </div>

@@ -68,7 +68,7 @@ class Login extends Component {
   handleClick = async (e) => {
     e.preventDefault();
 
-    await fetch("https://localhost:5001/Identity/Login", {
+    await fetch("http://localhost:5295/Identity/Login", {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ class Login extends Component {
         });
         setUserSession(result.token, result);
 
-        console.log(this.state);
+        console.log(result);
       });
   };
 
