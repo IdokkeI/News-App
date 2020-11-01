@@ -19,7 +19,6 @@ export const removeUserSession = () => {
 // set the token and user from the session storage
 export const setUserSession = (token, data) => {
   if (JSON.stringify(data.username)) {
-    alert("Добро пожаловать");
     sessionStorage.setItem("token", token);
     sessionStorage.setItem("user", JSON.stringify(data.username));
   } else alert("Пользователя не существует");

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component } from "react";
 import "./Header.scss";
 import { NavLink, Switch } from "react-router-dom";
 import Registration from "./Registration/Registration";
@@ -10,41 +10,43 @@ import PublicRouter from "../Utils/PublicRouter";
 import PrivateRoute from "../Utils/PrivateRouter";
 import CreatePost from "./CreatePost/CreatePost";
 
-const Header = () => {
-  const user = getUser();
-  return (
-    <header className="header">
-      <div className="Enter_registr">
-        <NavLink activeClassName="active" className="enter" to="/login">
-          Login
-        </NavLink>
-        <NavLink
-          activeClassName="active"
-          className="registration"
-          to="/registration">
-          registration !
-        </NavLink>
-        <NavLink activeClassName="active" to="/profile">
-          {user}
-        </NavLink>
-        <div className="header__createPost">
-        <NavLink to="/CreatePost" className="createPost">
-          Создать пост
-        </NavLink>
-      </div>
-      </div>
-      <div className="content">
-        <Switch>
-          <PublicRouter path="/login" component={Login} />
-          <PublicRouter path="/registration" component={Registration} />
-          <PrivateRouter path="/profile" component={Profile} />
-          <PrivateRoute path="/createPost" component={CreatePost} />
-        </Switch>
-      </div>
+class Header extends Component {
+  
+  render() {
+    const user = getUser();
 
-     
-    </header>
-  );
-};
+    return (
+      <header className="header">
+        <div className="Enter_registr">
+          {!user && <NavLink activeClassName="active" className="enter" to="/login">
+            Login
+          </NavLink>}
+          {!user &&<NavLink
+            activeClassName="active"
+            className="registration"
+            to="/registration">
+            registration !
+          </NavLink>}
+          {user && <NavLink activeClassName="active" to="/profile">
+            {user}
+          </NavLink>}
+          <div className="header__createPost">
+            {!user &&<NavLink to="/CreatePost" className="createPost">
+              Создать пост
+            </NavLink>}
+          </div>
+        </div>
+        <div className="content">
+          <Switch>
+            <PublicRouter path="/login" component={Login} />
+            <PublicRouter path="/registration" component={Registration} />
+            <PrivateRouter path="/profile" component={Profile} />
+            <PrivateRoute path="/createPost" component={CreatePost} />
+          </Switch>
+        </div>
+      </header>
+    );
+  }
+}
 
 export default Header;
