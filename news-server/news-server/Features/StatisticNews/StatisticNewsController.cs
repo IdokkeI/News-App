@@ -24,13 +24,14 @@ namespace news_server.Features.StatisticNews
         public async Task<ActionResult> SetState(StatisticModel model)
         {
             var username = User.GetUserName();
-           
-            string link = Url
-                    .Action(
-                        "GetNewsById",
-                        "News",
-                        new { newsId = model.ObjectId },
-                     protocol: HttpContext.Request.Scheme);
+
+            string link = model.ObjectId.ToString();
+                //Url
+                //    .Action(
+                //        "GetNewsById",
+                //        "News",
+                //        new { newsId = model.ObjectId },
+                //     protocol: HttpContext.Request.Scheme);
 
             var result = await StatisticNewsService.SetState(model.ObjectId, username, model.State, link);
 

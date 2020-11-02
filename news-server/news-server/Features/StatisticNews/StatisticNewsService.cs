@@ -236,7 +236,7 @@ namespace news_server.Features.StatisticNews
             var profileFromName = user.User.UserName;
             var profilFrom = user.Id;
             var profileTo = news.Owner;
-            var text = $"Пользователь {profileFromName} оценил вашу <alt>";
+            var text = $"Пользователь {profileFromName} оценил вашу";
             var alt = "статью";
 
             await notificationService.AddNotification(profileTo, profilFrom, text, link, alt);

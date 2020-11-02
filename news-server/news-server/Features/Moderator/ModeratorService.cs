@@ -66,11 +66,11 @@ namespace news_server.Features.Moderator
             string text;
             if (isModifyed)
             {
-                text = $"Ваша <alt> обновлена";
+                text = $"Обновлена";
             }
             else
             {
-                text = $"Ваша <alt> опубликована";
+                text = $"Опубликована";
             }
 
             var profileTo = news.Owner;
@@ -88,11 +88,11 @@ namespace news_server.Features.Moderator
             string text;
             if (isModifyed)
             {
-                text = $"Пользователь {profileFrom.User.UserName} обновил <alt>";
+                text = $"Пользователь {profileFrom.User.UserName} обновил";
             }
             else
             {
-                text = $"Пользователь {profileFrom.User.UserName} опубликовал <alt>";
+                text = $"Пользователь {profileFrom.User.UserName} опубликовал";
             }
 
             var subs = await subService.GetSubscribers(profileFrom.Id);            
@@ -100,11 +100,28 @@ namespace news_server.Features.Moderator
 
             List<Notification> notifications = new List<Notification>();
 
-            subs
-                .ForEach(sub => 
-                {
-                    var profileTo = profileService.GetSimpleProfileById(sub.ProfileID);
+            //subs
+            //    .ForEach(sub => 
+            //    {
+            //        var profileTo = profileService.GetSimpleProfileById(sub.ProfileID);
                     
+            //        var notification = new Notification
+            //        {
+            //            NotificationDate = DateTime.Now,
+            //            ProfileIdFrom = profileFrom.Id,
+            //            Profile = profileTo.Result,
+            //            NotificationText = text,
+            //            Url = link,
+            //            Alt = alt,
+            //            CommentId = null
+            //        };
+            //        notifications.Add(notification);
+            //    });
+
+            var subParalel = Parallel.ForEach(subs, (s) =>
+                {
+                    var profileTo = profileService.GetSimpleProfileById(s.ProfileID);
+
                     var notification = new Notification
                     {
                         NotificationDate = DateTime.Now,
@@ -117,7 +134,7 @@ namespace news_server.Features.Moderator
                     };
                     notifications.Add(notification);
                 });
-
+            
             await context.Notifications.AddRangeAsync(notifications);
             await context.SaveChangesAsync();
         }

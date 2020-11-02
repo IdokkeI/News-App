@@ -26,12 +26,13 @@ namespace news_server.Features.Subscriber
             {
                 var username = User.GetUserName();
 
-                string link = Url
-                        .Action(
-                            "GetProfileNewsByUserName",
-                            "Profile",
-                            new { username = username },
-                         protocol: HttpContext.Request.Scheme);
+                string link = username;
+                    //Url
+                    //    .Action(
+                    //        "GetProfileNewsByUserName",
+                    //        "Profile",
+                    //        new { username = username },
+                    //     protocol: HttpContext.Request.Scheme);
 
                 var result = await subService.SubState(model.SubTo, username, model.State, link);
 
