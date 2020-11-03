@@ -7,7 +7,6 @@ using news_server.Features.Notify;
 using news_server.Features.Profile;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Admin

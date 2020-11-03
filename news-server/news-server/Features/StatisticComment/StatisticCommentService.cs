@@ -64,6 +64,7 @@ namespace news_server.Features.StatisticComment
         {            
             var listComments = context
                 .StatisticComments
+                .Include(sc => sc.Comment)
                 .Where(sc => sc.Comment.Id == commentId)
                 .ToList();
 

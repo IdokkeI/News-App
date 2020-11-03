@@ -108,20 +108,23 @@ namespace news_server.Features.Comment
                     })                               
                     .ToListAsync();
 
-            var commentParams = Parallel.ForEach<GetCommentsModel>(comments, (c) =>
-                {
-                    c.Params = statisticCommentService.GetStatisticById(c.CommentId);
-                    c.LocalState = statisticCommentService.LocalStateComment(c.CommentId, username);
-                });
-
-          
-            var result = await Task.Run(() => comments
+               await Task.Run(() =>
+               {
+                   comments.ForEach(c =>
+                   {
+                       c.Params = statisticCommentService.GetStatisticById(c.CommentId);
+                       c.LocalState = statisticCommentService.LocalStateComment(c.CommentId, username);
+                   });
+               });
+            
+            var result = (await Task.Run(() => comments
                 .OrderBy(c => c.DateComment)
                 .Skip(page * 20 - 20)
-                .Take(20));
+                .Take(20)))
+                .ToList();
 
 
-            return result.ToList();
+            return result;
         }
 
 

@@ -24,13 +24,7 @@ namespace news_server.Features.Comment
         {
             var username = User.GetUserName();
             string link = model.NewsId.ToString();
-            //string link = Url
-            //      .Action(
-            //          "GetNewsById",
-            //          "News",
-            //          new { newsId = model.NewsId },
-            //       protocol: HttpContext.Request.Scheme);
-
+            
             var commentIdTo = model.CommentIdTo;
             var result = await commentService.CreateComment(model, username, link, commentIdTo);
 

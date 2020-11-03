@@ -70,23 +70,17 @@ namespace news_server.Features.News
                     })
                     .ToListAsync();
 
-           // var result = await Task.Run(() =>
-           //{
-           //    news.ForEach(n => 
-           //    {
-           //        n.Params = statisticNewsService.GetStatisticById(n.NewsId);
-           //        n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
-           //    });
-           //    return news;
-           //});
-
-            var newsParallel = Parallel.ForEach(news, (n) =>
+            var result = await Task.Run(() =>
             {
-                n.Params = statisticNewsService.GetStatisticById(n.NewsId);
-                n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
+                news.ForEach(n =>
+                {
+                    n.Params = statisticNewsService.GetStatisticById(n.NewsId);
+                    n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
+                });
+                return news;
             });
-           
-            return news;
+
+            return result;
         }
 
 
@@ -277,25 +271,20 @@ namespace news_server.Features.News
 
         public async Task<List<GetNewsModelWithStates>> SortingNewsWithStates(List<GetNewsModelWithStates> news, string username, int page)
         {
-            //var listNews = await Task.Run(() => 
-            //{
-            //    news.ForEach(n => 
-            //    {
-            //        n.Params = statisticNewsService.GetStatisticById(n.NewsId);
-            //        n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
-            //    });
-            //    return news; 
-            //});
-
-            var newsParallel = Parallel.ForEach(news, (n) =>
+            var listNews = await Task.Run(() =>
             {
-                n.Params = statisticNewsService.GetStatisticById(n.NewsId);
-                n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
+                news.ForEach(n =>
+                {
+                    n.Params = statisticNewsService.GetStatisticById(n.NewsId);
+                    n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
+                });
+                return news;
             });
+                        
 
             var result = await Task.Run(() =>
             {
-                var pageNews = news
+                var pageNews = listNews
                     .OrderByDescending(n => n.PublishDate)
                     .ThenByDescending(n => n.Params.Views)
                     .ThenByDescending(n => n.Params.Likes)

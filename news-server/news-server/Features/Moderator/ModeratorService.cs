@@ -34,6 +34,7 @@ namespace news_server.Features.Moderator
             this.profileService = profileService;
         }
 
+
         public async Task<bool> ApprooveNews(int newsId, string link)
         {
             var news = await context.News
@@ -61,6 +62,7 @@ namespace news_server.Features.Moderator
             return false;
         }
 
+
         private async Task SetNotificationAsync(CNews news, string link, bool isModifyed = false)
         {
             string text;
@@ -83,6 +85,7 @@ namespace news_server.Features.Moderator
             
         }
 
+
         private async Task NoticeSubs(CProfile profileFrom, string link, bool isModifyed = false)
         {
             string text;
@@ -100,45 +103,30 @@ namespace news_server.Features.Moderator
 
             List<Notification> notifications = new List<Notification>();
 
-            //subs
-            //    .ForEach(sub => 
-            //    {
-            //        var profileTo = profileService.GetSimpleProfileById(sub.ProfileID);
-                    
-            //        var notification = new Notification
-            //        {
-            //            NotificationDate = DateTime.Now,
-            //            ProfileIdFrom = profileFrom.Id,
-            //            Profile = profileTo.Result,
-            //            NotificationText = text,
-            //            Url = link,
-            //            Alt = alt,
-            //            CommentId = null
-            //        };
-            //        notifications.Add(notification);
-            //    });
-
-            var subParalel = Parallel.ForEach(subs, (s) =>
-                {
-                    var profileTo = profileService.GetSimpleProfileById(s.ProfileID);
-
-                    var notification = new Notification
+            await Task.Run( () =>
+                subs
+                    .ForEach(sub =>
                     {
-                        NotificationDate = DateTime.Now,
-                        ProfileIdFrom = profileFrom.Id,
-                        Profile = profileTo.Result,
-                        NotificationText = text,
-                        Url = link,
-                        Alt = alt,
-                        CommentId = null
-                    };
-                    notifications.Add(notification);
-                });
-            
+                        var profileTo = profileService.GetSimpleProfileById(sub.ProfileID);
+
+                        var notification = new Notification
+                        {
+                            NotificationDate = DateTime.Now,
+                            ProfileIdFrom = profileFrom.Id,
+                            Profile = profileTo.Result,
+                            NotificationText = text,
+                            Url = link,
+                            Alt = alt,
+                            CommentId = null
+                        };
+                        notifications.Add(notification);
+                    }));
+
             await context.Notifications.AddRangeAsync(notifications);
             await context.SaveChangesAsync();
         }
-                
+            
+        
         public async Task<bool> BanUser(string username, int dayCount)
         {
             var profile = await context
@@ -161,6 +149,7 @@ namespace news_server.Features.Moderator
 
             return true;
         }
+
 
         public async Task<List<GetNewsBaseModel>> NotApproovedNews(int page)
         {
@@ -198,6 +187,7 @@ namespace news_server.Features.Moderator
 
             return banUsers;
         }
+
 
         public async Task<GetNewsByIdWithOwnerNameModel> GetNotAprooveNewById(int newsId)
         {
