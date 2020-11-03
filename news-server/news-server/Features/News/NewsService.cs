@@ -153,6 +153,7 @@ namespace news_server.Features.News
             .Select(n => new GetNewsByIdWithOwnerNameModel
             {
                 UserName = n.Owner.User.UserName,
+                Photo = n.Owner.User.Photo,
                 SectionName = n.SectionsName.SectionName,
                 NewsId = n.Id,                
                 PublishDate = n.PublishOn,

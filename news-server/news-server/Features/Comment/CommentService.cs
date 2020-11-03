@@ -96,11 +96,13 @@ namespace news_server.Features.Comment
         {
             var comments = await context
                 .Comments
+                .Include(c => c.Owner)
                 .Where(c => c.NewsId == Id).Select(c =>            
                     new GetCommentsModel
                     {
                         CommentId = c.Id,
                         UserName = c.Owner.User.UserName,
+                        Photo = c.Owner.User.Photo,
                         Text = c.Text,
                         DateComment = c.DateComment,
                         isEdit = c.isEdit,
