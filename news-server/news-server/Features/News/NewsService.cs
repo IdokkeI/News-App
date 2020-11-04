@@ -123,7 +123,7 @@ namespace news_server.Features.News
         }
 
 
-        public async Task<IEnumerable<GetNewsModel>> GetNews(string username, int page)
+        public async Task<IEnumerable<GetNewsModelWithStates>> GetNews(string username, int page)
         {            
             var news = await context
             .News
