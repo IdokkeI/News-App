@@ -23,6 +23,15 @@ namespace news_server.Features.StatisticNews
 
         public LocalState LocalStateNews(int newsId, string username)
         {
+            if (username == null)
+            {
+                return new LocalState
+                {
+                    IsLike = false,
+                    IsDislike = false
+                };
+            }
+
             var profile = context
                 .Profiles
                 .Include(p => p.User)
