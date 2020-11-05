@@ -1,4 +1,5 @@
 ﻿using news_server.Features.News.Models;
+using news_server.Features.Profile.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,5 +17,6 @@ namespace news_server.Features.News
         Task<IEnumerable<GetNewsModel>> GetInterestingNews(string username, int page);
         Task<List<GetNewsModelWithStates>> FindNews(string username, string text, int page);
         Task<List<GetNewsModelWithStates>> SortingNewsWithStates(List<GetNewsModelWithStates> news, string username, int page);
+        Task<List<BestPublishersModels>> GetBestPublishers();
     }
 }

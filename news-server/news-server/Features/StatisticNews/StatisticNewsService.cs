@@ -7,6 +7,8 @@ using CNews = news_server.Data.dbModels.News;
 using news_server.Features.SharedStatistic.Models;
 using System.Linq;
 using news_server.Features.Notify;
+using news_server.Features.Profile.Models;
+using System.Collections.Generic;
 
 namespace news_server.Features.StatisticNews
 {
@@ -249,6 +251,27 @@ namespace news_server.Features.StatisticNews
             var alt = "статью";
 
             await notificationService.AddNotification(profileTo, profilFrom, text, link, alt);
+        }
+
+        public async Task<List<BestPublishersModels>> BestPublishers()
+        {
+            var publishers = await context
+                .StatisticNews
+                .Include(sn => sn.News)
+                .Include(sn => sn.News.Owner)
+                .Include(sn => sn.News.Owner.User)
+                .Where(sn => sn.Like != null)
+                .GroupBy(
+                    key => key.News.Owner.User.UserName,
+                    value => value.ViewBy,
+                    (k, v) => new BestPublishersModels
+                    {
+                        UserName = k,
+                        Statistic = v.Count()
+                    })
+                .ToListAsync();
+
+            return publishers;
         }
     }
 }

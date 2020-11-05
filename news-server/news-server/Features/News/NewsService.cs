@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Features.News.Models;
+using news_server.Features.Profile.Models;
 using news_server.Features.StatisticNews;
 using System;
 using System.Collections.Generic;
@@ -297,6 +298,11 @@ namespace news_server.Features.News
             });
 
             return result;
+        }
+
+        public async Task<List<BestPublishersModels>> GetBestPublishers()
+        {
+            return await statisticNewsService.BestPublishers();
         }
     }
 }
