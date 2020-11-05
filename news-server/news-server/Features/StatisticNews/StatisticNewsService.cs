@@ -24,16 +24,7 @@ namespace news_server.Features.StatisticNews
         }
 
         public LocalState LocalStateNews(int newsId, string username)
-        {
-            if (username == null)
-            {
-                return new LocalState
-                {
-                    IsLike = false,
-                    IsDislike = false
-                };
-            }
-
+        {            
             var profile = context
                 .Profiles
                 .Include(p => p.User)
@@ -46,10 +37,10 @@ namespace news_server.Features.StatisticNews
                 .FirstOrDefault(sc => sc.News.Id == newsId && sc.Like == profile);
 
             var DisLike = context
-                .StatisticComments
-                .Include(sc => sc.Comment)
+                .StatisticNews
+                .Include(sc => sc.News)
                 .Include(sc => sc.Dislike)
-                .FirstOrDefault(sc => sc.Comment.Id == newsId && sc.Dislike == profile);
+                .FirstOrDefault(sc => sc.News.Id == newsId && sc.Dislike == profile);
 
             bool isLike = Like == null ? false : true; ;
             bool isDisLike = DisLike == null ? false : true; ;
