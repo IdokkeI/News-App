@@ -96,24 +96,37 @@ namespace news_server.Features.Comment
         {
             var comments = await context
                 .Comments
+                .Include(c => c.Owner)
                 .Where(c => c.NewsId == Id).Select(c =>            
                     new GetCommentsModel
                     {
                         CommentId = c.Id,
                         UserName = c.Owner.User.UserName,
+                        Photo = c.Owner.User.Photo,
                         Text = c.Text,
                         DateComment = c.DateComment,
                         isEdit = c.isEdit,
-                        UserNameTo = c.UserNameTo,
-                        Params = statisticCommentService.GetStatisticById(c.Id),
-                        LocalState = statisticCommentService.LocalStateComment(c.Id, username)
-                    })
+                        UserNameTo = c.UserNameTo
+                    })                               
+                    .ToListAsync();
+
+               await Task.Run(() =>
+               {
+                   comments.ForEach(c =>
+                   {
+                       c.Params = statisticCommentService.GetStatisticById(c.CommentId);
+                       c.LocalState = statisticCommentService.LocalStateComment(c.CommentId, username);
+                   });
+               });
+            
+            var result = (await Task.Run(() => comments
                 .OrderBy(c => c.DateComment)
                 .Skip(page * 20 - 20)
-                .Take(20)                
-                .ToListAsync();
-            
-            return comments;
+                .Take(20)))
+                .ToList();
+
+
+            return result;
         }
 
 

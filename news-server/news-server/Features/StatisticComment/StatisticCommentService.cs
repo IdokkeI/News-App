@@ -20,22 +20,32 @@ namespace news_server.Features.StatisticComment
 
         public LocalState LocalStateComment(int commentId, string username)
         {
+            if (username == null)
+            {
+                return new LocalState
+                {
+                    IsLike = false,
+                    IsDislike = false
+                };
+            }
+
             var profile =  context
                 .Profiles
                 .Include(p => p.User)
-                .FirstOrDefault(p => p.User.UserName == username);
+                .FirstOrDefault(p => p.User.UserName == username)
+                ?.Id;
 
             var Like = context
                 .StatisticComments
                 .Include(sc => sc.Comment)
                 .Include(sc => sc.Like)
-                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Like == profile);
+                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Like.Id == profile);
             
             var DisLike = context
                 .StatisticComments
                 .Include(sc => sc.Comment)
                 .Include(sc => sc.Dislike)
-                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Dislike == profile);
+                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Dislike.Id == profile);
 
             bool isLike = false;
             bool isDisLike = false;
@@ -54,7 +64,8 @@ namespace news_server.Features.StatisticComment
         {            
             var listComments = context
                 .StatisticComments
-                .Where(sc => sc.Id == commentId)
+                .Include(sc => sc.Comment)
+                .Where(sc => sc.Comment.Id == commentId)
                 .ToList();
 
             var countLike = listComments

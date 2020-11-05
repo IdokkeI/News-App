@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using news_server.Data;
 using news_server.Features.News.Models;
+using news_server.Features.Profile.Models;
 using news_server.Features.StatisticNews;
 using System;
 using System.Collections.Generic;
@@ -71,14 +72,14 @@ namespace news_server.Features.News
                     .ToListAsync();
 
             var result = await Task.Run(() =>
-           {
-               news.ForEach(n => 
-               {
-                   n.Params = statisticNewsService.GetStatisticById(n.NewsId);
-                   n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
-               });
-               return news;
-           });
+            {
+                news.ForEach(n =>
+                {
+                    n.Params = statisticNewsService.GetStatisticById(n.NewsId);
+                    n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
+                });
+                return news;
+            });
 
             return result;
         }
@@ -115,7 +116,6 @@ namespace news_server.Features.News
                             PublishOn = now
                         });
 
-
                     await context.SaveChangesAsync();
                     return true;
                 }                
@@ -124,7 +124,7 @@ namespace news_server.Features.News
         }
 
 
-        public async Task<IEnumerable<GetNewsModel>> GetNews(string username, int page)
+        public async Task<IEnumerable<GetNewsModelWithStates>> GetNews(string username, int page)
         {            
             var news = await context
             .News
@@ -147,12 +147,15 @@ namespace news_server.Features.News
         {           
             var news = await context
             .News
+            .Include(n => n.SectionsName)
             .Include(n => n.Owner)
             .Include(n => n.Owner.User)
-            .Where(n => n.Id == newsId && n.isAproove)
+            .Where(n => n.Id == newsId /*&& n.isAproove*/)
             .Select(n => new GetNewsByIdWithOwnerNameModel
             {
                 UserName = n.Owner.User.UserName,
+                Photo = n.Owner.User.Photo,
+                SectionName = n.SectionsName.SectionName,
                 NewsId = n.Id,                
                 PublishDate = n.PublishOn,
                 Title = n.Title,
@@ -191,9 +194,7 @@ namespace news_server.Features.News
             news.isModifyed = true;
             news.PublishOn = DateTime.Now;
 
-            context
-                .News
-                .Update(news);
+            context.News.Update(news);
 
             await context.SaveChangesAsync();
 
@@ -242,7 +243,7 @@ namespace news_server.Features.News
         {
             var news = await context
                 .News
-                .Where(n => n.Text.Contains(text) || n.Title.Contains(text))
+                .Where(n => (n.Text.Contains(text) || n.Title.Contains(text)) && n.isAproove)
                 .ToListAsync();
 
             var result = await SelectNewsWithStates(news);
@@ -272,15 +273,16 @@ namespace news_server.Features.News
 
         public async Task<List<GetNewsModelWithStates>> SortingNewsWithStates(List<GetNewsModelWithStates> news, string username, int page)
         {
-            var listNews = await Task.Run(() => 
+            var listNews = await Task.Run(() =>
             {
-                news.ForEach(n => 
+                news.ForEach(n =>
                 {
                     n.Params = statisticNewsService.GetStatisticById(n.NewsId);
                     n.LocalState = statisticNewsService.LocalStateNews(n.NewsId, username);
                 });
-                return news; 
+                return news;
             });
+                        
 
             var result = await Task.Run(() =>
             {
@@ -296,6 +298,11 @@ namespace news_server.Features.News
             });
 
             return result;
+        }
+
+        public async Task<List<BestPublishersModels>> GetBestPublishers()
+        {
+            return await statisticNewsService.BestPublishers();
         }
     }
 }
