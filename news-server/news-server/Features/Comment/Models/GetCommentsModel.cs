@@ -7,6 +7,7 @@ namespace news_server.Features.Comment.Models
     {
         public int CommentId { get; set; }
         public string UserName { get; set; }
+        public string Photo { get; set; }
         public string Text { get; set; }
         public DateTime DateComment { get; set; }
         public string UserNameTo { get; set; }

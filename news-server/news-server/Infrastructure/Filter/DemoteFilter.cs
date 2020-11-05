@@ -39,8 +39,7 @@ namespace news_server.Infrastructure.Filter
             else
             {
                 await next();
-            }
-            
+            }            
         }
     }
 }

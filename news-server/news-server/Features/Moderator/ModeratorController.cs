@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using news_server.Features.Moderator.Models;
 using news_server.Features.Profile;
-using news_server.Infrastructure.Extensions;
 using System.Threading.Tasks;
 
 namespace news_server.Features.Moderator
@@ -43,13 +42,8 @@ namespace news_server.Features.Moderator
         [HttpPost(nameof(ApproveNews))]
         public async Task<ActionResult> ApproveNews([FromBody]int newsId)
         {
-            string link = Url
-                   .Action(
-                       "GetNewsById",
-                       "News",
-                       new { newsId = newsId },
-                    protocol: HttpContext.Request.Scheme);
-
+            string link = newsId.ToString();
+            
             var result = await moderatorService.ApprooveNews(newsId, link);
 
             if (result)

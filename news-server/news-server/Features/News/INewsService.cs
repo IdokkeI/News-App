@@ -10,7 +10,7 @@ namespace news_server.Features.News
         Task<List<GetNewsModelWithStates>> GetProfileNews(string username, int profileId, int page);
         Task<List<GetNewsModelWithStates>> GetProfileNews(string username, int profileId);
         Task<bool> CreateNews(CreateNewsModel model, string userName);
-        Task<IEnumerable<GetNewsModel>> GetNews(string username, int page);
+        Task<IEnumerable<GetNewsModelWithStates>> GetNews(string username, int page);
         Task<GetNewsByIdWithOwnerNameModel> GetNewsById(int newsId);
         Task<bool> EditNews(EditNewsModel model, string userName);        
         Task<IEnumerable<GetNewsModel>> GetInterestingNews(string username, int page);

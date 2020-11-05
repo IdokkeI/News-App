@@ -169,7 +169,7 @@ namespace news_server.Features.Subscriber
         {
             var profileFrom = ownerProfile.Id;
             var userNameFrom = ownerProfile.User.UserName;
-            var text = $"Пользователь <alt> подписался на вас";
+            var text = $"На ваши новости подписался пользователь";
             var alt = userNameFrom;
 
             await notificationService.AddNotification(profileTo, profileFrom, text, link, alt);

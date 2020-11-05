@@ -23,13 +23,8 @@ namespace news_server.Features.Comment
         public async Task<ActionResult> CreateComment(CommentCreateModel model)
         {
             var username = User.GetUserName();
-            string link = Url
-                  .Action(
-                      "GetNewsById",
-                      "News",
-                      new { newsId = model.NewsId },
-                   protocol: HttpContext.Request.Scheme);
-
+            string link = model.NewsId.ToString();
+            
             var commentIdTo = model.CommentIdTo;
             var result = await commentService.CreateComment(model, username, link, commentIdTo);
 
