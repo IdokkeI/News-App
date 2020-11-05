@@ -67,7 +67,7 @@ class Login extends Component {
   }
 
   handleClick = () => {
-      fetch("http://localhost:5295/Identity/Login", {
+    fetch("http://localhost:5295/Identity/Login", {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +80,9 @@ class Login extends Component {
           isLoaded: true,
           items: result,
         });
-        setUserSession(result.token, result);
+        setUserSession(result.token, result); 
+
+        localStorage.setItem("token", result.token); // Сохраняем наш токен Локал
         window.location.href = "/login";
       });
   };
@@ -106,7 +108,6 @@ class Login extends Component {
               </div>
               <div className="form_field">
                 <label htmlFor="password_field" className="form_field_lable">
-                  {" "}
                   Пароль
                 </label>
                 <input
