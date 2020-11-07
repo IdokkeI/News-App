@@ -20,38 +20,32 @@ namespace news_server.Features.StatisticComment
 
         public LocalState LocalStateComment(int commentId, string username)
         {
-            if (username == null)
-            {
-                return new LocalState
-                {
-                    IsLike = false,
-                    IsDislike = false
-                };
-            }
-
-            var profile =  context
-                .Profiles
-                .Include(p => p.User)
-                .FirstOrDefault(p => p.User.UserName == username)
-                ?.Id;
-
-            var Like = context
-                .StatisticComments
-                .Include(sc => sc.Comment)
-                .Include(sc => sc.Like)
-                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Like.Id == profile);
-            
-            var DisLike = context
-                .StatisticComments
-                .Include(sc => sc.Comment)
-                .Include(sc => sc.Dislike)
-                .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Dislike.Id == profile);
-
             bool isLike = false;
             bool isDisLike = false;
 
-            isLike = Like == null ? false : true;
-            isDisLike = DisLike == null ? false : true;
+            if (username != null)
+            {
+                var profile = context
+                    .Profiles
+                    .Include(p => p.User)
+                    .FirstOrDefault(p => p.User.UserName == username)
+                    ?.Id;
+
+                var Like = context
+                    .StatisticComments
+                    .Include(sc => sc.Comment)
+                    .Include(sc => sc.Like)
+                    .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Like.Id == profile);
+
+                var DisLike = context
+                    .StatisticComments
+                    .Include(sc => sc.Comment)
+                    .Include(sc => sc.Dislike)
+                    .FirstOrDefault(sc => sc.Comment.Id == commentId && sc.Dislike.Id == profile);
+
+                isLike = Like == null ? false : true;
+                isDisLike = DisLike == null ? false : true;
+            }                      
 
             return new LocalState
             {
@@ -86,7 +80,11 @@ namespace news_server.Features.StatisticComment
         }
 
 
-        public async Task<bool> SetState(int commentId, string username, string state, string link)
+        public async Task<bool> SetState(
+            int commentId, 
+            string username, 
+            string state, 
+            string link)
         {
             var comment = await context
                 .Comments
@@ -119,56 +117,66 @@ namespace news_server.Features.StatisticComment
 
             if (state == "like")
             {
-                if (isLike == null)
-                {
-                    if (isDislike == null)
-                    {
-                        await context
-                            .StatisticComments
-                            .AddAsync( new CStatisticComment
-                            {
-                                Comment = comment,
-                                Like = user
-                            });
-                    }
-                    else
-                    {
-                        isDislike.Dislike = null;
-                        isDislike.Like = user;
-                        context.StatisticComments.Update(isDislike);                        
-                    }
-                }
-                else
-                {
-                    context.StatisticComments.Remove(isLike);
-                }
+                await SetLike(isLike, isDislike, user, comment);               
             }
             else if (state == "dislike")
             {
-                if (isDislike == null)
-                {
-                    if (isLike == null)
-                    {
-                        await context.StatisticComments.AddAsync(new CStatisticComment
-                        {
-                            Comment = comment,
-                            Dislike = user
-                        });
-                    }
-                    else
-                    {
-                        isLike.Like = null;
-                        isLike.Dislike = user;
-                        context.StatisticComments.Update(isLike);                        
-                    }
-                }
-                else
-                {
-                    context.StatisticComments.Remove(isDislike);
-                }
+                await SetDislike(isDislike, isLike, user, comment);                                
             }
 
             await context.SaveChangesAsync();
+        }
+
+        private async Task SetDislike(CStatisticComment isDislike, CStatisticComment isLike, CProfile user, CComment comment)
+        {
+            if (isDislike == null)
+            {
+                if (isLike == null)
+                {
+                    await context.StatisticComments.AddAsync(new CStatisticComment
+                    {
+                        Comment = comment,
+                        Dislike = user
+                    });
+                }
+                else
+                {
+                    isLike.Like = null;
+                    isLike.Dislike = user;
+                    context.StatisticComments.Update(isLike);
+                }
+            }
+            else
+            {
+                context.StatisticComments.Remove(isDislike);
+            }
+        }
+
+        private async Task SetLike(CStatisticComment isLike, CStatisticComment isDislike, CProfile user, CComment comment)
+        {
+            if (isLike == null)
+            {
+                if (isDislike == null)
+                {
+                    await context
+                        .StatisticComments
+                        .AddAsync(new CStatisticComment
+                        {
+                            Comment = comment,
+                            Like = user
+                        });
+                }
+                else
+                {
+                    isDislike.Dislike = null;
+                    isDislike.Like = user;
+                    context.StatisticComments.Update(isDislike);
+                }
+            }
+            else
+            {
+                context.StatisticComments.Remove(isLike);
+            }
         }
     }
 }

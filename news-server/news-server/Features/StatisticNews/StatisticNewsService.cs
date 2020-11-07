@@ -24,27 +24,33 @@ namespace news_server.Features.StatisticNews
         }
 
         public LocalState LocalStateNews(int newsId, string username)
-        {            
-            var profile = context
-                .Profiles
-                .Include(p => p.User)
-                .FirstOrDefault(p => p.User.UserName == username);
+        {
+            bool isLike = false;
+            bool isDisLike = false;
 
-            var Like = context
-                .StatisticNews
-                .Include(sc => sc.News)
-                .Include(sc => sc.Like)
-                .FirstOrDefault(sc => sc.News.Id == newsId && sc.Like == profile);
+            if (username != null)
+            {
+                var profile = context
+                                .Profiles
+                                .Include(p => p.User)
+                                .FirstOrDefault(p => p.User.UserName == username);
 
-            var DisLike = context
-                .StatisticNews
-                .Include(sc => sc.News)
-                .Include(sc => sc.Dislike)
-                .FirstOrDefault(sc => sc.News.Id == newsId && sc.Dislike == profile);
+                var Like = context
+                    .StatisticNews
+                    .Include(sc => sc.News)
+                    .Include(sc => sc.Like)
+                    .FirstOrDefault(sc => sc.News.Id == newsId && sc.Like == profile);
 
-            bool isLike = Like == null ? false : true; ;
-            bool isDisLike = DisLike == null ? false : true; ;
+                var DisLike = context
+                    .StatisticNews
+                    .Include(sc => sc.News)
+                    .Include(sc => sc.Dislike)
+                    .FirstOrDefault(sc => sc.News.Id == newsId && sc.Dislike == profile);
 
+                isLike = Like == null ? false : true;
+                isDisLike = DisLike == null ? false : true;
+            }
+            
             return new LocalState
             {
                 IsLike = isLike,
@@ -126,112 +132,130 @@ namespace news_server.Features.StatisticNews
                 .FirstOrDefaultAsync(sn => sn.ViewBy == user && sn.News == news);
 
             if (state == "like")
-            {                
-                if (isLike == null)
-                {
-                    if (isDislike == null)
-                    {
-                        if (isViews == null)
-                        {
-                            await context
-                                .StatisticNews
-                                .AddAsync(new CStatisticNews
-                                {
-                                    News = news,
-                                    Like = user,
-                                    ViewBy = user,
-                                    IsNotifyed = true
-                                });
-
-                            if (user.Id != news.Owner.Id)
-                            {
-                                await SetNotificationAsync(user, news, link);
-                            }                                                                                  
-                        }
-                        else
-                        {
-                            if (!isViews.IsNotifyed && user.Id != news.Owner.Id)
-                            {
-                                await SetNotificationAsync(user, news, link);
-                                isViews.IsNotifyed = true;
-                            }
-                            
-                            isViews.Like = user;
-                            context.StatisticNews.Update(isViews);
-                        }                        
-                    }
-                    else
-                    {
-                        if (!isDislike.IsNotifyed && user.Id != news.Owner.Id)
-                        {
-                            await SetNotificationAsync(user, news, link);
-                            isDislike.IsNotifyed = true;
-                        }
-                        
-                        isDislike.Dislike = null;
-                        isDislike.Like = user;
-                        context.StatisticNews.Update(isDislike);                        
-                    }                    
-                }
-                else
-                {
-                    isLike.Like = null;
-                    context.StatisticNews.Update(isLike);
-                }
+            {
+                await SetLike(isLike, isDislike, isViews, user, news, link);
+                
             }
             else if (state == "dislike")
             {
-                if (isDislike == null)
-                {
-                    if (isLike == null)
-                    {
-                        if (isViews == null)
-                        {
-                            await context
-                                .StatisticNews
-                                .AddAsync(new CStatisticNews
-                                {
-                                    News = news,
-                                    Dislike = user,
-                                    ViewBy = user
-                                });
-                        }
-                        else
-                        {
-                            isViews.Dislike = user;
-                            context.StatisticNews.Update(isViews);
-                        }                        
-                    }
-                    else
-                    {
-                        isLike.Like = null;
-                        isLike.Dislike = user;
-                        context.StatisticNews.Update(isLike);                        
-                    }
-                }
-                else
-                {
-                    isDislike.Dislike = null;
-                    context.StatisticNews.Update(isDislike);
-                }
+                await SetDislike(isDislike, isLike, isViews, user, news);
+                
             }
             else if (state == "view")
             {
-                if (isViews == null)
-                {
-                    await context
-                        .StatisticNews
-                        .AddAsync(new CStatisticNews
-                        {
-                            News = news,
-                            Like = null,
-                            ViewBy = user
-                        });
-                }
+
+                await SetView(isViews, user, news);
+               
             }
             await context.SaveChangesAsync();
         }
 
+        private async Task SetView(CStatisticNews isViews, CProfile user, CNews news)
+        {
+            if (isViews == null)
+            {
+                await context
+                    .StatisticNews
+                    .AddAsync(new CStatisticNews
+                    {
+                        News = news,
+                        Like = null,
+                        ViewBy = user
+                    });
+            }
+        }
+
+        private async Task SetDislike(CStatisticNews isDislike, CStatisticNews isLike, CStatisticNews isViews, CProfile user, CNews news)
+        {
+            if (isDislike == null)
+            {
+                if (isLike == null)
+                {
+                    if (isViews == null)
+                    {
+                        await context
+                            .StatisticNews
+                            .AddAsync(new CStatisticNews
+                            {
+                                News = news,
+                                Dislike = user,
+                                ViewBy = user
+                            });
+                    }
+                    else
+                    {
+                        isViews.Dislike = user;
+                        context.StatisticNews.Update(isViews);
+                    }
+                }
+                else
+                {
+                    isLike.Like = null;
+                    isLike.Dislike = user;
+                    context.StatisticNews.Update(isLike);
+                }
+            }
+            else
+            {
+                isDislike.Dislike = null;
+                context.StatisticNews.Update(isDislike);
+            }
+        }
+
+        private async Task SetLike(CStatisticNews isLike, CStatisticNews isDislike, CStatisticNews isViews, CProfile user, CNews news, string link)
+        {
+            if (isLike == null)
+            {
+                if (isDislike == null)
+                {
+                    if (isViews == null)
+                    {
+                        await context
+                            .StatisticNews
+                            .AddAsync(new CStatisticNews
+                            {
+                                News = news,
+                                Like = user,
+                                ViewBy = user,
+                                IsNotifyed = true
+                            });
+
+                        if (user.Id != news.Owner.Id)
+                        {
+                            await SetNotificationAsync(user, news, link);
+                        }
+                    }
+                    else
+                    {
+                        if (!isViews.IsNotifyed && user.Id != news.Owner.Id)
+                        {
+                            await SetNotificationAsync(user, news, link);
+                            isViews.IsNotifyed = true;
+                        }
+
+                        isViews.Like = user;
+                        context.StatisticNews.Update(isViews);
+                    }
+                }
+                else
+                {
+                    if (!isDislike.IsNotifyed && user.Id != news.Owner.Id)
+                    {
+                        await SetNotificationAsync(user, news, link);
+                        isDislike.IsNotifyed = true;
+                    }
+
+                    isDislike.Dislike = null;
+                    isDislike.Like = user;
+                    context.StatisticNews.Update(isDislike);
+                }
+            }
+            else
+            {
+                isLike.Like = null;
+                context.StatisticNews.Update(isLike);
+            }
+        }
 
         private async Task SetNotificationAsync(CProfile user, CNews news, string link)
         {
