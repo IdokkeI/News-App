@@ -59,10 +59,17 @@ namespace news_server.Features.News
 
         public async Task<List<GetNewsModelWithStates>> GetProfileNews(string username, int profileId)
         {
+            var _user = await context
+                .Profiles
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.UserName == username);
+
+            bool isDisplay = _user.Id == profileId ? true : false;
+
             var news = await context
                     .News
                     .Include(n => n.Owner)
-                    .Where(n => n.Owner.Id == profileId)
+                    .Where(n => n.Owner.Id == profileId && n.isAproove == isDisplay)
                     .Select(n => new GetNewsModelWithStates
                     {
                         NewsId = n.Id,
