@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component } from "react";
 import "./Header.scss";
 import { NavLink, Switch } from "react-router-dom";
 import Registration from "./Registration/Registration";
@@ -7,9 +7,14 @@ import Profile from "./Profile/Profile";
 import {getAccess, getUser } from "../Utils/Common";
 import PrivateRouter from "../Utils/PrivateRouter";
 import PublicRouter from "../Utils/PublicRouter";
-import CreatePost from "./CreatePost/CreatePost";
-import PrivateRoute from "../Utils/PrivateRouter";
+
 import AdminRouter from "../Utils/AdminRouter";
+
+import CreatePostBack from "./CreatePostBack/CreatePostBack";
+import UserNotificationsBack from "./Profile/UserNotifications/UserNotificationsBack/UserNotificationsBack";
+
+import CreatePost from "./CreatePost/CreatePost";
+
 import UserSettings from "./Profile/UserSettings/UserSettings";
 import UserSubscribers from "./Profile/UserSubscribers/UserSubscribers";
 import UserNews from "./Profile/UserNews/UserNews";
@@ -85,11 +90,10 @@ class Header extends Component {
             <AdminRouter path="/CreateModerator" component={CreateModerator} />
             <AdminRouter path="/DemoteModerator" component={DemoteModerator} />
 
-
-            <PrivateRoute path="/userSettings" component={UserSettings} />
-            <PrivateRoute path="/userNews" component={UserNews} />
-            <PrivateRoute path="/userSubscribers" component={UserSubscribers} />
-            
+            <PrivateRouter path="/UserNotifications" component={UserNotificationsBack } />
+            <PrivateRouter path="/userSettings" component={UserSettings} />
+            <PrivateRouter path="/userNews" component={UserNews} />
+            <PrivateRouter path="/userSubscribers" component={UserSubscribers} />
             
 
           </Switch>

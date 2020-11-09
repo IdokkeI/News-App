@@ -116,5 +116,13 @@ namespace news_server.Features.News
             }
             return NotFound();
         }
+
+        [AllowAnonymous]
+        [HttpGet(nameof(GetBestPublishers))]
+        public async Task<ActionResult> GetBestPublishers()
+        {
+            var result = await newsService.GetBestPublishers();
+            return Ok(result);
+        }
     }
 }
