@@ -1,0 +1,12 @@
+.user-list {
+    border: 1px solid #ddd;
+    tbody tr td {
+      cursor: pointer;
+      transition: background-color 100ms;
+      border: 2px solid #ddd;
+  
+      &:hover {
+        background-color: #eee;
+      }
+    }
+  }
