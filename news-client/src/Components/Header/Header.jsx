@@ -13,7 +13,6 @@ import CreatePostBack from "./CreatePostBack/CreatePostBack";
 import UserNotificationsBack from "./Profile/UserNotifications/UserNotificationsBack/UserNotificationsBack";
 
 import CreatePost from "./CreatePost/CreatePost";
-import PrivateRoute from "../Utils/PrivateRouter";
 import UserSettings from "./Profile/UserSettings/UserSettings";
 import UserSubscribers from "./Profile/UserSubscribers/UserSubscribers";
 import UserNews from "./Profile/UserNews/UserNews";
