@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import { Route, Switch, NavLink } from "react-router-dom";
 
 import "./Profile.scss";
@@ -7,6 +8,7 @@ import UserSettings from "./UserSettings/UserSettings";
 import UserNews from "./UserNews/UserNews";
 import UserSubscribers from "./UserSubscribers/UserSubscribers";
 import UserNotifications from "./UserNotifications/UserNotifications";
+
 
 import { removeUserSession } from "../../Utils/Common";
 
@@ -28,14 +30,16 @@ class Profile extends Component {
       showMenu: true,
     });
   }
+  
   handleLogout = () => {
     removeUserSession();
-    this.props.history.push("/login");
+
     window.location.href = "/login";
   };
 
   render() {
     return (
+
       <div>
           <a href="/UserNews"> Мои Новости
           </a>
@@ -69,6 +73,7 @@ class Profile extends Component {
           <Route path="/userSettings" component={UserSettings} />
         </Switch>
         <input type="button" onClick={this.handleLogout} value="Logout" />
+
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import "./Login.scss";
 
 import { setUserSession } from "../../Utils/Common";
@@ -65,11 +66,9 @@ class Login extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
-  handleClick = async (e) => {
-    e.preventDefault();
-
-    await fetch("https://localhost:5001/Identity/Login", {
-      method: "POST", // or 'PUT'
+  handleClick = () => {
+    fetch("http://localhost:5295/Identity/Login", {
+      method: "POST", 
       headers: {
         "Content-Type": "application/json",
       },
@@ -81,9 +80,10 @@ class Login extends Component {
           isLoaded: true,
           items: result,
         });
-        setUserSession(result.token, result);
+        setUserSession(result.token, result); 
 
-        console.log(this.state);
+        localStorage.setItem("token", result.token); // Сохраняем наш токен Локал
+        window.location.href = "/login";
       });
   };
 
@@ -93,7 +93,6 @@ class Login extends Component {
         <div className="form_group">
           <div className="form_group_title">Вход</div>
           <div>
-            <form className="form_login">
               <div className="form_field">
                 <label htmlFor="email" className="form_field_lable">
                   E-mail
@@ -109,7 +108,6 @@ class Login extends Component {
               </div>
               <div className="form_field">
                 <label htmlFor="password_field" className="form_field_lable">
-                  {" "}
                   Пароль
                 </label>
                 <input
@@ -123,14 +121,13 @@ class Login extends Component {
               </div>
               <div className="form_buttom">
                 <button
-                  type="submit"
+                  type="button"
                   className="button button-primary"
                   onClick={this.handleClick}
                 >
                   Войти
                 </button>
               </div>
-            </form>
           </div>
         </div>
       </div>
