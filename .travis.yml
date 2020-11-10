@@ -13,6 +13,7 @@ notifications:
 	  - aistrainee2020:ihDiPwthejNnbu8jEGUWOykY#mychannel
 	  - aistrainee2020:ihDiPwthejNnbu8jEGUWOykY#onemorechanell
 
+
 language: node_js
 node_js:
   - "14.2"
