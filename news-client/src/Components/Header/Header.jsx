@@ -85,7 +85,7 @@ class Header extends Component {
             <PublicRouter path="/registration" component={Registration} />
             <PrivateRouter path="/profile" component={Profile} />
             <PrivateRouter path="/createPost" component={CreatePost} />
-            <PrivateRouter path="/UserList" component={UserList} />
+            <AdminRouter path="/UserList" component={UserList} />
             <AdminRouter path="/BanList" component={BanList} />
             <AdminRouter path="/CreateModerator" component={CreateModerator} />
             <AdminRouter path="/DemoteModerator" component={DemoteModerator} />

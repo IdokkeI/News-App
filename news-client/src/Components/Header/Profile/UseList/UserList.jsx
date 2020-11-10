@@ -63,20 +63,6 @@ export default class UserList extends Component {
     this.setState({ dayCount: Number(e.target.value) });
   };
 
-  handleClickModerator = () => {
-    fetch("http://localhost:5295/Admin/SetModerator", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(this.state.userName),
-    }).then((result) => {
-      this.setState({
-        data: result.userName,
-      });
-    });
-  };
-
   render() {
     return (
       <div className="user-list">
