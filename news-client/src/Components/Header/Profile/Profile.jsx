@@ -41,8 +41,6 @@ class Profile extends Component {
     return (
 
       <div>
-          <a href="/UserNews"> Мои Новости
-          </a>
           <NavLink activeClassName="active" className="userNews" to="/userNews">
               Мои Новости
           </NavLink>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { getToken } from "../../Utils/Common";
 
 
 export default class DemoteModerator extends Component {
@@ -19,7 +20,7 @@ export default class DemoteModerator extends Component {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
       .then((res) => res.json())
@@ -56,6 +57,7 @@ handleClickModerator = () => {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(this.state.userName),
     })

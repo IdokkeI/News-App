@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { getToken } from "../../../Utils/Common";
+
 
 import "./UserList.scss";
 
@@ -9,6 +11,7 @@ export default class UserList extends Component {
       userName: "",
       dayCount: 0,
       items: [],
+      data: [],
     };
   }
 
@@ -17,7 +20,7 @@ export default class UserList extends Component {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
       .then((res) => res.json())

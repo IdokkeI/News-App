@@ -57,7 +57,7 @@ class Header extends Component {
             )}
           </div>
           <div className="header__admin">
-            {access >= 1 && (
+            {access === 2 && (
               <NavLink to="/UserList" className="userList">
               User List 
             </NavLink>
@@ -85,7 +85,7 @@ class Header extends Component {
             <PublicRouter path="/registration" component={Registration} />
             <PrivateRouter path="/profile" component={Profile} />
             <PrivateRouter path="/createPost" component={CreatePost} />
-            <AdminRouter path="/UserList" component={UserList} />
+            <PrivateRouter path="/UserList" component={UserList} />
             <AdminRouter path="/BanList" component={BanList} />
             <AdminRouter path="/CreateModerator" component={CreateModerator} />
             <AdminRouter path="/DemoteModerator" component={DemoteModerator} />
