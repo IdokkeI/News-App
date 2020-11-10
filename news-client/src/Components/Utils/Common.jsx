@@ -7,19 +7,29 @@ export const getUser = () => {
 
 // return the token from the session storage
 export const getToken = () => {
-  return localStorage.getItem("token") || null;
+  const getToken = localStorage.getItem("token");
+  if (getToken) return JSON.parse(getToken);  
+  else return null;
 };
+
+export const getAccess = () => {
+  const getAccess = localStorage.getItem("access");
+  if (getAccess) return JSON.parse(getAccess);
+  else return null;
+}
 
 // remove the token and user from the session storage
 export const removeUserSession = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
+  localStorage.removeItem("access");
 };
 
 // set the token and user from the session storage
-export const setUserSession = (token, data) => {
+export const setUserSession = (data) => {
   if (JSON.stringify(data.username)) {
-    localStorage.setItem("token", token);
+    localStorage.setItem("token", JSON.stringify(data.token));
     localStorage.setItem("user", JSON.stringify(data.username));
+    localStorage.setItem("access", JSON.stringify(data.access));
   } else alert("Пользователя не существует");
 };
