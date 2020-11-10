@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./UserSettings.scss";
+import {getToken} from "../../../Utils/Common"
 
 class UserSettings extends Component {
   constructor() {
@@ -30,6 +31,8 @@ class UserSettings extends Component {
      method: "post",
      headers: {
        "Content-Type": "application/json",
+       Authorization: `Bearer ${getToken()}`,
+
      },
      body: JSON.stringify(this.state),
    })
