@@ -12,3 +12,11 @@ notifications:
     rooms:
 	  - aistrainee2020:ihDiPwthejNnbu8jEGUWOykY#mychannel
 	  - aistrainee2020:ihDiPwthejNnbu8jEGUWOykY#onemorechanell
+
+language: node_js
+node_js:
+  - "14.2"
+install:
+  - npm install ./news-client
+scripts:
+  - npm build ./news-client
