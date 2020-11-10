@@ -66,7 +66,8 @@ class Login extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
-  handleClick = () => {
+  handleClick = (e) => {
+    e.preventDefault();
     fetch("http://localhost:5295/Identity/Login", {
       method: "POST", 
       headers: {
@@ -80,11 +81,10 @@ class Login extends Component {
           isLoaded: true,
           items: result,
         });
-        setUserSession(result.token, result); 
-
-        localStorage.setItem("token", result.token); // Сохраняем наш токен Локал
+        setUserSession(result); 
         window.location.href = "/login";
       });
+     
   };
 
   render() {
