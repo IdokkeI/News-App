@@ -3,20 +3,11 @@ sudo: required
 mono: none
 dotnet: 3.1.402
 dist: xenial
-scripts:
-  - dotnet restore ./news-server/news-server.sln
-  - dotnet build ./news-server/news-server.sln
-
-notifications:
-    slack:
-    rooms:
-	  - aistrainee2020:ihDiPwthejNnbu8jEGUWOykY#mychannel
-	  - aistrainee2020:ihDiPwthejNnbu8jEGUWOykY#onemorechanell
-
-language: node_js
 node_js:
   - "14.2"
 install:
   - npm install ./news-client
 scripts:
+  - dotnet restore ./news-server/news-server.sln
+  - dotnet build ./news-server/news-server.sln
   - npm build ./news-client
