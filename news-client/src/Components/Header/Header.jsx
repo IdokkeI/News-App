@@ -57,7 +57,7 @@ class Header extends Component {
             )}
           </div>
           <div className="header__admin">
-            {access >= 1 && (
+            {access === 2 && (
               <NavLink to="/UserList" className="userList">
               User List 
             </NavLink>

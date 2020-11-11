@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { getToken } from "../../../Utils/Common";
+
 
 import "./UserList.scss";
 
@@ -9,6 +11,7 @@ export default class UserList extends Component {
       userName: "",
       dayCount: 0,
       items: [],
+      data: [],
     };
   }
 
@@ -17,7 +20,7 @@ export default class UserList extends Component {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
       .then((res) => res.json())
@@ -58,20 +61,6 @@ export default class UserList extends Component {
   };
   handleUserInput = (e) => {
     this.setState({ dayCount: Number(e.target.value) });
-  };
-
-  handleClickModerator = () => {
-    fetch("http://localhost:5295/Admin/SetModerator", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(this.state.userName),
-    }).then((result) => {
-      this.setState({
-        data: result.userName,
-      });
-    });
   };
 
   render() {

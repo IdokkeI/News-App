@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./UserSettings.scss";
+import {getToken} from "../../../Utils/Common"
 
 class UserSettings extends Component {
   constructor() {
@@ -15,19 +16,27 @@ class UserSettings extends Component {
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-console.log(value);
     this.setState({ [name]: value});
   };
 
   handleClick =  () => {
+    console.log(this.state.email);
+    console.log(this.state.oldPassword);
+
+    console.log(this.state.password);
+    console.log(this.state.confirmPassword);
+
+
     fetch("http://localhost:5295/Profile/ChangePassword", {
      method: "post",
      headers: {
        "Content-Type": "application/json",
+       Authorization: `Bearer ${getToken()}`,
+
      },
      body: JSON.stringify(this.state),
    })
-   .then((res) => res.json())
+  //  .then((res) => res.json())
    .then((result) => {
     this.setState({
       data: result,

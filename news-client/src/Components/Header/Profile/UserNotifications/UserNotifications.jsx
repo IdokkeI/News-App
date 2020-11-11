@@ -15,7 +15,7 @@ export default class UserNotifications extends Component {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                'Authorization': 'bearer ' + localStorage.getItem('token')
+                'Authorization': 'bearer ' + getToken(),
             },
         })
             .then((res) => res.json())
@@ -25,6 +25,7 @@ export default class UserNotifications extends Component {
                     items: result,
                 });
             });
+            console.log(this.state.items);
     }
 
     render(){
