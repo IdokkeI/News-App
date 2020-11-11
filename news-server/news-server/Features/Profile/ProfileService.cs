@@ -137,20 +137,13 @@ namespace news_server.Features.Profile
 
         public async Task<string> UploadProfileImage(string username, IFormFile image)
         {
-            var dirPath = Path.Combine(env.WebRootPath, username, "profile");
+            var dirPath = Path.Combine(env.WebRootPath, "img");
             Directory.CreateDirectory(dirPath);
-            var filePath = Path.Combine(dirPath, image.FileName.Replace(' ', '_'));
-
-            var files = new DirectoryInfo(dirPath).GetFiles();
-
-            if (files.Length != 0)
-            {
-                for (int i = 0; i < files.Length; i++)
-                {
-                    files[i].Delete();
-                }
-            }
-
+            var guid = System.Guid.NewGuid();
+            var getType = image.ContentType;
+            var imgType = getType.Replace("image/", ".");
+            var filePath = Path.Combine(dirPath, guid.ToString() + imgType);
+            
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {
                 await image.CopyToAsync(stream);
@@ -160,12 +153,14 @@ namespace news_server.Features.Profile
                 .Users
                 .FirstOrDefaultAsync(u => u.UserName == username);
 
-            user.Photo = filePath;
+            var modPath = filePath.Replace(Path.Combine(env.WebRootPath), "");
+
+            user.Photo = modPath;
             context.Users.Update(user);
 
             await context.SaveChangesAsync();
 
-            return filePath;
+            return modPath;
         }
 
         public async Task SendEmail(string email, string link)
