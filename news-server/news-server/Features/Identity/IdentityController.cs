@@ -84,7 +84,7 @@ namespace news_server.Features.Identity
                     {
                         UserName = model.UserName,
                         Email = model.Email,
-                        Photo = Path.Combine(env.WebRootPath, "user.png")
+                        Photo = Path.Combine(env.WebRootPath, "img", "userdefault.png")
                     };
 
                     await userManager.CreateAsync(createUser, model.Password);
