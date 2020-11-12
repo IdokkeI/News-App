@@ -1,10 +1,45 @@
-import React from 'react'
+import React, {Component} from 'react'
 import './New.scss'
+import NewHeader from "./NewHeader/NewHeader"
+import NewBody from "./NewBody/NewBody"
+import NewComments from "./NewComments/NewComments"
 
-const New = () => {
-    return <div className='new'>
+export default class New extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            items: [],
+            id: props.id,
+            params: {}
+        }
+    }
 
-    </div>
+    componentDidMount= () => {
+        fetch(`http://localhost:5295/News/GetNewsById?newsId=${this.state.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                this.setState({
+                    isLoaded: true,
+                    items: result,
+                    params: result.params
+                });
+            });
+    }
+
+    render(){
+        const newItemMap = this.state.items,
+            newItemParams = this.state.params
+        return(
+            <div>
+                <NewHeader id = {newItemMap.newsId} views={newItemParams.views} dislikes={newItemParams.dislikes} likes={newItemParams.likes} publishDate={newItemMap.dislikes} title={newItemMap.title} user = {newItemMap.userName} sectionName = {newItemMap.sectionName}/>
+                <NewBody text = {newItemMap.text} />
+                <NewComments id = {this.state.id} />
+            </div>
+        )
+    }
 }
-
-export default New;
