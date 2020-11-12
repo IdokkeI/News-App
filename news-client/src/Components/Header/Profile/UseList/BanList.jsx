@@ -9,6 +9,7 @@ export default class UserList extends Component {
     super();
     this.state = {
       items: [],
+      isLoaded: false,
     };
   }
 
@@ -23,6 +24,7 @@ export default class UserList extends Component {
       .then((res) => res.json())
       .then((result) => {
         this.setState({
+          isLoaded: true,
           items: result,
         });
         this.setState({
@@ -40,6 +42,9 @@ export default class UserList extends Component {
     this.setState({ items: filter });
   };
   render() {
+    if (this.state.isLoaded === false) {
+      return 'Загрузка...';
+    }
     return (
       <div>
         <p>Список Забаненных пользователей </p>

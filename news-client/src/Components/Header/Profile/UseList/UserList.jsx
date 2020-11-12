@@ -12,6 +12,7 @@ export default class UserList extends Component {
       dayCount: 0,
       items: [],
       data: [],
+      isLoaded: false,
     };
   }
 
@@ -26,6 +27,7 @@ export default class UserList extends Component {
       .then((res) => res.json())
       .then((result) => {
         this.setState({
+          isLoaded: true,
           items: result,
         });
         this.setState({
@@ -64,6 +66,9 @@ export default class UserList extends Component {
   };
 
   render() {
+    if (this.state.isLoaded === false) {
+    return 'Загрузка...';
+  }
     return (
       <div className="user-list">
         <p>Список пользователей </p>

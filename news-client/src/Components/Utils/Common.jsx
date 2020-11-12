@@ -28,9 +28,9 @@ export const removeUserSession = () => {
 
 // set the token and user from the session storage
 export const setUserSession = (data) => {
-  if (JSON.stringify(data.username)) {
+  // if (JSON.stringify(data.username)) {
     localStorage.setItem("token", JSON.stringify(data.token));
     localStorage.setItem("user", JSON.stringify(data.username));
     localStorage.setItem("access", JSON.stringify(data.access));
-  } else alert("Пользователя не существует");
+  // } else alert("Не верный пароль");
 };

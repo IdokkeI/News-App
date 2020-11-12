@@ -24,30 +24,33 @@ export default class UserNotifications extends Component {
                     isLoaded: true,
                     items: result,
                 });
+                console.log(this.state.items);
             });
-            console.log(this.state.items);
+           
     }
 
     render(){
         const  news  = this.state.items,
-            newUrl = 'http://localhost:3000/News/GetNewsById?newsId=',
-            new_or_comment = (notif_item) => {
-                return notif_item.alt === 'статья' ? 'http://localhost:3000/News/GetNewsById?newsId=': 1
-        }
+            newUrl = 'http://localhost:3000/News/GetNewsById?newsId=';
+        //     new_or_comment = (notif_item) => {
+        //         return notif_item.alt === 'статья' ? 'http://localhost:3000/News/GetNewsById?newsId=': 1
+        // }
 
         return(
             <div>
-                <p>Список пользователей </p>
+                <h3>NOTIFICATIONS </h3>
                 <ul>
-                    НОТИФИКАЦИИ
-                    {news.map((notif_item) =>
-                        <div>
-                            <div>
-                                <h3><a href={newUrl + notif_item.id}>Ид</a></h3>
-                                <p>{notif_item.id}</p>
-                            </div>
-                        </div>
-                    )}
+                    
+                    {news.map((notif_item) =>(
+                        notif_item.alt === 'статья' ? 
+                        <li>
+                        <span> Ваша </span>  
+                        <a href={newUrl + notif_item.url}>{notif_item.alt}</a>
+                        <span> {notif_item.notificationText} </span>
+                        </li> : 
+                        <li>{notif_item.notificationText}</li>
+                        
+                    ))}
                 </ul>
             </div>
         )
