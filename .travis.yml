@@ -5,13 +5,16 @@ dotnet: 3.1.402
 dist: xenial
 node_js:
   - "14.2"
+env:
+  global:
+    secure: BLa52iRsypEM4DtKxeRiZ/JSQmDdQba6JD+lPko5OVs4l9Vpo//HLO/h8hJdvYWPrrTUVPqtx37XcGK9wIsOVYqILn8z4yzAZ64Q8a0VHiWHBUr7WYiQd8aQhl8S7o6U0S/0xET+Bm/HdXS4LgTBRqI6m43Xki3CBAHxcR38dnWK8nxJcBRfkoQylcvPgQxAhJqJkKDeetIdNKp4VJv7/mxTSaj/8Rp65ds8IeDoSiGSGLH1D8+hBrTUMYuPqV/aDs5UHRF79Hj5tQ0+UlL5h1wPzX/hDOJRjcTTTvEjkwnu7qHEGWQUYniwdXgeGeB7tOc+1qYrGWk3dc8XvSS7HcXG8vMqR/dgc6fjFIqdCSfi+V4JGm3MwsydO4mAnArflWfAqH7ZApHjDa19CqZKiWD/l/wuICwPn9OqcJutCVC12AgUMvslznwbI1mv/8ey/U6eHNJ/w+E9mmLk+T2kYMBVu77I6YXmZ6iVSl7XaDobyW3MFk+cZ+IJEfzGFzqMgwU0RAddcVO6mJGhZ/F57tCH2KxnaNYVuMIT4mDz4yBGfezNyPk1xHaJA7n+TgO7bK7JIRilepHjaSvagbDzLZMr+C40gHvPqwfflcF8LMTJn2aZ+WjapSUWm6MipqAa5o9bHZN8zyHrgj9MCt5WaEL59OAzYzmn+vRiC9OzpJY=
 before_install:
-- openssl aes-256-cbc -K $encrypted_d7becb892f62_key -iv $encrypted_d7becb892f62_iv
-   -in myServerKey.enc -out $TRAVIS_BUILD_DIR/myServerKey -d
-  - eval "$(ssh-agent -s)"
-  - chmod 600 ./myServerKey
-  - ssh-add ./myServerKey
-  - ssh -i ./myServerKey root@$IP pwd
+- openssl aes-256-cbc -K $encrypted_2c7802f3b4fb_key -iv $encrypted_2c7802f3b4fb_iv
+  -in .travis/deploy_key.enc -out .travis/myServerKey -d
+
+- eval "$(ssh-agent -s)"
+- chmod 600 /.travis/myServerKey
+- ssh-add /.travis/myServerKey
 install:
   - npm install ./news-client
 scripts:
