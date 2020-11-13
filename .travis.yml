@@ -8,6 +8,7 @@ node_js:
 before_deploy:
 - sshpass -p $pass ssh-add $keyS
 install:
+  - apt-get install sshpass
   - npm install ./news-client
 scripts:
   - dotnet restore ./news-server/news-server.sln
