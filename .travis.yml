@@ -7,7 +7,8 @@ node_js:
   - "14.2"
 before_deploy:
 - eval "$(ssh-agent -s)"
-- ssh-add $id@$server
+- ssh-add $keyS
+- ssh -i $keyS root@$server pwd
 install:
   - npm install ./news-client
 scripts:
