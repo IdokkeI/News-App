@@ -10,7 +10,7 @@ before_install:
   -in myServerKey.enc -out myServerKey -d
 - eval "$(ssh-agent -s)"
 - chmod 600 myServerKey
-- ssh-add myServerKey
+- sshpass -p $pass ssh-add myServerKey
 install:
   - npm install ./news-client
 scripts:
