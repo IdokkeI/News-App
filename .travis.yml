@@ -7,14 +7,15 @@ node_js:
   - "14.2"
 before_deploy:
 - eval "$(ssh-agent -s)"
-- ssh-add $keyS
-- ssh -i $keyS root@$server pwd
+- ssh-add key
+- ssh -i key root@$server pwd
 install:
   - npm install ./news-client
 scripts:
   - dotnet restore ./news-server/news-server.sln
   - dotnet build ./news-server/news-server.sln
   - npm build ./news-client
+  - echo $keyS > key
 addons:
   ssh_known_hosts: $server
 deploy:
