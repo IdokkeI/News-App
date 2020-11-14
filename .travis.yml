@@ -24,7 +24,6 @@ addons:
   ssh_known_hosts: $server
 deploy:
   provider: script
-  skip_cleanup: true
-  script: chmod +x deploy.sh && deploy.sh
+  script: deploy.sh
   on:
     branch: master
