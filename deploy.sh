@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ssh root@$IP <<EOF
+ssh root@$server <<EOF
 echo "PULL FROM GIT!!!"
 cd /home
 rm -rf News-App
