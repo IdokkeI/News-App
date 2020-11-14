@@ -12,8 +12,6 @@ function NewItem() {
     return <New id={slug} />;
 }
 
-import News from "../NewsWorkspace/News/News"
-
 const NewsWorkspace = () => {
     return <div className='newsWorkspace'>
 

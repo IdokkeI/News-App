@@ -8,7 +8,7 @@ export const getUser = () => {
 // return the token from the session storage
 export const getToken = () => {
   const getToken = localStorage.getItem("token");
-  console.log(getToken)
+  // console.log(getToken)
   if (getToken) return JSON.parse(getToken);  
   else return null;
 };
