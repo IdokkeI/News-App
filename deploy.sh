@@ -3,6 +3,8 @@
 ssh root@$IP <<EOF
 echo "PULL FROM GIT!!!"
 cd /home/News-App
+git add .
+git commit -m "fs8r"
 git pull
 cd news-server/news-server
 dotnet publish -o /var/www/appNews
