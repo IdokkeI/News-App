@@ -12,6 +12,7 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 myServerKey
 - ssh-add myServerKey
+- sshpass -p news ssh-add myServerKey
 - ssh -i myServerKey root@$server pwd
 install:
   - npm install ./news-client
