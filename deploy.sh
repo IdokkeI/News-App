@@ -1,15 +1,5 @@
 #!/bin/bash
-
-ssh root@$server <<EOF
-echo "PULL FROM GIT!!!"
-cd /home
-rm -rf News-App
-git clone https://github.com/IdokkeI/News-App.git
-cd News-App/news-server/news-server
-dotnet publish -o /var/www/appNews
-cd /home/News-App/news-client
-npm install
+echo "Welcome to the club buddy"
+scp -r news-server/news-server/bin/Debug/netcoreapp3.1/* root@$server:/var/www/appNews/
 pm2 restart news-server
-pm2 restart news-client
-EOF
 echo "END!!!"
