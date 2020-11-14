@@ -5,14 +5,13 @@ dotnet: 3.1.402
 dist: xenial
 node_js:
   - "14.2"
-before_install:
+before_deploy:
 - openssl aes-256-cbc -K $encrypted_d479270c765b_key -iv $encrypted_d479270c765b_iv
   -in myServerKey.enc -out myServerKey -d
-before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 myServerKey
-- ssh-add myServerKey
 - ssh-keygen -p -P $pass -N "" -f myServerKey
+- ssh-add myServerKey
 - ssh -i myServerKey root@$server pwd
 install:
   - npm install ./news-client
