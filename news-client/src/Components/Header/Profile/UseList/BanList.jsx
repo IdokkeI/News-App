@@ -1,19 +1,23 @@
 import React, { Component } from "react";
 
 import { getToken } from "../../../Utils/Common";
+import NextPrevPage from "../NextPrevPage/NextPrevPage";
 
-import "./UserList.scss";
+import "./BanList.scss";
 
-export default class UserList extends Component {
-  constructor() {
-    super();
+export default class BanList extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
       items: [],
+      isLoaded: false,
+      count: 1,
+      url: "http://localhost:5295/Moderator/GetBanUsers?page=",
     };
   }
 
   componentDidMount = () => {
-    fetch("http://localhost:5295/Moderator/GetBanUsers?page=1", {
+    fetch(this.state.url + this.state.count, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -23,6 +27,7 @@ export default class UserList extends Component {
       .then((res) => res.json())
       .then((result) => {
         this.setState({
+          isLoaded: true,
           items: result,
         });
         this.setState({
@@ -31,6 +36,25 @@ export default class UserList extends Component {
       });
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.count !== prevState.count) {
+      fetch(this.state.url + this.state.count, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          this.setState({
+            isLoaded: true,
+            items: result,
+          });
+        });
+    }
+  };
+  
   handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
 
@@ -39,7 +63,19 @@ export default class UserList extends Component {
     });
     this.setState({ items: filter });
   };
+
+  handleCountPlus = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+  handleCountMinus = () => {
+    this.setState({ count: this.state.count - 1 });
+  };
+
   render() {
+    if (this.state.isLoaded === false) {
+      return "Загрузка...";
+    }
+
     return (
       <div>
         <p>Список Забаненных пользователей </p>
@@ -53,6 +89,15 @@ export default class UserList extends Component {
             ))}
           </tbody>
         </table>
+
+        <div>
+          <NextPrevPage
+            itemLenght={this.state.items.length}
+            count={this.state.count}
+            handleCountMinus={this.handleCountMinus}
+            countClickPlus={this.handleCountPlus}
+          />
+        </div>
       </div>
     );
   }

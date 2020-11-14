@@ -4,7 +4,7 @@ import "./Login.scss";
 
 import { setUserSession } from "../../Utils/Common";
 
-class Login extends Component {
+export default class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -18,6 +18,7 @@ class Login extends Component {
       error: null,
       isLoaded: false,
       items: [],
+      errorForm: {},
     };
   }
 
@@ -37,11 +38,11 @@ class Login extends Component {
     switch (fieldName) {
       case "email":
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        fieldValidationErrors.email = emailValid ? "" : " is invalid";
+        fieldValidationErrors.email = emailValid ? "" : " Email  is invalid";
         break;
       case "password":
         passwordValid = value.length >= 6;
-        fieldValidationErrors.password = passwordValid ? "" : " is too short";
+        fieldValidationErrors.password = passwordValid ? "" : "Password have to has 6 number, and it have to least one letter ";
         break;
       default:
         break;
@@ -75,19 +76,27 @@ class Login extends Component {
       },
       body: JSON.stringify(this.state),
     })
-      .then((res) => res.json())
+      .then((res) => res.json()
+    )
       .then((result) => {
         this.setState({
           isLoaded: true,
           items: result,
         });
-        setUserSession(result); 
-        window.location.href = "/login";
-      });
-     
+        if(result.status !== 400){
+          setUserSession(this.state.items);          
+          window.location.href = "/login";
+          // console.log(this.state.formErrors)
+        }else {
+          this.setState({errorForm : this.state.formErrors})
+           console.log(this.state.formErrors);
+        }       
+      });     
   };
 
   render() {
+    const error = this.state.errorForm;
+    // console.log(error);
     return (
       <div className="form">
         <div className="form_group">
@@ -105,6 +114,8 @@ class Login extends Component {
                   value={this.state.email}
                   onChange={this.handleUserInput}
                 />
+                {error.email != null && 
+                <p style={{color:"red"}}>{error.email}</p>}
               </div>
               <div className="form_field">
                 <label htmlFor="password_field" className="form_field_lable">
@@ -118,6 +129,8 @@ class Login extends Component {
                   value={this.state.password}
                   onChange={this.handleUserInput}
                 />
+                 {error.password != null && 
+                <p style={{color:"red"}}>{error.password}</p>}
               </div>
               <div className="form_buttom">
                 <button
@@ -134,4 +147,4 @@ class Login extends Component {
     );
   }
 }
-export default Login;
+// export default Login;

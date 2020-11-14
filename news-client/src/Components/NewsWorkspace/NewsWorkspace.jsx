@@ -14,6 +14,7 @@ function NewItem() {
 
 const NewsWorkspace = () => {
     return <div className='newsWorkspace'>
+
         <Route path='/' exact render ={ ()=> <News /> } />
         <Route path="/NewItem/:slug">
             <NewItem />
