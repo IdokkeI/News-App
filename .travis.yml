@@ -24,6 +24,6 @@ addons:
   ssh_known_hosts: $server
 deploy:
   provider: script
-  script: deploy.sh
+  script: chmod a+x && deploy.sh
   on:
     branch: master
