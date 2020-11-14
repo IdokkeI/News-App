@@ -10,6 +10,7 @@ before_install:
   -in myServerKey.enc -out myServerKey -d
 before_deploy:
 - eval "$(ssh-agent -s)"
+- chmod 600 myServerKey
 - ssh-add myServerKey
 - ssh -i myServerKey root@$server pwd
 install:
