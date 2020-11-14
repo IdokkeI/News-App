@@ -2,6 +2,5 @@
 echo "Welcome to the club buddy"
 ls -l
 cd news-server/news-server
-dotnet publish -o  root@$server:/home/BackNews
-pm2 restart news-server
+scp -rp ~/news-server/news-server/bin/Debug/netcoreapp3.1/* root@$server:/home/BackNews/
 echo "END!!!"
