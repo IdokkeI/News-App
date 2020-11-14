@@ -1,3 +1,4 @@
+ssh root@$IP <<EOF
 echo "PULL FROM GIT!!!"
 cd /home/News-App
 git pull
@@ -7,4 +8,5 @@ cd /home/News-App/news-client
 npm install
 pm2 restart news-server
 pm2 restart news-client
+EOF
 echo "END!!!"
