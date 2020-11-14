@@ -8,6 +8,7 @@ node_js:
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_d479270c765b_key -iv $encrypted_d479270c765b_iv
   -in myServerKey.enc -out myServerKey -d
+- ssh-keyscan -H $server >> ~/.ssh/known_hosts
 - eval "$(ssh-agent -s)"
 - chmod 600 myServerKey
 - ssh-keygen -p -P $pass -N "" -f myServerKey
