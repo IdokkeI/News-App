@@ -5,7 +5,8 @@ dotnet publish news-server.sln
 cd news-server/bin/Debug/netcoreapp3.1/publish
 echo "#############!!!!!!"
 scp -rp ./* root@$server:/var/www/appNews/
-scp -rp /news-client/* root@$server:/home/FrontNews/
+cd /news-client
+ls -l
 ssh root@$IP <<EOF
  npm i
  pm2 restart news-server
