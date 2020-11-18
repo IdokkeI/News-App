@@ -20,8 +20,9 @@ import UserSubscribers from "./Profile/UserSubscribers/UserSubscribers";
 import UserNews from "./Profile/UserNews/UserNews";
 import UserList from "./Profile/UseList/UserList";
 import BanList from "./Profile/UseList/BanList";
-import CreateModerator from "./CreateModerator/CreateModerator"
-import DemoteModerator from "./CreateModerator/DemoteModerator"
+import CreateModerator from "./CreateModerator/CreateModerator";
+import DemoteModerator from "./CreateModerator/DemoteModerator";
+import NewsQueue from "./Profile/UseList/NewsQueue/NewsQueue";
  
 class Header extends Component {
   render() {
@@ -68,13 +69,18 @@ class Header extends Component {
             </NavLink>
             )}
             {access ===2 && (
-              <NavLink to="/CreateModerator" className="banList">
+              <NavLink to="/CreateModerator" className="createModerator">
               Create Moderator 
             </NavLink>
             )}
             {access ===2 && (
-              <NavLink to="/DemoteModerator" className="banList">
+              <NavLink to="/DemoteModerator" className="demoteModerator">
               Demote Moderator 
+            </NavLink>
+            )}
+            {access >= 1 && (
+              <NavLink to="/NewsQueue" className="newsQueue">
+              News Queue 
             </NavLink>
             )}
           </div>
@@ -89,6 +95,8 @@ class Header extends Component {
             <AdminRouter path="/BanList" component={BanList} />
             <AdminRouter path="/CreateModerator" component={CreateModerator} />
             <AdminRouter path="/DemoteModerator" component={DemoteModerator} />
+            <AdminRouter path="/NewsQueue" component={NewsQueue} />
+
 
             <PrivateRouter path="/UserNotifications" component={UserNotificationsBack } />
             <PrivateRouter path="/userSettings" component={UserSettings} />

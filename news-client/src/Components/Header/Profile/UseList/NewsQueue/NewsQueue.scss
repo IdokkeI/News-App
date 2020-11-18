@@ -1,0 +1,16 @@
+.NewsQueueGet-table {
+    border: 3px solid #ddd;
+    tbody tr  {
+        font-size: 16px;
+      cursor: pointer;
+      transition: background-color 100ms;
+      border: 1px solid #ddd;
+  
+      &:hover {
+        background-color: #eee;
+      }
+    }
+    td{
+        padding: 5px 10px;
+    }
+  }
