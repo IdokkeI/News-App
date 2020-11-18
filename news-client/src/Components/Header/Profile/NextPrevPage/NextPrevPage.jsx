@@ -2,14 +2,14 @@ import React from 'react'
 import "./NextPrevPage.scss"
 
  const NextPrevPage = (props) => {
-     
+
     return <div className='NextPrevPage'>
         {props.itemLenght >= 20 && props.count > 1 ? (
           [
             <button key={1} type="button" 
             onClick={props.handleCountMinus}
             >
-              prev
+              back
             </button>,
             <button key={2} type="button" 
             onClick={props.countClickPlus}
@@ -17,7 +17,7 @@ import "./NextPrevPage.scss"
               next
             </button>
           ]
-        ) : props.itemLenght >= 20 ? (
+        ) : props.itemLenght >= 20 && props.count === 1? (
           <button
             key={3}
             type="button"
@@ -25,21 +25,13 @@ import "./NextPrevPage.scss"
           >
             next
           </button>
-        ) : props.itemLenght < 20 ? (
-          <button
-            key={4}
-            type="button"
-            onClick={props.handleCountMinus}
-          >
-            prev
-          </button>
-        ) : (
-          <button
+        ) : props.count > 1 && props.itemLenght < 20 && (
+            <button
             key={5}
             type="button"
             onClick={props.handleCountMinus}
           >
-            prev
+            back
           </button>
         )}
     </div>
