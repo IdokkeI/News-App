@@ -10,7 +10,7 @@ import PublicRouter from "../Utils/PublicRouter";
 
 import AdminRouter from "../Utils/AdminRouter";
 
-import CreatePostBack from "./CreatePostBack/CreatePostBack";
+// import CreatePostBack from "./CreatePostBack/CreatePostBack";
 import UserNotificationsBack from "./Profile/UserNotifications/UserNotificationsBack/UserNotificationsBack";
 
 import CreatePost from "./CreatePost/CreatePost";
@@ -46,9 +46,9 @@ class Header extends Component {
             </NavLink>
           )}
           {user && (
-            <NavLink activeClassName="active" to="/profile">
-              {user}
-            </NavLink>
+            <ul className="header__profile">
+              <Profile user={user} />
+            </ul>
           )}
           <div className="header__createPost">
             {(user && access < 2)  && (
@@ -89,7 +89,7 @@ class Header extends Component {
           <Switch>
             <PublicRouter path="/login" component={Login} />
             <PublicRouter path="/registration" component={Registration} />
-            <PrivateRouter path="/profile" component={Profile} />
+            {/* <PrivateRouter path="/profile" component={Profile} /> */}
             <PrivateRouter path="/createPost" component={CreatePost} />
             <AdminRouter path="/UserList" component={UserList} />
             <AdminRouter path="/BanList" component={BanList} />

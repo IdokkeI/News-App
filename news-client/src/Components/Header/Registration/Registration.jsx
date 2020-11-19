@@ -83,6 +83,10 @@ class Registration extends Component {
        
       })
   };
+  handleClickBack = () => {
+    window.location.href = "/";
+
+  }
 
   render() {
     return (
@@ -151,8 +155,8 @@ class Registration extends Component {
                 >
                   Регистрация
                 </button>
-                <button className="button button-primary">
-                  <a href="/">Назад</a>
+                <button className="button button-primary" onClick={this.handleClickBack}>
+                  Назад
                 </button>
               </div>
           </div>

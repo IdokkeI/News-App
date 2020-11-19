@@ -1,79 +1,56 @@
 import React, { Component } from "react";
 
-import { Route, Switch, NavLink } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 import "./Profile.scss";
-
-import UserSettings from "./UserSettings/UserSettings";
-import UserNews from "./UserNews/UserNews";
-import UserSubscribers from "./UserSubscribers/UserSubscribers";
-import UserNotifications from "./UserNotifications/UserNotifications";
-
 
 import { removeUserSession } from "../../Utils/Common";
 
-class Profile extends Component {
+export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       showMenu: false,
     };
-
-    this.showMenu = this.showMenu.bind(this);
   }
 
-  showMenu(event) {
-    event.preventDefault();
-
-    this.setState({
-      showMenu: true,
-    });
+  showMenu() {
+    this.setState({ showMenu: !this.state.showMenu });
   }
-  
+
   handleLogout = () => {
     removeUserSession();
-
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   render() {
+    let profileMenu;
+    if (this.state.showMenu) {
+      profileMenu = (
+        <div className="profile">
+          <NavLink className="userNews" to="/userNews">
+            Мои Новости
+          </NavLink>
+          <NavLink className="userSubscribers" to="/userSubscribers">
+            Мои Подписки
+          </NavLink>
+          <NavLink className="userNotifications" to="/UserNotifications">
+            Мои уведомления
+          </NavLink>
+          <NavLink className="userSettings" to="/userSettings">
+            Настройки !
+          </NavLink>
+          <NavLink className="logout" to="/" onClick={this.handleLogout}>
+            Выход
+          </NavLink>
+        </div>
+      );
+    }
     return (
-
-      <div>
-          <NavLink activeClassName="active" className="userNews" to="/userNews">
-              Мои Новости
-          </NavLink>
-
-          <NavLink
-              // activeClassName="active"
-              className="userSubscribers"
-              to="/userSubscribers">
-              Мои Подписки
-          </NavLink>
-          <NavLink
-              // activeClassName="active"
-              className="userNotifications"
-              to="/UserNotifications">
-              Мои уведомления
-          </NavLink>
-          <NavLink
-              // activeClassName="active"
-              className="userSettings"
-              to="/userSettings"
-          >
-              Настройки !
-          </NavLink>
-
-        <Switch>
-          <Route exact path="/userNews" component={UserNews} />
-          <Route path="/userSubscribers" component={UserSubscribers} />
-          <Route path="/userSettings" component={UserSettings} />
-        </Switch>
-        <input type="button" onClick={this.handleLogout} value="Logout" />
-
+      <div onClick={this.showMenu.bind(this)}>
+        {this.props.user}
+        {profileMenu}
       </div>
     );
   }
 }
-export default Profile;

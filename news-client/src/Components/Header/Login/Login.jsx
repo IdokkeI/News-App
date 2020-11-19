@@ -67,8 +67,7 @@ export default class Login extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
-  handleClick = (e) => {
-    e.preventDefault();
+  handleClick = () => {
     fetch("http://localhost:5295/Identity/Login", {
       method: "POST", 
       headers: {
@@ -83,20 +82,23 @@ export default class Login extends Component {
           isLoaded: true,
           items: result,
         });
+        // console.log(result.errors.Password)
+
         if(result.status !== 400){
           setUserSession(this.state.items);          
           window.location.href = "/login";
-          // console.log(this.state.formErrors)
         }else {
-          this.setState({errorForm : this.state.formErrors})
-           console.log(this.state.formErrors);
+          this.setState({errorForm : result.errors})
+           console.log(this.state.errorForm);
         }       
       });     
   };
+  handleClickBack = () => {
+    window.location.href = "/";
+  }
 
   render() {
     const error = this.state.errorForm;
-    // console.log(error);
     return (
       <div className="form">
         <div className="form_group">
@@ -114,8 +116,8 @@ export default class Login extends Component {
                   value={this.state.email}
                   onChange={this.handleUserInput}
                 />
-                {error.email != null && 
-                <p style={{color:"red"}}>{error.email}</p>}
+                {error.Email != null && 
+                <p style={{color:"red"}}>{error.Email}</p>}
               </div>
               <div className="form_field">
                 <label htmlFor="password_field" className="form_field_lable">
@@ -129,8 +131,8 @@ export default class Login extends Component {
                   value={this.state.password}
                   onChange={this.handleUserInput}
                 />
-                 {error.password != null && 
-                <p style={{color:"red"}}>{error.password}</p>}
+                 {error.Password != null && 
+                <p style={{color:"red"}}>{error.Password}</p>}
               </div>
               <div className="form_buttom">
                 <button
@@ -139,6 +141,9 @@ export default class Login extends Component {
                   onClick={this.handleClick}
                 >
                   Войти
+                </button>
+                <button className="button button-primary" onClick={this.handleClickBack}>
+                  Назад
                 </button>
               </div>
           </div>

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { getToken } from "../../Utils/Common";
+import {NavLink} from "react-router-dom";
 
 import NextPrevPage from "../Profile/NextPrevPage/NextPrevPage";
 
@@ -121,6 +122,7 @@ handleCountMinus = () => {
             handleCountMinus={this.handleCountMinus}
             countClickPlus={this.handleCountPlus}
           />
+        <NavLink to='/'>Вернуться</NavLink>
 
       </div>
     );
