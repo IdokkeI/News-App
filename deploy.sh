@@ -1,10 +1,18 @@
-echo "PULL FROM GIT"
-cd /home/News-App
-git pull
-cd news-server/news-server
-dotnet publish -o /var/www/appNews
-cd /home/News-App/news-client
-npm install
-pm2 restart news-server
-pm2 restart news-client
-echo "END"
+#!/bin/bash
+echo "Welcome to the club buddy"
+cd news-client
+npm i
+scp -rp ./* root@$server:/home/FrontNews/
+cd..
+cd news-server
+dotnet publish news-server.sln
+cd news-server/bin/Debug/netcoreapp3.1/publish
+echo "#############!!!!!!"
+scp -rp ./* root@$server:/var/www/appNews/
+cd /news-client
+ls -l
+ssh root@$server <<EOF
+ pm2 restart news-server
+ pm2 restart news-client
+EOF
+echo "END!!!"

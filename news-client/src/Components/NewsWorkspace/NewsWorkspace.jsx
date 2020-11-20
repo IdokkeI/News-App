@@ -1,7 +1,5 @@
 import React from 'react'
 import './NewsWorkspace.scss'
-<<<<<<< Updated upstream
-=======
 import {
     Route,
     useParams
@@ -18,13 +16,9 @@ function NewItem(props) {
     let { slug } = useParams();
     return <New id={slug} state={props.state} dispatch={props.dispatch} store={props.store}/>;
 }
->>>>>>> Stashed changes
 
 const NewsWorkspace = (props) => {
     return <div className='newsWorkspace'>
-<<<<<<< Updated upstream
-
-=======
         <div className='newsWorkspace-container'>
             <Route path='/CreatePost' render ={ ()=> <CreatePost state={props.state} dispatch={props.dispatch} store={props.store}/> } />
             <Route path='/' exact render ={ ()=> <News /> } />
@@ -36,7 +30,7 @@ const NewsWorkspace = (props) => {
             <Route path="/userSubscribers" component={UserSubscribers} />
             <Route exact path="/userNews" component={UserNews} />
         </div>
->>>>>>> Stashed changes
+
     </div>
 }
 

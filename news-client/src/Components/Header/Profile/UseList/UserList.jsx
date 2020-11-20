@@ -1,28 +1,35 @@
 import React, { Component } from "react";
+import { getToken } from "../../../Utils/Common";
+import NextPrevPage from "../NextPrevPage/NextPrevPage";
 
 import "./UserList.scss";
 
 export default class UserList extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       userName: "",
       dayCount: 0,
       items: [],
+      data: [],
+      isLoaded: false,
+      url: "http://localhost:5295/Admin/GetUsers?page=",
+      count: 1,
     };
   }
 
   componentDidMount = () => {
-    fetch("http://localhost:5295/Admin/GetUsers?page=1", {
+    fetch(this.state.url + this.state.count, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
       .then((res) => res.json())
       .then((result) => {
         this.setState({
+          isLoaded: true,
           items: result,
         });
         this.setState({
@@ -30,6 +37,25 @@ export default class UserList extends Component {
         });
       });
   };
+  
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.count !== prevState.count) {
+      fetch(this.state.url + this.state.count, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          this.setState({
+            isLoaded: true,
+            items: result,
+          });
+        });
+    }
+  }
 
   handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
@@ -44,6 +70,7 @@ export default class UserList extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(this.state),
     }).then((result) => {
@@ -56,25 +83,23 @@ export default class UserList extends Component {
   onSelect = (userName) => {
     this.setState({ userName: userName.userName });
   };
+
   handleUserInput = (e) => {
     this.setState({ dayCount: Number(e.target.value) });
   };
 
-  handleClickModerator = () => {
-    fetch("http://localhost:5295/Admin/SetModerator", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(this.state.userName),
-    }).then((result) => {
-      this.setState({
-        data: result.userName,
-      });
-    });
+  handleCountPlus = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  handleCountMinus = () => {
+    this.setState({ count: this.state.count - 1 });
   };
 
   render() {
+    if (this.state.isLoaded === false) {
+      return "Загрузка...";
+    }
     return (
       <div className="user-list">
         <p>Список пользователей </p>
@@ -82,10 +107,7 @@ export default class UserList extends Component {
         <table className="userList">
           <tbody filter={this.state.searchString}>
             {this.state.items.map((user) => (
-              <tr
-                key={user.userName}
-                onClick={this.onSelect.bind(null, user)}
-              >
+              <tr key={user.userName} onClick={this.onSelect.bind(null, user)}>
                 <td>{user.userName}</td>
               </tr>
             ))}
@@ -99,6 +121,15 @@ export default class UserList extends Component {
           />
         )}
         <input type="button" onClick={this.handleClickBan} value="Ban" />
+
+        <div>
+          <NextPrevPage
+            itemLenght={this.state.items.length}
+            count={this.state.count}
+            handleCountMinus={this.handleCountMinus}
+            countClickPlus={this.handleCountPlus}
+          />
+        </div>
       </div>
     );
   }
