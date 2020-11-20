@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getToken } from "../../Utils/Common";
 
+import NextPrevPage from "../Profile/NextPrevPage/NextPrevPage";
 
 export default class DemoteModerator extends Component {
   constructor() {
@@ -11,12 +12,13 @@ export default class DemoteModerator extends Component {
       items: [],
       data: [],
       row: null,
-      
+      url: "http://localhost:5295/Admin/GetModerators?page=",
+      count: 1,      
     };
   }
 
   componentDidMount = () => {
-    fetch("http://localhost:5295/Admin/GetModerators?page=1", {
+    fetch(this.state.url + this.state.count, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,6 +34,25 @@ export default class DemoteModerator extends Component {
           searchString: this.state.items,
         });
       });
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.count !== prevState.count) {
+      fetch(this.state.url + this.state.count, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          this.setState({
+            isLoaded: true,
+            items: result,
+          });
+        });
+    }
   };
 
   handleSearch = (e) => {
@@ -68,8 +89,15 @@ handleClickModerator = () => {
       });
       alert(this.state.userName + "  -  is not moderator!");
       window.location.href = "/DemoteModerator";
+};
 
-}
+handleCountPlus = () => {
+  this.setState({ count: this.state.count + 1 });
+};
+
+handleCountMinus = () => {
+  this.setState({ count: this.state.count - 1 });
+};
 
   render() {
     return (
@@ -86,6 +114,13 @@ handleClickModerator = () => {
           </tbody>
         </table>
         <input type="button" onClick={this.handleClickModerator} value="Demote Moder" />
+
+        <NextPrevPage
+            itemLenght={this.state.items.length}
+            count={this.state.count}
+            handleCountMinus={this.handleCountMinus}
+            countClickPlus={this.handleCountPlus}
+          />
 
       </div>
     );
