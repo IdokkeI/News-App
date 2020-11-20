@@ -6,12 +6,12 @@ import Header from './Components/Header/Header.jsx'
 import NewsWorkspace from "./Components/NewsWorkspace/NewsWorkspace";
 
 
-function App() {
+const App = (props) => {
   return (
     <BrowserRouter>
       <div>
-          <Header />
-          <NewsWorkspace />
+          <Header state={props.state} dispatch={props.dispatch} store={props.store}/>
+          <NewsWorkspace state={props.state} dispatch={props.dispatch} store={props.store}/>
       </div>
     </BrowserRouter>
 );
