@@ -1,11 +1,19 @@
 import React from 'react'
 import './NewHeader.scss'
+import {postLikeActionCreator, postDislikeActionCreator} from "../../../../../redux/newlike-reducer";
 
 const NewHeader = (props) => {
+    let postLikeClick = () => {
+            props.store.dispatch(postLikeActionCreator(props.id));
+        },
+        postDislikeClick = () => {
+            props.store.dispatch(postDislikeActionCreator(props.id));
+        }
+
     return <div className='newHeader'>
         <div>
-            <button>Лайк</button>
-            <button>Дизлайк</button>
+            <button onClick={() => { postLikeClick() } }>Лайк</button>
+            <button onClick={() => { postDislikeClick() } }>Дизлайк</button>
         </div>
         <div>
             <h1>{props.title}</h1>
