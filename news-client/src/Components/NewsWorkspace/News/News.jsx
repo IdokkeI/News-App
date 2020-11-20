@@ -35,13 +35,13 @@ export default class News extends Component {
                 <p>Список новостей </p>
                 <ul>
                     {news.map((new_item) =>
-                        <div key={new_item.newsId}>
+                        <div>
                             <div>
                                 <h2><NavLink to={url+new_item.newsId}>{new_item.title}</NavLink></h2>
-                                <span>Дата публикации: {new_item.publishDate}.  </span>
-                                <span>Просмотров: {new_item.params.views}.  </span>
-                                <span>Лайков: {new_item.params.likes}.  </span>
-                                <span>Дизлайков: {new_item.params.dislikes}.  </span>
+                                <span>Дата публикации: {new_item.publishDate}</span>
+                                <span>Просмотров: {new_item.params.views}</span>
+                                <span>Лайков: {new_item.params.likes}</span>
+                                <span>Дизлайков: {new_item.params.dislikes}</span>
                             </div>
                         </div>
                     )}
