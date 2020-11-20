@@ -1,19 +1,52 @@
-header {
-    display: block;
-    background-color: rgba($color: #505c54c0, $alpha: 0.4);
+.header {
+    margin: 0 auto;
+    position: relative;
+    z-index: 200;
+    background: rgba($color: #bcd6c2ea, $alpha: 0.4);
+    text-align: center;
+    box-shadow: 0 0 5px 1px #070707;
+    min-width: 1024px;
 }
-
-.Enter_registr{
-    display: inline-block;
-    margin: 0;
-    padding: 15px;
-}
-.Enter_registr nav {
-    display: inline-block;
-    // padding: 0 15px 0 15px;
+.header__inner {
+    box-sizing: border-box;
+    height: 67px;
+    margin: auto;
+    max-width: 1164px;
+    text-align: right;
+    padding: 0 10px;
     position: relative;
 }
-.Enter_registr a{
-    display: inline;
-    padding: 0 15px 0 15px;
+
+.header__login{
+    display: inline-flex;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0px;
+    top: 20px;
+    width: 400px;
+    text-align: right;
+    vertical-align: middle;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 35px;
+    text-transform: uppercase;
+    padding-right: 10px;
+}
+
+.header__login a{
+    text-decoration: none;
+    color: #707070;
+    margin: 0 5px;
+    padding:  0 10px;
+    border: 1px solid #667177;
+    border-radius: 5px;
+}
+
+.header__login a:hover {
+    color: #222222;
+}
+
+.header__profile {
+    margin: 0;
+    cursor: pointer;
 }

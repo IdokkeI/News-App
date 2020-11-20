@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { getToken } from "../../Utils/Common";
+import {NavLink} from "react-router-dom";
+
 
 import NextPrevPage from "../Profile/NextPrevPage/NextPrevPage";
 
@@ -123,6 +125,8 @@ export default class CreateModerator extends Component {
             countClickPlus={this.handleCountPlus}
           />
         </div>
+        <NavLink to='/'>Вернуться</NavLink>
+
       </div>
     );
   }

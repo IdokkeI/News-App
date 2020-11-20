@@ -67,8 +67,7 @@ export default class Login extends Component {
     return error.length === 0 ? "" : "has-error";
   }
 
-  handleClick = (e) => {
-    e.preventDefault();
+  handleClick = () => {
     fetch("http://localhost:5295/Identity/Login", {
       method: "POST", 
       headers: {
@@ -86,59 +85,67 @@ export default class Login extends Component {
         if(result.status !== 400){
           setUserSession(this.state.items);          
           window.location.href = "/login";
-          // console.log(this.state.formErrors)
         }else {
-          this.setState({errorForm : this.state.formErrors})
-           console.log(this.state.formErrors);
+          this.setState({errorForm : result.errors})
         }       
       });     
   };
+  handleClickBack = () => {
+    window.location.href = "/";
+  }
 
   render() {
     const error = this.state.errorForm;
-    // console.log(error);
+    
     return (
       <div className="form">
-        <div className="form_group">
-          <div className="form_group_title">Вход</div>
+        <div className="form__group">
+          <div className="form__group_title">Вход</div>
           <div>
-              <div className="form_field">
-                <label htmlFor="email" className="form_field_lable">
+              <div className="form__field">
+                <label htmlFor="email" className="form__field_lable">
                   E-mail
                 </label>
                 <input
                   type="email"
-                  className="form_field_input"
+                  className="form__field_input"
                   name="email"
                   placeholder="Email"
                   value={this.state.email}
                   onChange={this.handleUserInput}
                 />
-                {error.email != null && 
-                <p style={{color:"red"}}>{error.email}</p>}
+                {error.Email != null && 
+                  error.Email.map((err, i) => (
+                    <li key ={i} className="form__field-error">{err}</li>                  
+                ))}
               </div>
-              <div className="form_field">
-                <label htmlFor="password_field" className="form_field_lable">
+              <div className="form__field">
+                <label htmlFor="password_field" className="form__field_lable">
                   Пароль
                 </label>
                 <input
                   type="password"
-                  className="form_field_input"
+                  className="form__field_input"
                   name="password"
                   placeholder="Password"
                   value={this.state.password}
                   onChange={this.handleUserInput}
                 />
-                 {error.password != null && 
-                <p style={{color:"red"}}>{error.password}</p>}
+                {error.Password != null && 
+                  error.Password.map((err, i)=> (
+                    <li key = {i} className="form__field-error">{err}</li>                  
+                ))}
               </div>
-              <div className="form_buttom">
+              <div className="form__buttom">
                 <button
                   type="button"
-                  className="button button-primary"
+                  className="button"
                   onClick={this.handleClick}
                 >
                   Войти
+                </button>
+                <button className="button" onClick={this.handleClickBack}>
+                  Назад
                 </button>
               </div>
           </div>
@@ -147,4 +154,3 @@ export default class Login extends Component {
     );
   }
 }
-// export default Login;

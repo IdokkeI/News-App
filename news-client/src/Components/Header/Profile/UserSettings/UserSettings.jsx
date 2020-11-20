@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "./UserSettings.scss";
-import {getToken} from "../../../Utils/Common"
+import {getToken} from "../../../Utils/Common";
+import { NavLink } from 'react-router-dom';
+
 
 class UserSettings extends Component {
   constructor() {
@@ -86,7 +88,10 @@ class UserSettings extends Component {
         value="Change"
         onClick={this.handleClick}
         />
+        <NavLink to='/'>Вернуться</NavLink>
+
       </div>
+      
     );
   }
 }

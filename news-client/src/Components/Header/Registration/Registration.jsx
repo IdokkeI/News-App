@@ -83,59 +83,63 @@ class Registration extends Component {
        
       })
   };
+  handleClickBack = () => {
+    window.location.href = "/";
+
+  }
 
   render() {
     return (
       <div className="form">
-        <div className="form_group">
-          <div className="form_group_title">Регистрация</div>
+        <div className="form__group">
+          <div className="form__group_title">Регистрация</div>
           <div>
-              <div className="form_field">
-                <label htmlFor="email" className="form_field_lable">
+              <div className="form__field">
+                <label htmlFor="email" className="form__field_lable">
                   E-mail
                 </label>
                 <input
                   type="email"
-                  className="form_field_input"
+                  className="form__field_input"
                   name="email"
                   placeholder="Email"
                   value={this.state.email}
                   onChange={this.handleUserInput}
                 />
               </div>
-              <div className="form_field">
-                <label htmlFor="password_field" className="form_field_lable">
+              <div className="form__field">
+                <label htmlFor="password_field" className="form__field_lable">
                   Пароль
                 </label>
                 <input
                   type="password"
-                  className="form_field_input"
+                  className="form__field_input"
                   name="password"
                   placeholder="Password"
                   value={this.state.password}
                   onChange={this.handleUserInput}
                 />
               </div>
-              <div className="form_field">
-                <label htmlFor="userName" className="form_field_lable">
+              <div className="form__field">
+                <label htmlFor="userName" className="form__field_lable">
                   Никнейм
                 </label>
                 <input
                   type="userName"
-                  className="form_field_input"
+                  className="form__field_input"
                   name="userName"
                   value={this.state.userName}
                   onChange={this.handleUserInput}
                 />
               </div>
 
-              <div className="form_field">
-                <label htmlFor="password_field" className="form_field_lable">
+              <div className="form__field">
+                <label htmlFor="password_field" className="form__field_lable">
                   Подтвердите пароль
                 </label>
                 <input
                   type="password"
-                  className="form_field_input"
+                  className="form__field_input"
                   name="confirmPassword"
                   placeholder="confirmPassword"
                   value={this.state.confirmPassword}
@@ -143,16 +147,16 @@ class Registration extends Component {
                 />
               </div>
 
-              <div className="form_buttom">
+              <div className="form__buttom">
                 <button
                   type="button"
-                  className="button button-primary"
+                  className="button"
                   onClick={this.handleClick}
                 >
                   Регистрация
                 </button>
-                <button className="button button-primary">
-                  <a href="/">Назад</a>
+                <button className="button" onClick={this.handleClickBack}>
+                  Назад
                 </button>
               </div>
           </div>

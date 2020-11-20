@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { getToken } from "../../../Utils/Common";
 import NextPrevPage from "../NextPrevPage/NextPrevPage";
+import { NavLink } from 'react-router-dom';
 
 import "./BanList.scss";
 
@@ -98,6 +99,8 @@ export default class BanList extends Component {
             countClickPlus={this.handleCountPlus}
           />
         </div>
+        <NavLink to='/'>Вернуться</NavLink>
+
       </div>
     );
   }
