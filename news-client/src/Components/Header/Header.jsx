@@ -7,17 +7,9 @@ import Profile from "./Profile/Profile";
 import {getAccess, getUser } from "../Utils/Common";
 import PrivateRouter from "../Utils/PrivateRouter";
 import PublicRouter from "../Utils/PublicRouter";
-import AdminRouter from "../Utils/AdminRouter";
 import UserNotificationsBack from "./Profile/UserNotifications/UserNotificationsBack/UserNotificationsBack";
-import CreatePost from "./CreatePost/CreatePost";
-import UserSettings from "./Profile/UserSettings/UserSettings";
-import UserSubscribers from "./Profile/UserSubscribers/UserSubscribers";
-import UserNews from "./Profile/UserNews/UserNews";
-import UserList from "./Profile/UseList/UserList";
-import BanList from "./Profile/UseList/BanList";
-import CreateModerator from "./CreateModerator/CreateModerator";
-import DemoteModerator from "./CreateModerator/DemoteModerator";
-import NewsQueue from "./Profile/UseList/NewsQueue/NewsQueue";
+import CreatePostBack from "./CreatePostBack/CreatePostBack";
+
  
 class Header extends Component {
   render() {
@@ -44,9 +36,9 @@ class Header extends Component {
           </div>
           <div className="header__profile">
             {user && (
-                <ul>
+                
                   <Profile user={user} />
-                </ul>
+              
               )}
           </div>            
             <div className="header__createPost">
@@ -88,22 +80,10 @@ class Header extends Component {
             <PublicRouter path="/login" component={Login} />
             <PublicRouter path="/registration" component={Registration} />
 
-           // <PrivateRouter path="/createPost" component={CreatePost} />
-
-
-            <AdminRouter path="/UserList" component={UserList} />
-            <AdminRouter path="/BanList" component={BanList} />
-            <AdminRouter path="/CreateModerator" component={CreateModerator} />
-            <AdminRouter path="/DemoteModerator" component={DemoteModerator} />
-            <AdminRouter path="/NewsQueue" component={NewsQueue} />
-
-
             <PrivateRouter path="/CreatePost" component={CreatePostBack} />
 
             <PrivateRouter path="/UserNotifications" component={UserNotificationsBack } />
-            <PrivateRouter path="/userSettings" component={UserSettings} />
-            <PrivateRouter path="/userNews" component={UserNews} />
-            <PrivateRouter path="/userSubscribers" component={UserSubscribers} />
+           
           </Switch>
         </div>
         </div>

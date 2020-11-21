@@ -10,60 +10,17 @@ class Registration extends Component {
       password: "",
       userName: "",
       confirmPassword: "",
-      formErrors: { email: "", password: "" },
-      emailValid: false,
-      passwordValid: false,
-      formValid: false,
-      error: null,
       isLoaded: false,
       items: [],
+      errorForm: [],
     };
   }
 
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, () => {
-      this.validateField(name, value);
-    });
+    this.setState({ [name]: value });
   };
-
-  validateField(fieldName, value) {
-    let fieldValidationErrors = this.state.formErrors;
-    let emailValid = this.state.emailValid;
-    let passwordValid = this.state.passwordValid;
-
-    switch (fieldName) {
-      case "email":
-        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        fieldValidationErrors.email = emailValid ? "" : " is invalid";
-        break;
-      case "password":
-        passwordValid = value.length >= 6;
-        fieldValidationErrors.password = passwordValid ? "" : " is too short";
-        break;
-      default:
-        break;
-    }
-    this.setState(
-      {
-        formErrors: fieldValidationErrors,
-        emailValid: emailValid,
-        passwordValid: passwordValid,
-      },
-      this.validateForm
-    );
-  }
-
-  validateForm() {
-    this.setState({
-      formValid: this.state.emailValid && this.state.passwordValid,
-    });
-  }
-
-  errorClass(error) {
-    return error.length === 0 ? "" : "has-error";
-  }
 
   handleClick =  () => {
      fetch("http://localhost:5295/Identity/Register", {
@@ -73,15 +30,21 @@ class Registration extends Component {
       },
       body: JSON.stringify(this.state),
     })
-      .then((Response) =>{
-        if(Response.status !== 200) {
-          alert("Пользователь с такими данными существует");
-          return
-        }else{
-          this.props.history.push("/login");
-        }
-       
-      })
+    .then((res) =>
+    res.status !== 200 && res.json() 
+    )
+      .then((result) => {
+        this.setState({
+          isLoaded: true,
+          items: result,
+        });
+        if(result.status !== 400){
+          window.location.href = "/login";
+        }else {
+          console.log(result.errors)
+          this.setState({errorForm : result.errors})
+        }       
+      });  
   };
   handleClickBack = () => {
     window.location.href = "/";
@@ -89,6 +52,8 @@ class Registration extends Component {
   }
 
   render() {
+    const error = this.state.errorForm;
+ 
     return (
       <div className="form">
         <div className="form__group">
@@ -106,6 +71,10 @@ class Registration extends Component {
                   value={this.state.email}
                   onChange={this.handleUserInput}
                 />
+                {error.Email != null && 
+                  error.Email.map((err, i) => (
+                    <li key ={i} className="form__field-error">{err}</li>                  
+                ))}
               </div>
               <div className="form__field">
                 <label htmlFor="password_field" className="form__field_lable">
@@ -119,6 +88,10 @@ class Registration extends Component {
                   value={this.state.password}
                   onChange={this.handleUserInput}
                 />
+                {error.Password != null && 
+                  error.Password.map((err, i) => (
+                    <li key ={i} className="form__field-error">{err}</li>                  
+                ))}
               </div>
               <div className="form__field">
                 <label htmlFor="userName" className="form__field_lable">
@@ -131,6 +104,10 @@ class Registration extends Component {
                   value={this.state.userName}
                   onChange={this.handleUserInput}
                 />
+                {error.UserName != null && 
+                  error.UserName.map((err, i) => (
+                    <li key ={i} className="form__field-error">{err}</li>                  
+                ))}
               </div>
 
               <div className="form__field">
@@ -145,6 +122,10 @@ class Registration extends Component {
                   value={this.state.confirmPassword}
                   onChange={this.handleUserInput}
                 />
+                {error.ConfirmPassword != null && 
+                  error.ConfirmPassword.map((err, i) => (
+                    <li key ={i} className="form__field-error">{err}</li>                  
+                ))}
               </div>
 
               <div className="form__buttom">
