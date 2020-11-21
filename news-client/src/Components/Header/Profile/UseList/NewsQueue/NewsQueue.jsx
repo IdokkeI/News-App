@@ -4,6 +4,8 @@ import "./NewsQueue.scss"
 import { getToken } from "../../../../Utils/Common";
 import NewsQueueGet from "./NewsQueueGet";
 import NextPrevPage from "../../../Profile/NextPrevPage/NextPrevPage";
+import { NavLink } from 'react-router-dom';
+
 
 
 export default class NewsQueue extends Component {
@@ -102,7 +104,8 @@ export default class NewsQueue extends Component {
                     handleCountMinus={this.handleCountMinus}
                     countClickPlus={this.handleCountPlus}
                 />
-               
+                       <NavLink to='/'>Вернуться</NavLink>
+
             </div>
         )
     }

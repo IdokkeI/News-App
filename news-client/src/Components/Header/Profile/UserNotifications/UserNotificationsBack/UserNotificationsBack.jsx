@@ -8,7 +8,7 @@ class UserNotificationsBack extends Component {
         return (
             <div className='userNotificationsBack'>
                 <UserNotifications />
-                <NavLink to='/profile'>Вернуться</NavLink>
+                <NavLink to='/'>Вернуться</NavLink>
             </div>
         );
     }

@@ -1,13 +1,49 @@
 
-.profile {
-  display: block;
-  background-color: rgba($color: #505c54c0, $alpha: 0.4);
-  position: absolute;
+.profile p {
+  display: inline-flex;
 }
-
-
-.profile a{
+.profile-dropdown {
+    margin-left: 5px;
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    border-left: 1px solid rgba(27, 26, 26, 0.459);
+    height: 25px;
+    padding: 0 5px;
+    cursor: pointer;
+    top: 20px;
+}
+.dropdown {
+  width: 20px;
+  height: 15px;
+  stroke: black ;
+  stroke-width: 3;
+}
+.reverted  {
+  width: 20px;
+  height: 15px;
+  stroke: black ;
+   stroke-width: 3;
+  transform: rotate(-180deg);
+}
+.profile-menu {
+  position: relative;
+  background-color: rgba($color: #bcd6c2ea, $alpha: 0.4);
   display: block;
-  padding: 10px 15px 10px 15px;
+  text-align: left;
+  box-shadow: 0 5px 5px 1px #070707;
+}
+.profile-menu a{
+  display: block;  
+  padding: 14px 20px;
   text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: #303031;
+
+}
+.profile-menu a:hover {
+  background-color: #c4d3c191;
 }

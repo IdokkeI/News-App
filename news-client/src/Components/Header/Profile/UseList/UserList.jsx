@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { getToken } from "../../../Utils/Common";
 import NextPrevPage from "../NextPrevPage/NextPrevPage";
+import { NavLink } from 'react-router-dom';
+
 
 import "./UserList.scss";
 
@@ -130,6 +132,8 @@ export default class UserList extends Component {
             countClickPlus={this.handleCountPlus}
           />
         </div>
+        <NavLink to='/'>Вернуться</NavLink>
+
       </div>
     );
   }
