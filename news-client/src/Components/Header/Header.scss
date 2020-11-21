@@ -47,6 +47,56 @@
 }
 
 .header__profile {
+    display: inline-flex;
+    margin: 10px 0;
+    top: 0px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #350606;
+    font-weight: 700;;
+}
+.header__admin {
     margin: 0;
+
+    display: inline-flex;
+    position: absolute;
+    left: 0;
+    top: 20px;
+    width: 680px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 35px;
+    text-transform: uppercase;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.header__admin a, .header__createPost a {
+    text-decoration: none;
+    color: #707070;
+    margin: 0 5px;
+    padding:  0 10px;
+    border: 1px solid #667177;
+    border-radius: 5px;
+}
+.header__admin a:hover, .header__createPost a:hover {
+    color: #89be7d;
+}
+
+.header__createPost {
+    margin: 0;
+
+    display: inline-flex;
+    position: absolute;
+    right: 90px;
+    top: 20px;
+    width: 170px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 35px;
+    text-transform: uppercase;
+    padding:  0 10px;
     cursor: pointer;
 }

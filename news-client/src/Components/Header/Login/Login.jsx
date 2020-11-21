@@ -10,12 +10,7 @@ export default class Login extends Component {
 
     this.state = {
       email: "",
-      password: "",
-      formErrors: { email: "", password: "" },
-      emailValid: false,
-      passwordValid: false,
-      formValid: false,
-      error: null,
+      password: "",     
       isLoaded: false,
       items: [],
       errorForm: {},
@@ -25,47 +20,8 @@ export default class Login extends Component {
   handleUserInput = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState({ [name]: value }, () => {
-      this.validateField(name, value);
-    });
+    this.setState({ [name]: value });
   };
-
-  validateField(fieldName, value) {
-    let fieldValidationErrors = this.state.formErrors;
-    let emailValid = this.state.emailValid;
-    let passwordValid = this.state.passwordValid;
-
-    switch (fieldName) {
-      case "email":
-        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        fieldValidationErrors.email = emailValid ? "" : " Email  is invalid";
-        break;
-      case "password":
-        passwordValid = value.length >= 6;
-        fieldValidationErrors.password = passwordValid ? "" : "Password have to has 6 number, and it have to least one letter ";
-        break;
-      default:
-        break;
-    }
-    this.setState(
-      {
-        formErrors: fieldValidationErrors,
-        emailValid: emailValid,
-        passwordValid: passwordValid,
-      },
-      this.validateForm
-    );
-  }
-
-  validateForm() {
-    this.setState({
-      formValid: this.state.emailValid && this.state.passwordValid,
-    });
-  }
-
-  errorClass(error) {
-    return error.length === 0 ? "" : "has-error";
-  }
 
   handleClick = () => {
     fetch("http://localhost:5295/Identity/Login", {
@@ -85,9 +41,12 @@ export default class Login extends Component {
         if(result.status !== 400){
           setUserSession(this.state.items);          
           window.location.href = "/login";
-        }else {
+        }else if (result.errors === null){
+          console.log(result.errors)
+        }
+        else {
           this.setState({errorForm : result.errors})
-        }       
+        } 
       });     
   };
   handleClickBack = () => {
