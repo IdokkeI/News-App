@@ -98,6 +98,10 @@ handleCountMinus = () => {
       <div className="user-list">
         <p>Список пользователей </p>
         <input type="text" onChange={this.Search} />
+        <br />
+        <label htmlFor="button"> {this.state.userName} </label>
+        <input type="button" onClick={this.ClickDemoteModerator} value="Demote Moder" />
+
         <table className="userList">
           <tbody filter={this.state.searchString} >
             {this.state.items.map((user) => (
@@ -107,8 +111,7 @@ handleCountMinus = () => {
             ))}
           </tbody>
         </table>
-        <input type="button" onClick={this.ClickDemoteModerator} value="Demote Moder" />
-
+        
         <NextPrevPage
             itemLenght={this.state.items.length}
             count={this.state.count}

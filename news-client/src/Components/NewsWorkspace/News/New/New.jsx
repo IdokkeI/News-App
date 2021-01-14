@@ -38,7 +38,7 @@ export default class New extends Component {
             <div>
                 <NewHeader state={this.props.state} dispatch={this.props.dispatch} store={this.props.store} new_id = {this.props.id} id = {newItemMap.newsId} views={newItemParams.views} dislikes={newItemParams.dislikes} likes={newItemParams.likes} publishDate={newItemMap.dislikes} title={newItemMap.title} user = {newItemMap.userName} sectionName = {newItemMap.sectionName}/>
                 <NewBody text = {newItemMap.text} />
-                <NewComments state={this.props.state} dispatch={this.props.dispatch} store={this.props.store} id = {this.state.id} state={this.props.state} dispatch={this.props.dispatch} store={this.props.store}/>
+                <NewComments state={this.props.state} dispatch={this.props.dispatch} id = {this.state.id}  store={this.props.store}/>
             </div>
 
         )
