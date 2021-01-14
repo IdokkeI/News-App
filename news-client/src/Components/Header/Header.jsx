@@ -7,7 +7,6 @@ import Profile from "./Profile/Profile";
 import {getAccess, getUser } from "../Utils/Common";
 import PrivateRouter from "../Utils/PrivateRouter";
 import PublicRouter from "../Utils/PublicRouter";
-import UserNotificationsBack from "./Profile/UserNotifications/UserNotificationsBack/UserNotificationsBack";
 import CreatePostBack from "./CreatePostBack/CreatePostBack";
 
  
@@ -81,8 +80,6 @@ class Header extends Component {
             <PublicRouter path="/registration" component={Registration} />
 
             <PrivateRouter path="/CreatePost" component={CreatePostBack} />
-
-            <PrivateRouter path="/UserNotifications" component={UserNotificationsBack } />
            
           </Switch>
         </div>

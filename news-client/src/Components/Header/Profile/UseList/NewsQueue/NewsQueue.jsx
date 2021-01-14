@@ -93,6 +93,7 @@ export default class NewsQueue extends Component {
         return(
             <div className="newsQueue">
                 <p>Список новостей в очереди на проверке</p>
+                <label htmlFor="button"> {this.state.title} </label>
                 <input type="button" onClick={this.handleClickApprove} value="Approve News" />
                 <NewsQueueGet  
                     items = {this.state.items} 
